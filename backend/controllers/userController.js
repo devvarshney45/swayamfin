@@ -11,8 +11,8 @@ exports.getAgents = async (req, res) => {
 
 exports.createAgent = async (req, res) => {
   try {
-    const { name, email, password, branch, role } = req.body;
-    const agent = await User.create({ name, email, password, branch, role: role || 'Agent' });
+    const { name, email, password, branch, cityName, role } = req.body;
+    const agent = await User.create({ name, email, password, branch, cityName, role: role || 'Agent' });
     res.status(201).json({ success: true, data: agent });
   } catch (error) {
     if (error.code === 11000) {
