@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Handshake, TrendingUp, Cpu, Support, FileCheck, CheckCircle2 } from 'lucide-react';
+import { Handshake, TrendingUp, Cpu, Headset, FileCheck, CheckCircle2 } from 'lucide-react';
 
 const Partner = () => {
   return (
@@ -31,7 +31,7 @@ const Partner = () => {
               {[
                 { icon: TrendingUp, title: 'High Commission', desc: 'Industry-leading payouts on converted disbursements.' },
                 { icon: Cpu, title: 'Tech Dashboard', desc: 'Real-time tracking of your leads and commission status.' },
-                { icon: Support, title: 'Dedicated RM', desc: 'A dedicated manager to help close your complex cases.' },
+                { icon: Headset, title: 'Dedicated RM', desc: 'A dedicated manager to help close your complex cases.' },
                 { icon: FileCheck, title: 'Fast Pay-outs', desc: 'Monthly commission cycles with zero delays.' }
               ].map((benefit, i) => (
                 <div key={i} className="flex gap-4">
