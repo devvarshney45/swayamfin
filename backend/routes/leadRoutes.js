@@ -1,3 +1,5 @@
+const express = require('express');
+const router = express.Router();
 const { createLead, getTodaysLeads, updateLeadStatus, getAllLeads, getLeadStats, getLeadById } = require('../controllers/leadController');
 const { protect, adminOnly } = require('../middleware/authMiddleware');
 
