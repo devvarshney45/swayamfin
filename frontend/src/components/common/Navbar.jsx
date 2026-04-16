@@ -17,13 +17,16 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center space-x-6 font-medium text-sm text-gray-600">
+          <div className="hidden md:flex items-center space-x-5 font-medium text-[13px] text-slate-600">
             <Link to="/" className="hover:text-primary-blue transition-colors duration-200">Home</Link>
             <Link to="/msme-loans" className="hover:text-primary-blue transition-colors duration-200">MSME</Link>
             <Link to="/lap" className="hover:text-primary-blue transition-colors duration-200">LAP</Link>
             <Link to="/housing" className="hover:text-primary-blue transition-colors duration-200">Housing</Link>
             <Link to="/supply-chain" className="hover:text-primary-blue transition-colors duration-200">Supply Chain</Link>
-            <Link to="/agent/dashboard" className="px-5 py-2.5 rounded-full bg-primary-lightBlue text-primary-darkBlue font-semibold hover:bg-blue-100 transition duration-200">
+            <Link to="/about" className="hover:text-primary-blue transition-colors duration-200">About</Link>
+            <Link to="/process" className="hover:text-primary-blue transition-colors duration-200">Process</Link>
+            <Link to="/contact" className="hover:text-primary-blue transition-colors duration-200">Contact</Link>
+            <Link to="/agent/dashboard" className="px-5 py-2.5 rounded-full bg-primary-lightBlue text-primary-darkBlue font-bold hover:bg-blue-100 transition shadow-sm">
               Agent Portal
             </Link>
           </div>

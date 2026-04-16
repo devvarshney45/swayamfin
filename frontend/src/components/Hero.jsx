@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, TrendingUp, Users } from 'lucide-react';
+import { getUTMParams } from '../utils/helpers';
 
 // A simple CountUp hook to animate numbers
 const useCountUp = (end, duration = 2000) => {
@@ -34,22 +35,23 @@ const Hero = () => {
     city: ''
   });
 
+  const [submitStatus, setSubmitStatus] = useState(null);
+
   const handleChange = (e) => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
-
-  const [submitStatus, setSubmitStatus] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitStatus('submitting');
     
     try {
+      const utms = getUTMParams();
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const response = await fetch(`${apiUrl}/api/leads`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ ...formData, ...utms })
       });
       
       const data = await response.json();

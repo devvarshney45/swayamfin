@@ -125,3 +125,57 @@ exports.updateLeadStatus = async (req, res) => {
     res.status(500).json({ success: false, message: 'Could not update lead.' });
   }
 };
+
+/**
+ * Gets all leads for Super Admin (global view)
+ */
+exports.getAllLeads = async (req, res) => {
+  try {
+    const { status, loanType, city } = req.query;
+    const query = {};
+    if (status) query.status = status;
+    if (loanType) query.loanType = loanType;
+    if (city) query.city = new RegExp(city, 'i');
+
+    const leads = await Lead.find(query)
+      .populate('assignedBranch')
+      .populate('assignedAgent', 'name email')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ success: true, count: leads.length, data: leads });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+/**
+ * Gets lead statistics for Admin Dashboard
+ */
+exports.getLeadStats = async (req, res) => {
+  try {
+    const totalLeads = await Lead.countDocuments();
+    const statusStats = await Lead.aggregate([
+      { $group: { _id: '$status', count: { $sum: 1 } } }
+    ]);
+    const loanTypeStats = await Lead.aggregate([
+      { $group: { _id: '$loanType', count: { $sum: 1 } } }
+    ]);
+    const cityStats = await Lead.aggregate([
+      { $group: { _id: '$city', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }
+    ]);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        totalLeads,
+        statusStats,
+        loanTypeStats,
+        cityStats
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};

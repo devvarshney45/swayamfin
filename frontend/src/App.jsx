@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Hero from './components/Hero';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
@@ -8,24 +8,95 @@ import MSMELoans from './pages/MSMELoans';
 import SupplyChain from './pages/SupplyChain';
 import LAP from './pages/LAP';
 import Housing from './pages/Housing';
+import Login from './pages/Login';
+import About from './pages/About';
+import Team from './pages/Team';
+import Process from './pages/Process';
+import Contact from './pages/Contact';
+import Partner from './pages/Partner';
+import Branches from './pages/Branches';
+import Compliance from './pages/Compliance';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Grievance from './pages/Grievance';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminLeads from './pages/admin/AdminLeads';
+import AdminAgents from './pages/admin/AdminAgents';
+import AdLandingPage from './pages/AdLandingPage';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/common/ProtectedRoute';
+
+const AppContent = () => {
+  const location = useLocation();
+  const isLandingPage = location.pathname.startsWith('/lp/');
+
+  return (
+    <div className="flex flex-col min-h-screen font-inter">
+      {!isLandingPage && <Navbar />}
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<Hero />} />
+          <Route path="/msme-loans" element={<MSMELoans />} />
+          <Route path="/lap" element={<LAP />} />
+          <Route path="/housing" element={<Housing />} />
+          <Route path="/supply-chain" element={<SupplyChain />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/process" element={<Process />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/become-a-partner" element={<Partner />} />
+          <Route path="/branches" element={<Branches />} />
+          <Route path="/compliance" element={<Compliance />} />
+          <Route path="/privacy-policy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/grievance" element={<Grievance />} />
+          <Route path="/agent/login" element={<Login />} />
+          <Route path="/lp/:slug" element={<AdLandingPage />} />
+          <Route 
+            path="/agent/dashboard" 
+            element={
+              <ProtectedRoute>
+                <AgentDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/dashboard" 
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/leads" 
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminLeads />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/agents" 
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminAgents />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </main>
+      {!isLandingPage && <Footer />}
+    </div>
+  );
+};
 
 function App() {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Hero />} />
-            <Route path="/msme-loans" element={<MSMELoans />} />
-            <Route path="/lap" element={<LAP />} />
-            <Route path="/housing" element={<Housing />} />
-            <Route path="/supply-chain" element={<SupplyChain />} />
-            <Route path="/agent/dashboard" element={<AgentDashboard />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </Router>
   );
 }
