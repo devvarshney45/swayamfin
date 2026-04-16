@@ -1,11 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Navigation2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Branches = () => {
   const branches = [
     {
       city: "New Delhi (Head Office)",
+      slug: "delhi",
       address: "619, Somdutt Chambers II, Bhikaji Cama, New Delhi – 110066",
       phone: "+91 87009 65592",
       email: "delhi@swayamfin.com",
@@ -13,6 +15,7 @@ const Branches = () => {
     },
     {
       city: "Gurugram",
+      slug: "gurgaon",
       address: "Sector 44, Near Huda City Center, Gurugram, Haryana - 122003",
       phone: "+91 87009 65592",
       email: "gurgaon@swayamfin.com",
@@ -20,6 +23,7 @@ const Branches = () => {
     },
     {
       city: "Agra",
+      slug: "agra",
       address: "Sanjay Place, Civil Lines, Agra, Uttar Pradesh - 282002",
       phone: "+91 0562-400XXXX",
       email: "agra@swayamfin.com",
@@ -51,10 +55,10 @@ const Branches = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="bg-white rounded-[40px] shadow-fintech border border-slate-100 overflow-hidden flex flex-col lg:flex-row"
+              className="group bg-white rounded-[40px] shadow-fintech border border-slate-100 overflow-hidden flex flex-col lg:flex-row hover:shadow-2xl hover:shadow-primary-blue/5 transition-all duration-500"
             >
               <div className="lg:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-                <div className="inline-flex items-center gap-2 bg-blue-50 text-primary-blue px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
+                <div className="inline-flex items-center gap-2 bg-blue-50 text-primary-blue px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider mb-6">
                   <MapPin className="w-4 h-4" /> 
                   Physical Branch
                 </div>

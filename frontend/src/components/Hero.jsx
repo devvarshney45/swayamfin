@@ -75,6 +75,8 @@ const Hero = () => {
       if (response.ok) {
         setSubmitStatus('success');
         setFormData({ fullName: '', mobile: '', loanType: 'MSME', amount: '', city: '' });
+      } else if (response.status === 409) {
+        setSubmitStatus('duplicate');
       } else {
         console.error('Server error:', data.message);
         setSubmitStatus('error');
@@ -225,10 +227,17 @@ const Hero = () => {
                       Your application was received successfully!
                     </div>
                   )}
+                  {submitStatus === 'duplicate' && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-700">
+                      <AlertCircle className="w-5 h-5" />
+                      <p className="text-xs font-bold leading-tight">You've already submitted a request. Our team is already processing it!</p>
+                    </motion.div>
+                  )}
                   {submitStatus === 'error' && (
-                    <div className="p-3 mb-3 bg-red-50 text-red-600 border border-red-200 rounded-lg text-sm text-center font-semibold">
-                      An error occurred. Make sure your details are unique.
-                    </div>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700">
+                      <AlertCircle className="w-5 h-5" />
+                      <p className="text-xs font-bold">Something went wrong. Please call us directly.</p>
+                    </motion.div>
                   )}
 
                   <motion.button
