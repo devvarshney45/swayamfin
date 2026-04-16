@@ -28,7 +28,7 @@ exports.createLead = async (req, res) => {
     let assignedAgent = null;    
     
     // Exact mapping logic checking MongoDB for nearest city and finding agent with oldest 'lastAssigned'
-    const branch = await Branch.findOne({ city: new RegExp(city, 'i') });
+    const branch = await Branch.findOne({ city: new RegExp(`^${city.trim()}$`, 'i') });
     if (branch) {
        assignedBranch = branch._id;
        const nextAgent = await User.findOne({ branch: branch._id, role: 'Agent' }).sort({ lastAssigned: 1 });
@@ -45,7 +45,7 @@ exports.createLead = async (req, res) => {
       mobile,
       loanType,
       amount,
-      city,
+      city: city.trim(),
       assignedBranch,
       assignedAgent,
       utm_source,
@@ -69,8 +69,7 @@ exports.createLead = async (req, res) => {
  */
 exports.getTodaysLeads = async (req, res) => {
   try {
-    // Note: Assuming req.user._id is populated via authentication middleware
-    const agentId = req.user ? req.user._id : null; 
+    const agentId = req.user ? req.user.id : null; 
     
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);

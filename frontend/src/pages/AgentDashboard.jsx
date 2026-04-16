@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, CheckCircle, Clock, Search, ChevronRight } from 'lucide-react';
+import { Phone, CheckCircle, Clock, Search, ChevronRight, LogOut } from 'lucide-react';
 
 const AgentDashboard = () => {
   const [leads, setLeads] = useState([]);
@@ -10,8 +10,13 @@ const AgentDashboard = () => {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
+        const token = localStorage.getItem('swayamfin_token');
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-        const response = await fetch(`${apiUrl}/api/leads/today`);
+        const response = await fetch(`${apiUrl}/api/leads/today`, {
+          headers: { 
+            'Authorization': `Bearer ${token}` 
+          }
+        });
         const result = await response.json();
         if (result.success) {
           setLeads(result.data);
@@ -25,6 +30,12 @@ const AgentDashboard = () => {
     fetchLeads();
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem('swayamfin_token');
+    localStorage.removeItem('swayamfin_user');
+    window.location.href = '/agent/login';
+  };
+
   const getStatusColor = (status) => {
     switch(status) {
       case 'Fresh': return 'bg-blue-100 text-primary-darkBlue';
@@ -36,10 +47,14 @@ const AgentDashboard = () => {
 
   const updateStatus = async (id, newStatus) => {
     try {
+      const token = localStorage.getItem('swayamfin_token');
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const response = await fetch(`${apiUrl}/api/leads/${id}/status`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ status: newStatus })
       });
       if (response.ok) {
@@ -59,9 +74,12 @@ const AgentDashboard = () => {
             <h1 className="text-xl font-bold">Agent Portal</h1>
             <p className="text-primary-lightBlue text-sm">Welcome back, Agent</p>
           </div>
-          <div className="w-10 h-10 rounded-full bg-primary-blue flex justify-center items-center font-bold shadow-inner">
-            A
-          </div>
+          <button 
+            onClick={handleLogout}
+            className="w-10 h-10 rounded-full bg-red-500/20 text-white flex justify-center items-center font-bold shadow-inner hover:bg-red-500 transition-colors"
+          >
+            <LogOut className="w-5 h-5" />
+          </button>
         </div>
         
         {/* Search Bar */}

@@ -11,7 +11,8 @@ import {
   ChevronRight,
   ArrowUpRight,
   TrendingDown,
-  LayoutDashboard
+  LayoutDashboard,
+  Zap
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 

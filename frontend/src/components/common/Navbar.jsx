@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { AreaChart, MessageCircle, PhoneCall, User } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { AreaChart, MessageCircle, PhoneCall, User, LogOut, LayoutDashboard } from 'lucide-react';
 
 const Navbar = () => {
+  const { user, logout } = useAuth();
+
   return (
     <>
       <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm sticky top-0 z-50">
@@ -32,13 +35,33 @@ const Navbar = () => {
                 <span>Support</span>
               </a>
 
-              <Link to="/agent/login" className="px-5 py-2.5 rounded-full bg-primary-darkBlue text-white font-black hover:bg-primary-blue transition shadow-xl shadow-primary-blue/20">
-                PARTNER LOGIN
-              </Link>
+              {user ? (
+                <div className="flex items-center gap-3">
+                  <Link 
+                    to={user.role === 'Admin' ? '/admin/dashboard' : '/agent/dashboard'} 
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-50 text-primary-darkBlue hover:bg-slate-100 transition border border-slate-200"
+                  >
+                    <LayoutDashboard className="w-4 h-4" /> DASHBOARD
+                  </Link>
+                  <button 
+                    onClick={() => {
+                      logout();
+                      window.location.href = '/agent/login';
+                    }}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-red-500 hover:bg-red-50 transition font-black"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <Link to="/agent/login" className="px-5 py-2.5 rounded-full bg-primary-darkBlue text-white font-black hover:bg-primary-blue transition shadow-xl shadow-primary-blue/20">
+                  PARTNER LOGIN
+                </Link>
+              )}
             </div>
 
             {/* Mobile Partner Icon */}
-            <Link to="/agent/login" className="md:hidden p-2 bg-slate-50 rounded-xl text-primary-darkBlue">
+            <Link to={user ? (user.role === 'Admin' ? '/admin/dashboard' : '/agent/dashboard') : '/agent/login'} className="md:hidden p-2 bg-slate-50 rounded-xl text-primary-darkBlue">
                <User className="w-6 h-6 fill-current" />
             </Link>
             
