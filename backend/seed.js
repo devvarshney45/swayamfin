@@ -21,8 +21,9 @@ const seedData = async () => {
       { name: 'Swayamfin Agra Post', city: 'Agra' }
     ]);
     
-    // Insert 6 Agents (2 per branch)
+    // Insert Admin & 6 Agents (2 per branch)
     await User.insertMany([
+      { name: 'Swayamfin Admin', email: 'admin@swayamfin.com', password: 'Admin@123', role: 'Admin' },
       { name: 'Amit Sharma', email: 'amit@swayamfin.com', password: 'Swayamfin@123', role: 'Agent', branch: branches[0]._id, lastAssigned: Date.now() },
       { name: 'Priya Gupta', email: 'priya@swayamfin.com', password: 'Swayamfin@123', role: 'Agent', branch: branches[0]._id, lastAssigned: Date.now() - 1000 },
       { name: 'Rahul Desai', email: 'rahul@swayamfin.com', password: 'Swayamfin@123', role: 'Agent', branch: branches[1]._id, lastAssigned: Date.now() },
