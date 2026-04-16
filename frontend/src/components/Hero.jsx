@@ -24,6 +24,22 @@ const useCountUp = (end, duration = 2000) => {
 };
 
 const Hero = () => {
+  const headlines = [
+    { main: "Empowering You for", highlight: "Financial Success", sub: "Fast Loans for Growing Businesses" },
+    { main: "Working Capital When", highlight: "You Need It Most", sub: "Apply in 5 Minutes" },
+    { main: "Your Dream Home is", highlight: "Closer Than You Think", sub: "Affordable Housing Loans" }
+  ];
+
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIdx((prev) => (prev + 1) % headlines.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const totalDisbursements = useCountUp(125); // ₹125 Cr+
   const clientsCount = useCountUp(750);
   const loansCount = useCountUp(350);
 
@@ -71,41 +87,53 @@ const Hero = () => {
 
   return (
     <div className="relative bg-primary-lightBlue min-h-screen flex items-center justify-center overflow-hidden py-16">
-      {/* Background Graphic Elements */}
       <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 bg-primary-darkBlue rounded-l-[100px] transform skew-x-12 translate-x-32" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           {/* Left Text Side */}
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-primary-darkBlue text-sm font-semibold mb-6 shadow-sm">
-              <ShieldCheck className="w-5 h-5 text-success-green" />
+          <motion.div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-primary-darkBlue text-xs font-black uppercase tracking-widest mb-6 shadow-sm ring-1 ring-slate-100">
+              <ShieldCheck className="w-4 h-4 text-success-green" />
               RBI Compliant LSP Platform
             </div>
             
-            <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
-              Unlock Your <span className="text-primary-blue">Financial</span> Growth Instantly.
-            </h1>
-            
-            <p className="text-lg text-gray-700 mb-10 max-w-lg">
-              Swayamfin simplifies loan processing with intelligent matching, zero hassle, and real-time approvals for personal and business needs.
-            </p>
+            <div className="h-[220px] md:h-[180px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentIdx}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="space-y-4"
+                >
+                  <h1 className="text-5xl md:text-6xl font-black text-gray-900 leading-[1.1]">
+                    {headlines[currentIdx].main} <br />
+                    <span className="text-primary-blue">{headlines[currentIdx].highlight}</span>.
+                  </h1>
+                  <p className="text-xl text-gray-600 font-medium">
+                    {headlines[currentIdx].sub}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
 
             {/* Statistics Bar */}
-            <div className="flex gap-8">
+            <div className="flex gap-8 mt-12 bg-white/50 backdrop-blur-sm p-6 rounded-[32px] inline-flex border border-white/50">
               <div className="flex flex-col">
-                <span className="text-4xl font-bold text-primary-darkBlue">{clientsCount}+</span>
-                <span className="text-gray-600 font-medium flex items-center"><Users className="w-4 h-4 mr-1" />Happy Clients</span>
+                <span className="text-3xl font-black text-primary-darkBlue">₹{totalDisbursements}Cr+</span>
+                <span className="text-slate-400 text-[10px] font-bold uppercase tracking-tighter">Disbursed</span>
               </div>
-              <div className="w-px bg-gray-300 h-12 self-center"></div>
+              <div className="w-px bg-slate-200 h-10 self-center"></div>
               <div className="flex flex-col">
-                <span className="text-4xl font-bold text-primary-darkBlue">{loansCount}+</span>
-                <span className="text-gray-600 font-medium flex items-center"><TrendingUp className="w-4 h-4 mr-1" />Loans Disbursed</span>
+                <span className="text-3xl font-black text-primary-darkBlue">{clientsCount}+</span>
+                <span className="text-slate-400 text-[10px] font-bold uppercase tracking-tighter">Happy Clients</span>
+              </div>
+              <div className="w-px bg-slate-200 h-10 self-center"></div>
+              <div className="flex flex-col">
+                <span className="text-3xl font-black text-primary-darkBlue">NBFC</span>
+                <span className="text-slate-400 text-[10px] font-bold uppercase tracking-tighter">Partners</span>
               </div>
             </div>
           </motion.div>

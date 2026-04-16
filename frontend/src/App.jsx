@@ -23,6 +23,10 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminLeads from './pages/admin/AdminLeads';
 import AdminAgents from './pages/admin/AdminAgents';
 import AdLandingPage from './pages/AdLandingPage';
+import BranchDetails from './pages/BranchDetails';
+import ServiceDetails from './pages/ServiceDetails';
+import LeadDetails from './pages/agent/LeadDetails';
+import Blog from './pages/Blog';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
@@ -36,16 +40,25 @@ const AppContent = () => {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Hero />} />
-          <Route path="/msme-loans" element={<MSMELoans />} />
-          <Route path="/lap" element={<LAP />} />
-          <Route path="/housing" element={<Housing />} />
-          <Route path="/supply-chain" element={<SupplyChain />} />
           <Route path="/about" element={<About />} />
           <Route path="/team" element={<Team />} />
           <Route path="/process" element={<Process />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/become-a-partner" element={<Partner />} />
+          
+          {/* Services Hub & Individual Pages */}
+          <Route path="/services" element={<MSMELoans />} /> {/* Temporary hub redirect */}
+          <Route path="/services/:slug" element={<ServiceDetails />} />
+          <Route path="/msme-loans" element={<ServiceDetails />} /> {/* Legacy support */}
+          <Route path="/lap" element={<ServiceDetails />} />
+          <Route path="/housing" element={<ServiceDetails />} />
+          <Route path="/supply-chain" element={<ServiceDetails />} />
+
+          {/* Branches Listing & City Pages */}
           <Route path="/branches" element={<Branches />} />
+          <Route path="/branches/:slug" element={<BranchDetails />} />
+          <Route path="/blog" element={<Blog />} />
+
           <Route path="/compliance" element={<Compliance />} />
           <Route path="/privacy-policy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
@@ -57,6 +70,14 @@ const AppContent = () => {
             element={
               <ProtectedRoute>
                 <AgentDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/agent/lead/:id" 
+            element={
+              <ProtectedRoute>
+                <LeadDetails />
               </ProtectedRoute>
             } 
           />

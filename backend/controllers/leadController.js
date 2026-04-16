@@ -127,6 +127,30 @@ exports.updateLeadStatus = async (req, res) => {
 };
 
 /**
+ * Gets a single lead by ID
+ */
+exports.getLeadById = async (req, res) => {
+  try {
+    const lead = await Lead.findById(req.params.id)
+      .populate('assignedBranch')
+      .populate('assignedAgent', 'name email');
+
+    if (!lead) {
+      return res.status(404).json({ success: false, message: 'Lead not found' });
+    }
+
+    // Security: Check if agent is assigned or user is admin
+    if (req.user.role !== 'Admin' && lead.assignedAgent?._id.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+
+    res.status(200).json(lead);
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+/**
  * Gets all leads for Super Admin (global view)
  */
 exports.getAllLeads = async (req, res) => {
