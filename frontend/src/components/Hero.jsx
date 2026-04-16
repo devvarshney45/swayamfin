@@ -88,33 +88,34 @@ const Hero = () => {
   };
 
   return (
-    <div className="relative bg-primary-lightBlue min-h-screen flex items-center justify-center overflow-hidden py-16">
+    <div className="relative bg-primary-lightBlue min-h-screen flex items-center justify-center overflow-hidden pt-8 pb-16">
       <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 bg-primary-darkBlue rounded-l-[100px] transform skew-x-12 translate-x-32" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full mt-[-20px] md:mt-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center lg:items-start pt-12">
           
           {/* Left Text Side */}
-          <motion.div>
+          <motion.div className="lg:pt-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-primary-darkBlue text-xs font-black uppercase tracking-widest mb-6 shadow-sm ring-1 ring-slate-100">
               <ShieldCheck className="w-4 h-4 text-success-green" />
               RBI Compliant LSP Platform
             </div>
             
-            <div className="h-[220px] md:h-[180px]">
+            <div className="min-h-[280px] md:min-h-[200px] flex flex-col justify-start">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentIdx}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="space-y-4"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.5 }}
+                  className="space-y-6"
                 >
-                  <h1 className="text-5xl md:text-6xl font-black text-gray-900 leading-[1.1]">
+                  <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-[1.1]">
                     {headlines[currentIdx].main} <br />
                     <span className="text-primary-blue">{headlines[currentIdx].highlight}</span>.
                   </h1>
-                  <p className="text-xl text-gray-600 font-medium">
+                  <p className="text-lg md:text-xl text-gray-600 font-medium max-w-lg">
                     {headlines[currentIdx].sub}
                   </p>
                 </motion.div>

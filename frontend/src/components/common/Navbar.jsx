@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { AreaChart, MessageCircle, PhoneCall, Zap } from 'lucide-react';
+import { AreaChart, MessageCircle, PhoneCall, User } from 'lucide-react';
 
 const Navbar = () => {
   return (
@@ -33,13 +33,13 @@ const Navbar = () => {
               </a>
 
               <Link to="/agent/login" className="px-5 py-2.5 rounded-full bg-primary-darkBlue text-white font-black hover:bg-primary-blue transition shadow-xl shadow-primary-blue/20">
-                AGENT PORTAL
+                PARTNER LOGIN
               </Link>
             </div>
 
-            {/* Mobile Agent Icon */}
+            {/* Mobile Partner Icon */}
             <Link to="/agent/login" className="md:hidden p-2 bg-slate-50 rounded-xl text-primary-darkBlue">
-               <Zap className="w-6 h-6 fill-current" />
+               <User className="w-6 h-6 fill-current" />
             </Link>
             
           </div>

@@ -11,7 +11,8 @@ import {
   Shield, 
   X,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Pencil
 } from 'lucide-react';
 
 const AdminAgents = () => {
@@ -21,6 +22,8 @@ const AdminAgents = () => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', password: '', branch: '', role: 'Agent' });
   const [notification, setNotification] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -43,19 +46,40 @@ const AdminAgents = () => {
     }
   };
 
+  const handleEdit = (agent) => {
+    setEditMode(true);
+    setEditingId(agent._id);
+    setFormData({
+      name: agent.name,
+      email: agent.email,
+      password: '', // Leave blank for security
+      branch: agent.branch?._id || '',
+      role: agent.role
+    });
+    setShowModal(true);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('swayamfin_token');
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/users`, formData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setNotification({ type: 'success', message: 'Agent added successfully!' });
+      const headers = { Authorization: `Bearer ${token}` };
+      
+      if (editMode) {
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/users/${editingId}`, formData, { headers });
+        setNotification({ type: 'success', message: 'Agent updated successfully!' });
+      } else {
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/users`, formData, { headers });
+        setNotification({ type: 'success', message: 'Agent added successfully!' });
+      }
+      
       setShowModal(false);
+      setEditMode(false);
+      setEditingId(null);
       setFormData({ name: '', email: '', password: '', branch: '', role: 'Agent' });
       fetchData();
     } catch (err) {
-      setNotification({ type: 'error', message: err.response?.data?.message || 'Failed to add agent' });
+      setNotification({ type: 'error', message: err.response?.data?.message || 'Action failed' });
     }
   };
 
@@ -93,7 +117,11 @@ const AdminAgents = () => {
             <p className="text-slate-500 font-medium italic">Manage your team and branch assignments.</p>
           </div>
           <button 
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              setEditMode(false);
+              setFormData({ name: '', email: '', password: '', branch: '', role: 'Agent' });
+              setShowModal(true);
+            }}
             className="bg-primary-blue text-white px-8 py-3.5 rounded-2xl font-bold flex items-center gap-2 shadow-xl shadow-primary-blue/20 hover:scale-105 transition-all"
           >
             <Plus className="w-5 h-5" /> Add New Agent
@@ -126,12 +154,20 @@ const AdminAgents = () => {
               transition={{ delay: i * 0.05 }}
               className="bg-white rounded-[32px] p-8 shadow-fintech border border-slate-100 group relative hover:border-primary-blue transition-all"
             >
-              <button 
-                onClick={() => handleDelete(agent._id)}
-                className="absolute top-6 right-6 p-2 text-slate-300 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-all active:scale-95"
-              >
-                <Trash2 className="w-5 h-5" />
-              </button>
+              <div className="absolute top-6 right-6 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                <button 
+                  onClick={() => handleEdit(agent)}
+                  className="p-2 text-slate-300 hover:text-primary-blue active:scale-95"
+                >
+                  <Pencil className="w-5 h-5" />
+                </button>
+                <button 
+                  onClick={() => handleDelete(agent._id)}
+                  className="p-2 text-slate-300 hover:text-red-600 active:scale-95"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              </div>
               
               <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 mb-6 group-hover:bg-primary-blue group-hover:text-white transition-all">
                 <Shield className="w-8 h-8" />
@@ -178,7 +214,9 @@ const AdminAgents = () => {
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary-blue/5 rounded-full translate-x-1/2 -translate-y-1/2" />
                 
-                <h2 className="text-2xl font-extrabold text-slate-900 mb-8">Add New Personnel</h2>
+                <h2 className="text-2xl font-extrabold text-slate-900 mb-8">
+                  {editMode ? 'Edit Personnel' : 'Add New Personnel'}
+                </h2>
                 
                 <form onSubmit={handleSubmit} className="space-y-5 relative">
                   <div>
@@ -240,7 +278,7 @@ const AdminAgents = () => {
                       type="submit"
                       className="flex-1 py-4 bg-primary-blue text-white font-extrabold rounded-2xl shadow-xl shadow-primary-blue/20 hover:scale-105 transition-all"
                     >
-                      Confirm Add
+                      {editMode ? 'Update Details' : 'Confirm Add'}
                     </button>
                   </div>
                 </form>

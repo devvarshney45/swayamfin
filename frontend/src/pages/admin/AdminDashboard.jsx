@@ -99,6 +99,7 @@ const AdminDashboard = () => {
           ))}
         </div>
 
+        {/* Quick Actions & Hotspots */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Status Breakdown */}
@@ -133,27 +134,53 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Top Cities */}
-          <div className="bg-primary-darkBlue rounded-[32px] shadow-2xl p-8 text-white relative overflow-hidden">
-             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-             <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
-                <MapPin className="text-primary-lightBlue w-5 h-5" />
-                Hotspots
-             </h3>
-             <ul className="space-y-6">
-                {stats?.cityStats?.map((city, i) => (
-                  <li key={i} className="flex justify-between items-center group cursor-pointer hover:bg-white/5 p-2 -mx-2 rounded-xl transition-all">
-                    <div>
-                      <div className="font-bold text-white capitalize">{city._id}</div>
-                      <div className="text-xs text-blue-300">Active Market</div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                       <span className="font-extrabold text-primary-lightBlue">{city.count}</span>
-                       <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-white transition-colors" />
-                    </div>
-                  </li>
-                ))}
-             </ul>
+          {/* Quick Actions sidebar-style */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-[32px] shadow-fintech border border-slate-100 p-8">
+              <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <Zap className="text-amber-500 w-5 h-5" />
+                Quick Actions
+              </h3>
+              <div className="space-y-3">
+                <button 
+                  onClick={() => window.location.href = '/admin/agents'}
+                  className="w-full flex items-center justify-between p-4 bg-slate-50 hover:bg-primary-blue hover:text-white rounded-2xl transition-all group"
+                >
+                  <span className="font-bold text-sm">Add New Agent</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-white" />
+                </button>
+                <button 
+                  onClick={() => window.location.href = '/admin/leads'}
+                  className="w-full flex items-center justify-between p-4 bg-slate-50 hover:bg-primary-blue hover:text-white rounded-2xl transition-all group"
+                >
+                  <span className="font-bold text-sm">View All Leads</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-white" />
+                </button>
+              </div>
+            </div>
+
+            {/* Top Cities */}
+            <div className="bg-primary-darkBlue rounded-[32px] shadow-2xl p-8 text-white relative overflow-hidden">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+               <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
+                  <MapPin className="text-primary-lightBlue w-5 h-5" />
+                  Hotspots
+               </h3>
+               <ul className="space-y-6">
+                  {stats?.cityStats?.map((city, i) => (
+                    <li key={i} className="flex justify-between items-center group cursor-pointer hover:bg-white/5 p-2 -mx-2 rounded-xl transition-all">
+                      <div>
+                        <div className="font-bold text-white capitalize">{city._id}</div>
+                        <div className="text-xs text-blue-300">Active Market</div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                         <span className="font-extrabold text-primary-lightBlue">{city.count}</span>
+                         <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-white transition-colors" />
+                      </div>
+                    </li>
+                  ))}
+               </ul>
+            </div>
           </div>
 
         </div>
