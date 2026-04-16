@@ -7,7 +7,7 @@ const User = require('../models/User');
  */
 exports.createLead = async (req, res) => {
   try {
-    const { fullName, mobile, loanType, amount, city, utm_source, utm_medium, utm_campaign } = req.body;
+    const { fullName, mobile, email, loanType, amount, city, utm_source, utm_medium, utm_campaign } = req.body;
 
     // 1. Lead Deduplication
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
@@ -43,6 +43,7 @@ exports.createLead = async (req, res) => {
     const newLead = await Lead.create({
       fullName,
       mobile,
+      email,
       loanType,
       amount,
       city: city.trim(),

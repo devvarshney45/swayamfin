@@ -12,6 +12,11 @@ const leadSchema = new mongoose.Schema({
     trim: true,
     match: [/^\d{10}$/, 'Mobile number must be 10 digits'],
   },
+  email: {
+    type: String,
+    trim: true,
+    lowercase: true,
+  },
   loanType: {
     type: String,
     required: [true, 'Loan type is required'],

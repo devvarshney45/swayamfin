@@ -46,6 +46,7 @@ const Hero = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     mobile: '',
+    email: '',
     loanType: 'MSME',
     amount: '',
     city: ''
@@ -74,7 +75,7 @@ const Hero = () => {
       
       if (response.ok) {
         setSubmitStatus('success');
-        setFormData({ fullName: '', mobile: '', loanType: 'MSME', amount: '', city: '' });
+        setFormData({ fullName: '', mobile: '', email: '', loanType: 'MSME', amount: '', city: '' });
       } else if (response.status === 409) {
         setSubmitStatus('duplicate');
       } else {
@@ -180,7 +181,15 @@ const Hero = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                <input 
+                  type="email"
+                  className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-primary-blue transition-all font-bold placeholder:text-slate-300"
+                  placeholder="Email Address (Optional)"
+                  value={formData.email}
+                  onChange={e => setFormData({...formData, email: e.target.value})}
+                />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Loan Type</label>
                       <select 

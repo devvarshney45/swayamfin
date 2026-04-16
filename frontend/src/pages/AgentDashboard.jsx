@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, CheckCircle, Clock, Search, ChevronRight, LogOut } from 'lucide-react';
+import { Phone, CheckCircle, Clock, Search, ChevronRight, LogOut, Mail, MapPin, CheckCircle2 } from 'lucide-react';
 
 const AgentDashboard = () => {
   const [leads, setLeads] = useState([]);
@@ -117,7 +117,13 @@ const AgentDashboard = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-bold text-gray-900">{lead.fullName}</h3>
-                    <p className="text-sm text-gray-500 font-medium">{lead.loanType} • ₹{(lead.amount/100000).toFixed(1)}L</p>
+                    <div className="flex flex-col gap-1 mt-1">
+                      <p className="text-sm text-gray-500 font-medium">{lead.loanType} • ₹{(lead.amount/100000).toFixed(1)}L</p>
+                      <div className="flex items-center gap-2 text-xs text-slate-400 font-bold">
+                        <MapPin className="w-3 h-3" /> {lead.city}
+                        {lead.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3 ml-1" /> {lead.email}</span>}
+                      </div>
+                    </div>
                   </div>
                   <span className={`px-2 py-1 rounded-md text-xs font-bold ${getStatusColor(lead.status)}`}>
                     {lead.status}
@@ -131,9 +137,15 @@ const AgentDashboard = () => {
                     </a>
                     <button 
                       onClick={() => updateStatus(lead._id, 'Qualified')}
-                      className="flex items-center justify-center bg-green-50 hover:bg-green-100 text-success-green px-3 py-2 rounded-lg transition"
+                      disabled={lead.status === 'Qualified'}
+                      className={`flex items-center justify-center px-3 py-2 rounded-lg transition ${
+                        lead.status === 'Qualified' 
+                          ? 'bg-green-100 text-success-green cursor-default' 
+                          : 'bg-green-50 hover:bg-green-100 text-success-green'
+                      }`}
                     >
-                      <CheckCircle className="w-4 h-4 mr-1"/> Qualify
+                      {lead.status === 'Qualified' ? <CheckCircle2 className="w-4 h-4 mr-1"/> : <CheckCircle className="w-4 h-4 mr-1"/>}
+                      {lead.status === 'Qualified' ? 'Qualified' : 'Qualify'}
                     </button>
                   </div>
                   <button className="text-gray-400 hover:text-primary-blue transition">

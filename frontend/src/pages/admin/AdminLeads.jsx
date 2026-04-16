@@ -12,7 +12,8 @@ import {
   Clock,
   User,
   MapPin,
-  ExternalLink
+  ExternalLink,
+  Mail
 } from 'lucide-react';
 
 const AdminLeads = () => {
@@ -141,6 +142,11 @@ const AdminLeads = () => {
                         <div className="flex items-center gap-1.5 text-slate-400 font-bold text-xs">
                           <Phone className="w-3 h-3" /> {lead.mobile}
                         </div>
+                        {lead.email && (
+                          <div className="flex items-center gap-1.5 text-primary-blue/60 font-medium text-[10px] mt-0.5 lowercase">
+                            <Mail className="w-2.5 h-2.5" /> {lead.email}
+                          </div>
+                        )}
                       </td>
                       <td className="px-6 py-5">
                         <div className="text-slate-900 font-bold text-[13px] capitalize">{lead.loanType.replace('-', ' ')}</div>

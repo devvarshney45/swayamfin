@@ -12,6 +12,7 @@ const AdLandingPage = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     mobile: '',
+    email: '',
     loanType: slug || 'MSME Loan',
     amount: '5L-25L',
     city: ''
@@ -132,6 +133,13 @@ const AdLandingPage = () => {
                 placeholder="10-Digit Mobile Number"
                 value={formData.mobile}
                 onChange={e => setFormData({...formData, mobile: e.target.value})}
+              />
+              <input 
+                type="email"
+                className="w-full px-6 py-4.5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-blue focus:bg-white transition-all outline-none font-bold placeholder:text-slate-300"
+                placeholder="Email Address (Optional)"
+                value={formData.email}
+                onChange={e => setFormData({...formData, email: e.target.value})}
               />
               <input 
                 required
