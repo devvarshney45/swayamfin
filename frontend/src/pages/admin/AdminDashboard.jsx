@@ -15,6 +15,7 @@ import {
   Zap
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { downloadLeadsAsCSV } from '../../utils/exportUtils';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -36,6 +37,26 @@ const AdminDashboard = () => {
       console.error('Failed to fetch stats', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDownloadCSV = async () => {
+    try {
+      const token = localStorage.getItem('swayamfin_token');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/leads/all`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      downloadLeadsAsCSV(res.data.data);
+    } catch (err) {
+      console.error('Export failed', err);
+      alert('Failed to export data');
+    }
+  };
+
+  const scrollToFilters = () => {
+    const section = document.getElementById('status-breakdown');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -66,10 +87,16 @@ const AdminDashboard = () => {
             <p className="text-slate-500 font-medium italic">Welcome back, Super Admin {user?.name}</p>
           </div>
           <div className="flex gap-3">
-            <button className="px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-600 font-bold shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2">
+            <button 
+              onClick={scrollToFilters}
+              className="px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-600 font-bold shadow-sm hover:bg-slate-50 transition-all flex items-center gap-2"
+            >
               <Filter className="w-4 h-4" /> Filters
             </button>
-            <button className="px-5 py-2.5 bg-primary-blue text-white rounded-xl font-bold shadow-lg shadow-primary-blue/20 hover:bg-primary-darkBlue transition-all flex items-center gap-2">
+            <button 
+              onClick={handleDownloadCSV}
+              className="px-5 py-2.5 bg-primary-blue text-white rounded-xl font-bold shadow-lg shadow-primary-blue/20 hover:bg-primary-darkBlue transition-all flex items-center gap-2"
+            >
                Download CSV
             </button>
           </div>
@@ -104,7 +131,7 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Status Breakdown */}
-          <div className="lg:col-span-2 bg-white rounded-[32px] shadow-fintech border border-slate-100 p-8">
+          <div id="status-breakdown" className="lg:col-span-2 bg-white rounded-[32px] shadow-fintech border border-slate-100 p-8">
             <div className="flex justify-between items-center mb-8">
               <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                  <BarIcon className="text-primary-blue w-5 h-5" />

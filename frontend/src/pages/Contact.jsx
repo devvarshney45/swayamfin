@@ -26,9 +26,9 @@ const Contact = () => {
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
-                { icon: Phone, title: 'Call Us', detail: '+91 87009 65592', detail2: '011-44728117', color: 'bg-blue-50 text-primary-blue' },
+                { icon: Phone, title: 'Call Us', detail: '+91 6397003690', detail2: '011-44728117', color: 'bg-blue-50 text-primary-blue' },
                 { icon: Mail, title: 'Email Us', detail: 'info@swayamfin.com', detail2: 'support@swayamfin.com', color: 'bg-indigo-50 text-indigo-600' },
-                { icon: MessageSquare, title: 'WhatsApp', detail: 'Chat with an Expert', detail2: '+91 87009 65592', color: 'bg-green-50 text-green-600' },
+                { icon: MessageSquare, title: 'WhatsApp', detail: 'Chat with an Expert', detail2: '+91 6397003690', color: 'bg-green-50 text-green-600' },
                 { icon: Clock, title: 'Office Hours', detail: 'Mon - Sat', detail2: '09:00 AM - 07:00 PM', color: 'bg-orange-50 text-orange-600' }
               ].map((item, i) => (
                 <motion.div 

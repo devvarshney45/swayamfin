@@ -72,7 +72,7 @@ const AdLandingPage = () => {
           </div>
           <div className="hidden md:flex items-center gap-3 bg-blue-50 px-5 py-2 rounded-full border border-blue-100">
              <PhoneCall className="w-4 h-4 text-primary-blue" />
-             <span className="text-sm font-bold text-primary-darkBlue">+91 87009 65592</span>
+             <span className="text-sm font-bold text-primary-darkBlue">+91 6397003690</span>
           </div>
         </div>
       </nav>

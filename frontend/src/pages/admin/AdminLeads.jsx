@@ -15,6 +15,7 @@ import {
   ExternalLink,
   Mail
 } from 'lucide-react';
+import { downloadLeadsAsCSV } from '../../utils/exportUtils';
 
 const AdminLeads = () => {
   const [leads, setLeads] = useState([]);
@@ -66,7 +67,10 @@ const AdminLeads = () => {
             <h1 className="text-3xl font-extrabold text-slate-900 mb-1">Lead Management</h1>
             <p className="text-slate-500 font-medium italic">Master database of all incoming loan enquiries.</p>
           </div>
-          <button className="bg-primary-darkBlue text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:scale-105 transition-all shadow-lg">
+          <button 
+            onClick={() => downloadLeadsAsCSV(leads)}
+            className="bg-primary-darkBlue text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:scale-105 transition-all shadow-lg"
+          >
              <Download className="w-5 h-5" /> Export All Data
           </button>
         </div>

@@ -30,7 +30,7 @@ const Navbar = () => {
               
               <div className="w-px h-6 bg-slate-200" />
               
-              <a href="https://wa.me/918700965592" className="flex items-center gap-2 text-success-green hover:opacity-80 transition">
+              <a href="https://wa.me/916397003690" className="flex items-center gap-2 text-success-green hover:opacity-80 transition">
                 <MessageCircle className="w-4 h-4 fill-current" />
                 <span>Support</span>
               </a>
@@ -71,7 +71,7 @@ const Navbar = () => {
 
       {/* Mobile Sticky Bar - PRD 18.3 */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-3 z-[60] flex gap-3 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
-        <a href="https://wa.me/918700965592" className="flex-1 bg-success-green text-white flex items-center justify-center gap-2 py-3.5 rounded-2xl font-black text-sm">
+        <a href="https://wa.me/916397003690" className="flex-1 bg-success-green text-white flex items-center justify-center gap-2 py-3.5 rounded-2xl font-black text-sm">
           <MessageCircle className="w-5 h-5 fill-current" /> WHATSAPP
         </a>
         <Link to="/" className="flex-1 bg-primary-blue text-white flex items-center justify-center gap-2 py-3.5 rounded-2xl font-black text-sm">

@@ -16,7 +16,7 @@ const branchData = {
   'gurgaon': {
     city: 'Gurugram',
     address: 'Sector 44, Near Huda City Center, Gurugram, Haryana - 122003',
-    phone: '+91 87009 65592',
+    phone: '+91 6397003690',
     email: 'gurgaon@swayamfin.com',
     map: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3506.27!2d77.07!3d28.45!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDI3JzAwLjAiTiA3N8KwMDQnMTIuMCJF!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin',
     manager: 'Sandeep Singh'
@@ -24,7 +24,7 @@ const branchData = {
   'delhi': {
     city: 'New Delhi (HQ)',
     address: '619, Somdutt Chambers II, Bhikaji Cama, New Delhi – 110066',
-    phone: '+91 87009 65592',
+    phone: '+91 6397003690',
     email: 'delhi@swayamfin.com',
     map: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3504.144406563!2d77.1852!3d28.5654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDMzJzU1LjQiTiA3N8KwMTEnMDYuNyJF!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin',
     manager: 'Vikkrant Prasad'
