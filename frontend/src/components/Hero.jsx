@@ -33,6 +33,7 @@ const Hero = () => {
       if (response.ok) {
         setSubmitStatus('success');
         setFormData({ fullName: '', mobile: '', email: '', loanType: 'MSME Loan', amount: '', city: '' });
+        setTouched({ mobile: false, amount: false });
       } else if (response.status === 409) {
         setSubmitStatus('duplicate');
       } else {
@@ -116,7 +117,7 @@ const Hero = () => {
                         type="tel" 
                         placeholder="Mobile Number"
                         className={`w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 transition-all font-bold text-sm outline-none ${
-                          touched.mobile && formData.mobile.length !== 10 
+                          touched.mobile && formData.mobile.length > 0 && formData.mobile.length !== 10 
                             ? 'border-red-400 focus:border-red-500' 
                             : 'border-transparent focus:border-primary-gold'
                         }`}
@@ -129,7 +130,7 @@ const Hero = () => {
                         required
                         pattern="\d{10}"
                       />
-                      {touched.mobile && formData.mobile.length !== 10 && (
+                      {touched.mobile && formData.mobile.length > 0 && formData.mobile.length !== 10 && (
                         <span className="text-[10px] text-red-500 font-bold ml-2">Must be 10 digits</span>
                       )}
                     </div>

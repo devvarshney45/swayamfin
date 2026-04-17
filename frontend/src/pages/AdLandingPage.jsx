@@ -48,6 +48,7 @@ const AdLandingPage = () => {
       
       if (response.status === 201 || response.status === 200) {
         setSubmitStatus('success');
+        setTouched({ mobile: false });
       }
     } catch (err) {
       if (err.response && err.response.status === 409) {
@@ -147,7 +148,7 @@ const AdLandingPage = () => {
                   required
                   type="tel"
                   className={`w-full px-6 py-4.5 bg-slate-50 rounded-2xl border-2 transition-all outline-none font-bold placeholder:text-slate-300 ${
-                    touched.mobile && formData.mobile.length !== 10 
+                    touched.mobile && formData.mobile.length > 0 && formData.mobile.length !== 10 
                       ? 'border-red-400 focus:border-red-500 focus:bg-white' 
                       : 'border-transparent focus:border-primary-blue focus:bg-white'
                   }`}
@@ -160,7 +161,7 @@ const AdLandingPage = () => {
                   onBlur={() => setTouched({ ...touched, mobile: true })}
                   pattern="\d{10}"
                 />
-                {touched.mobile && formData.mobile.length !== 10 && (
+                {touched.mobile && formData.mobile.length > 0 && formData.mobile.length !== 10 && (
                   <span className="text-[10px] text-red-500 font-bold ml-2">Must be 10 digits</span>
                 )}
               </div>
