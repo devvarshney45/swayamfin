@@ -1,5 +1,27 @@
 const mongoose = require('mongoose');
 
+// Sub-schema for daily follow-up entries
+const followUpSchema = new mongoose.Schema({
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  note: {
+    type: String,
+    required: [true, 'Follow-up note is required'],
+    trim: true,
+  },
+  outcome: {
+    type: String,
+    enum: ['Interested', 'Not Reachable', 'Call Back', 'Documents Pending', 'Rejected', 'Converted', 'Other'],
+    default: 'Other',
+  },
+  addedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+}, { timestamps: true });
+
 const leadSchema = new mongoose.Schema({
   fullName: {
     type: String,
@@ -40,6 +62,7 @@ const leadSchema = new mongoose.Schema({
     type: String,
     required: [true, 'City is required'],
     trim: true,
+    enum: ['Delhi', 'Noida', 'Agra', 'Gurgaon'],
   },
   status: {
     type: String,
@@ -60,6 +83,37 @@ const leadSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+
+  // --- Extra Client Details (editable by agent) ---
+  employmentType: {
+    type: String,
+    enum: ['Salaried', 'Self-Employed', 'Business Owner', 'Professional', 'Other', ''],
+    default: '',
+  },
+  monthlyIncome: {
+    type: Number,
+    default: null,
+  },
+  businessName: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  address: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  pincode: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+
+  // --- Daily Follow-Up Logs ---
+  followUps: [followUpSchema],
+
+  // --- UTM Tracking ---
   utm_source: {
     type: String,
     trim: true,

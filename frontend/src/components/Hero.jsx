@@ -147,14 +147,23 @@ const Hero = () => {
                       required
                     />
                   </div>
-                  <input 
-                    type="text" 
-                    placeholder="Search City"
-                    className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none"
-                    value={formData.city}
-                    onChange={e => setFormData({...formData, city: e.target.value})}
-                    required
-                  />
+                  <div className="relative">
+                    <select
+                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none appearance-none cursor-pointer"
+                      value={formData.city}
+                      onChange={e => setFormData({...formData, city: e.target.value})}
+                      required
+                    >
+                      <option value="" disabled>Select City</option>
+                      <option value="Delhi">Delhi</option>
+                      <option value="Noida">Noida</option>
+                      <option value="Agra">Agra</option>
+                      <option value="Gurgaon">Gurgaon</option>
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+                       <ArrowRight className="w-4 h-4 rotate-90" />
+                    </div>
+                  </div>
                 </div>
 
                 <button

@@ -23,7 +23,7 @@ exports.createLead = async (req, res) => {
       });
     }
 
-    // 2. Round-Robin Lead Routing Setup
+    // 2. Round-Robin Lead Routing — auto-assign branch + agent
     let assignedBranch = null;   
     let assignedAgent = null;    
     
@@ -97,12 +97,12 @@ exports.getTodaysLeads = async (req, res) => {
 };
 
 /**
- * Updates status / logs call data for a lead
+ * Updates status / logs call data / extra client details for a lead
  */
 exports.updateLeadStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status, agentNotes, notes } = req.body; // Handle both notes and agentNotes
+    const { status, agentNotes, notes, employmentType, monthlyIncome, businessName, address, pincode } = req.body;
 
     const lead = await Lead.findById(id);
     
@@ -112,6 +112,11 @@ exports.updateLeadStatus = async (req, res) => {
 
     if (status) lead.status = status;
     if (agentNotes || notes) lead.agentNotes = agentNotes || notes;
+    if (employmentType !== undefined) lead.employmentType = employmentType;
+    if (monthlyIncome !== undefined) lead.monthlyIncome = monthlyIncome;
+    if (businessName !== undefined) lead.businessName = businessName;
+    if (address !== undefined) lead.address = address;
+    if (pincode !== undefined) lead.pincode = pincode;
 
     await lead.save();
 
@@ -127,13 +132,14 @@ exports.updateLeadStatus = async (req, res) => {
 };
 
 /**
- * Gets a single lead by ID
+ * Gets a single lead by ID with full populated data
  */
 exports.getLeadById = async (req, res) => {
   try {
     const lead = await Lead.findById(req.params.id)
       .populate('assignedBranch')
-      .populate('assignedAgent', 'name email');
+      .populate('assignedAgent', 'name email cityName')
+      .populate('followUps.addedBy', 'name');
 
     if (!lead) {
       return res.status(404).json({ success: false, message: 'Lead not found' });
@@ -147,6 +153,59 @@ exports.getLeadById = async (req, res) => {
     res.status(200).json(lead);
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+/**
+ * Add a daily follow-up entry to a lead
+ */
+exports.addFollowUp = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { note, outcome } = req.body;
+
+    if (!note || !note.trim()) {
+      return res.status(400).json({ success: false, message: 'Follow-up note is required.' });
+    }
+
+    const lead = await Lead.findById(id);
+    if (!lead) {
+      return res.status(404).json({ success: false, message: 'Lead not found.' });
+    }
+
+    // Security check
+    if (req.user.role !== 'Admin' && lead.assignedAgent?.toString() !== req.user.id) {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+
+    lead.followUps.push({
+      note: note.trim(),
+      outcome: outcome || 'Other',
+      addedBy: req.user.id,
+      date: new Date(),
+    });
+
+    // Auto-update status to 'Contacted' if still 'Fresh'
+    if (lead.status === 'Fresh') {
+      lead.status = 'Contacted';
+    }
+
+    await lead.save();
+
+    // Re-fetch with populated data
+    const updatedLead = await Lead.findById(id)
+      .populate('assignedBranch')
+      .populate('assignedAgent', 'name email cityName')
+      .populate('followUps.addedBy', 'name');
+
+    res.status(201).json({
+      success: true,
+      data: updatedLead,
+      message: 'Follow-up added successfully.',
+    });
+  } catch (error) {
+    console.error('Error adding follow-up:', error);
+    res.status(500).json({ success: false, message: 'Could not add follow-up.' });
   }
 };
 

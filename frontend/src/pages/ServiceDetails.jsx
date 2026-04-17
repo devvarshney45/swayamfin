@@ -330,13 +330,18 @@ const ServiceDetails = () => {
                         value={formData.mobile}
                         onChange={e => setFormData({...formData, mobile: e.target.value})}
                       />
-                      <input 
+                      <select
                         required 
-                        placeholder="City" 
-                        className="w-full px-7 py-4.5 bg-slate-50 border-2 border-transparent focus:border-primary-gold rounded-2xl outline-none font-bold text-sm text-primary-navy transition-all"
+                        className="w-full px-7 py-4.5 bg-slate-50 border-2 border-transparent focus:border-primary-gold rounded-2xl outline-none font-bold text-sm text-primary-navy transition-all appearance-none cursor-pointer"
                         value={formData.city}
                         onChange={e => setFormData({...formData, city: e.target.value})}
-                      />
+                      >
+                        <option value="" disabled>Select City</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Noida">Noida</option>
+                        <option value="Agra">Agra</option>
+                        <option value="Gurgaon">Gurgaon</option>
+                      </select>
                     </div>
                     <select 
                       className="w-full px-7 py-4.5 bg-slate-50 border-2 border-transparent focus:border-primary-gold rounded-2xl outline-none font-bold appearance-none text-primary-navy text-sm cursor-pointer transition-all"

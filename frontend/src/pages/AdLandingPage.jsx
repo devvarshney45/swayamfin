@@ -141,13 +141,18 @@ const AdLandingPage = () => {
                 value={formData.email}
                 onChange={e => setFormData({...formData, email: e.target.value})}
               />
-              <input 
+              <select
                 required
-                className="w-full px-6 py-4.5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-blue focus:bg-white transition-all outline-none font-bold placeholder:text-slate-300"
-                placeholder="City (e.g. Agra, Delhi)"
+                className="w-full px-6 py-4.5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-blue focus:bg-white transition-all outline-none font-bold text-slate-700 appearance-none cursor-pointer"
                 value={formData.city}
                 onChange={e => setFormData({...formData, city: e.target.value})}
-              />
+              >
+                <option value="" disabled>Select City</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Noida">Noida</option>
+                <option value="Agra">Agra</option>
+                <option value="Gurgaon">Gurgaon</option>
+              </select>
               <select 
                 className="w-full px-6 py-4.5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-blue focus:bg-white transition-all outline-none font-bold appearance-none text-slate-700"
                 value={formData.amount}
