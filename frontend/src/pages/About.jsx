@@ -49,7 +49,7 @@ const About = () => {
             >
               <div className="absolute inset-0 bg-gradient-to-tr from-primary-darkBlue/30 to-transparent z-10"></div>
               <img 
-                src="/Users/store/.gemini/antigravity/brain/db71988b-a180-4f56-bd8b-74a51ba29089/modern_fintech_office_india_1776392502681.png" 
+                src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200" 
                 alt="Swayamfin Corporate Office" 
                 className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700" 
               />
@@ -73,8 +73,8 @@ const About = () => {
             >
               <div className="aspect-square rounded-[64px] overflow-hidden shadow-2xl relative">
                 <img 
-                  src="/Users/store/.gemini/antigravity/brain/db71988b-a180-4f56-bd8b-74a51ba29089/modern_fintech_office_india_1776392502681.png" 
-                  alt="Modern Office" 
+                  src="https://images.unsplash.com/photo-1497366412874-3415097a27e7?auto=format&fit=crop&q=80&w=1200" 
+                  alt="Modern Office Interior" 
                   className="w-full h-full object-cover" 
                 />
                 <div className="absolute inset-0 bg-primary-navy/20 mix-blend-multiply"></div>
