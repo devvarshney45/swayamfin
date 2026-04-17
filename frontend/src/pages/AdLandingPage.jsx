@@ -7,14 +7,23 @@ import { getUTMParams } from '../utils/helpers';
 
 const AdLandingPage = () => {
   const { slug } = useParams();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState('idle'); // idle, submitting, success, duplicate, error
+  const [errorMessage, setErrorMessage] = useState('');
+  const [touched, setTouched] = useState({ mobile: false });
+
+  const loanTypeMap = {
+    'msme-loan': 'MSME Loan',
+    'lap': 'LAP',
+    'housing-loan': 'Home Loan',
+    'supply-chain': 'Supply Chain Finance'
+  };
+
   const [formData, setFormData] = useState({
     fullName: '',
     mobile: '',
     email: '',
-    loanType: slug || 'MSME Loan',
-    amount: '5L-25L',
+    loanType: loanTypeMap[slug] || 'MSME Loan',
+    amount: 500000,
     city: ''
   });
 
@@ -29,22 +38,29 @@ const AdLandingPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setSubmitStatus('submitting');
     try {
       const utms = getUTMParams();
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/leads`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/leads`, {
         ...formData,
         ...utms
       });
-      setSuccess(true);
+      
+      if (response.status === 201 || response.status === 200) {
+        setSubmitStatus('success');
+      }
     } catch (err) {
+      if (err.response && err.response.status === 409) {
+        setSubmitStatus('duplicate');
+      } else {
+        setSubmitStatus('error');
+        setErrorMessage(err.response?.data?.message || 'Server Error. Please try again.');
+      }
       console.error('Lead submission failed');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
-  if (success) {
+  if (submitStatus === 'success') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white px-4">
         <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center max-w-md">
@@ -126,14 +142,28 @@ const AdLandingPage = () => {
                 value={formData.fullName}
                 onChange={e => setFormData({...formData, fullName: e.target.value})}
               />
-              <input 
-                required
-                type="tel"
-                className="w-full px-6 py-4.5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-blue focus:bg-white transition-all outline-none font-bold placeholder:text-slate-300"
-                placeholder="10-Digit Mobile Number"
-                value={formData.mobile}
-                onChange={e => setFormData({...formData, mobile: e.target.value})}
-              />
+              <div className="flex flex-col gap-1">
+                <input 
+                  required
+                  type="tel"
+                  className={`w-full px-6 py-4.5 bg-slate-50 rounded-2xl border-2 transition-all outline-none font-bold placeholder:text-slate-300 ${
+                    touched.mobile && formData.mobile.length !== 10 
+                      ? 'border-red-400 focus:border-red-500 focus:bg-white' 
+                      : 'border-transparent focus:border-primary-blue focus:bg-white'
+                  }`}
+                  placeholder="10-Digit Mobile Number"
+                  value={formData.mobile}
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    if (val.length <= 10) setFormData({...formData, mobile: val});
+                  }}
+                  onBlur={() => setTouched({ ...touched, mobile: true })}
+                  pattern="\d{10}"
+                />
+                {touched.mobile && formData.mobile.length !== 10 && (
+                  <span className="text-[10px] text-red-500 font-bold ml-2">Must be 10 digits</span>
+                )}
+              </div>
               <input 
                 type="email"
                 className="w-full px-6 py-4.5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-blue focus:bg-white transition-all outline-none font-bold placeholder:text-slate-300"
@@ -156,20 +186,34 @@ const AdLandingPage = () => {
               <select 
                 className="w-full px-6 py-4.5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-blue focus:bg-white transition-all outline-none font-bold appearance-none text-slate-700"
                 value={formData.amount}
-                onChange={e => setFormData({...formData, amount: e.target.value})}
+                onChange={e => setFormData({...formData, amount: Number(e.target.value)})}
               >
-                <option value="Under 5L">Under ₹5 Lakhs</option>
-                <option value="5L-25L">₹5 Lakhs - ₹25 Lakhs</option>
-                <option value="25L-1Cr">₹25 Lakhs - ₹1 Crore</option>
-                <option value="1Cr+">Over ₹1 Crore</option>
+                <option value={500000}>Under ₹5 Lakhs</option>
+                <option value={1500000}>₹5 Lakhs - ₹25 Lakhs</option>
+                <option value={5000000}>₹25 Lakhs - ₹1 Crore</option>
+                <option value={10000000}>Over ₹1 Crore</option>
               </select>
               <button 
                 type="submit"
-                disabled={isSubmitting}
+                disabled={submitStatus === 'submitting'}
                 className="w-full bg-primary-blue hover:bg-primary-darkBlue text-white font-black py-5 rounded-2xl shadow-xl shadow-primary-blue/20 transition-all uppercase tracking-widest text-sm disabled:opacity-50"
               >
-                {isSubmitting ? 'Processing...' : 'APPLY NOW →'}
+                {submitStatus === 'submitting' ? 'Processing...' : 'APPLY NOW →'}
               </button>
+              
+              <AnimatePresence mode="wait">
+                {submitStatus === 'duplicate' && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-4 p-4 bg-amber-50 text-amber-700 rounded-xl text-[10px] font-black text-center border border-amber-100 uppercase tracking-widest leading-relaxed">
+                    Duplicate Entry: You have already applied with this number today.
+                  </motion.div>
+                )}
+                {submitStatus === 'error' && (
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-4 p-4 bg-red-50 text-red-600 rounded-xl text-[10px] font-black text-center border border-red-100 uppercase tracking-widest leading-relaxed">
+                    {errorMessage}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <p className="text-[10px] text-center text-slate-400 font-medium">By submitting, you agree to our <a href="/privacy-policy" className="underline">Privacy Policy</a>.</p>
             </form>
           </motion.div>

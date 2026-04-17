@@ -14,9 +14,11 @@ import CTASection from './home/CTASection';
 
 const Hero = () => {
   const [formData, setFormData] = useState({
-    fullName: '', mobile: '', email: '', loanType: 'MSME', amount: '', city: ''
+    fullName: '', mobile: '', email: '', loanType: 'MSME Loan', amount: '', city: ''
   });
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [touched, setTouched] = useState({ mobile: false, amount: false });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,16 +29,19 @@ const Hero = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, ...getUTMParams() })
       });
+      const data = await response.json();
       if (response.ok) {
         setSubmitStatus('success');
-        setFormData({ fullName: '', mobile: '', email: '', loanType: 'MSME', amount: '', city: '' });
+        setFormData({ fullName: '', mobile: '', email: '', loanType: 'MSME Loan', amount: '', city: '' });
       } else if (response.status === 409) {
         setSubmitStatus('duplicate');
       } else {
         setSubmitStatus('error');
+        setErrorMessage(data.message || 'Server Error. Try again.');
       }
-    } catch {
+    } catch (error) {
       setSubmitStatus('error');
+      setErrorMessage('Network error. Check your connection.');
     }
   };
 
@@ -106,14 +111,28 @@ const Hero = () => {
                     required
                   />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <input 
-                      type="tel" 
-                      placeholder="Mobile Number"
-                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none"
-                      value={formData.mobile}
-                      onChange={e => setFormData({...formData, mobile: e.target.value})}
-                      required
-                    />
+                    <div className="flex flex-col gap-1">
+                      <input 
+                        type="tel" 
+                        placeholder="Mobile Number"
+                        className={`w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 transition-all font-bold text-sm outline-none ${
+                          touched.mobile && formData.mobile.length !== 10 
+                            ? 'border-red-400 focus:border-red-500' 
+                            : 'border-transparent focus:border-primary-gold'
+                        }`}
+                        value={formData.mobile}
+                        onChange={e => {
+                          const val = e.target.value.replace(/\D/g, '');
+                          if (val.length <= 10) setFormData({...formData, mobile: val});
+                        }}
+                        onBlur={() => setTouched({ ...touched, mobile: true })}
+                        required
+                        pattern="\d{10}"
+                      />
+                      {touched.mobile && formData.mobile.length !== 10 && (
+                        <span className="text-[10px] text-red-500 font-bold ml-2">Must be 10 digits</span>
+                      )}
+                    </div>
                     <input 
                       type="email" 
                       placeholder="Email (Optional)"
@@ -129,23 +148,34 @@ const Hero = () => {
                         value={formData.loanType}
                         onChange={e => setFormData({...formData, loanType: e.target.value})}
                       >
-                        <option value="MSME">MSME Loan</option>
+                        <option value="MSME Loan">MSME Loan</option>
                         <option value="LAP">LAP</option>
-                        <option value="Housing">Housing</option>
-                        <option value="Supply Chain">Supply Chain</option>
+                        <option value="Home Loan">Home Loan</option>
+                        <option value="Supply Chain Finance">Supply Chain Finance</option>
                       </select>
                       <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
                          <ArrowRight className="w-4 h-4 rotate-90" />
                       </div>
                     </div>
-                    <input 
-                      type="number" 
-                      placeholder="Amount (₹)"
-                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none"
-                      value={formData.amount}
-                      onChange={e => setFormData({...formData, amount: e.target.value})}
-                      required
-                    />
+                    <div className="flex flex-col gap-1">
+                      <input 
+                        type="number" 
+                        placeholder="Amount (₹)"
+                        className={`w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 transition-all font-bold text-sm outline-none ${
+                          touched.amount && (formData.amount < 10000)
+                            ? 'border-red-400 focus:border-red-500' 
+                            : 'border-transparent focus:border-primary-gold'
+                        }`}
+                        value={formData.amount}
+                        onChange={e => setFormData({...formData, amount: e.target.value ? Number(e.target.value) : ''})}
+                        onBlur={() => setTouched({ ...touched, amount: true })}
+                        required
+                        min="10000"
+                      />
+                      {touched.amount && formData.amount < 10000 && formData.amount !== '' && (
+                        <span className="text-[10px] text-red-500 font-bold ml-2">Min ₹10,000</span>
+                      )}
+                    </div>
                   </div>
                   <div className="relative">
                     <select
@@ -177,10 +207,23 @@ const Hero = () => {
                   </span>
                 </button>
 
-                <AnimatePresence>
+                <AnimatePresence mode="wait">
                   {submitStatus === 'success' && (
-                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="mt-4 p-4 bg-green-50 text-success-green rounded-2xl text-xs font-black text-center border border-green-100 uppercase tracking-widest">
-                      Application Submitted!
+                    <motion.div key="success" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-4 p-4 bg-green-50 text-success-green rounded-2xl text-xs font-black text-center border border-green-100 uppercase tracking-widest">
+                      <CheckCircle2 className="w-4 h-4 inline-block mr-2 mb-0.5" />
+                      Application Submitted Successfully!
+                    </motion.div>
+                  )}
+                  {submitStatus === 'duplicate' && (
+                    <motion.div key="duplicate" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-4 p-4 bg-amber-50 text-amber-600 rounded-2xl text-xs font-black text-center border border-amber-100 uppercase tracking-widest leading-relaxed">
+                      <AlertCircle className="w-4 h-4 inline-block mr-2 mb-0.5" />
+                      Duplicate Entry: This number was used in the last 24 hours.
+                    </motion.div>
+                  )}
+                  {submitStatus === 'error' && (
+                    <motion.div key="error" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-4 p-4 bg-red-50 text-red-600 rounded-2xl text-[10px] font-black text-center border border-red-100 uppercase tracking-widest leading-relaxed">
+                      <AlertCircle className="w-4 h-4 inline-block mr-2 mb-0.5" />
+                      {errorMessage}
                     </motion.div>
                   )}
                 </AnimatePresence>

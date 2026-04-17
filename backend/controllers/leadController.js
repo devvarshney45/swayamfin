@@ -61,6 +61,16 @@ exports.createLead = async (req, res) => {
     });
   } catch (error) {
     console.error('Error creating lead:', error);
+    
+    // Handle Mongoose Validation Errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ 
+        success: false, 
+        message: messages.join(', ') || 'Validation Error' 
+      });
+    }
+
     res.status(500).json({ success: false, message: 'Server Error. Could not process lead.' });
   }
 };
