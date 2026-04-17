@@ -8,13 +8,17 @@ export default {
     extend: {
       colors: {
         primary: {
-          blue: '#0EA5E9',
+          navy: '#0D1B3E',
+          secondaryNavy: '#1A2F5A',
+          gold: '#C8932A',
+          lightGold: '#FDF3E3',
+          blue: '#0EA5E9', // Keeping for legacy/accents
           darkBlue: '#0369A1',
-          lightBlue: '#E0F2FE',
         },
         success: {
           green: '#16A34A',
-        }
+        },
+        offWhite: '#F9F7F2',
       },
       boxShadow: {
         'fintech': '0 4px 24px rgba(14, 165, 233, 0.10)',
@@ -23,7 +27,9 @@ export default {
         'fintech': '16px',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        playfair: ['"Playfair Display"', 'serif'],
+        dmsans: ['"DM Sans"', 'sans-serif'],
+        sans: ['"DM Sans"', 'sans-serif'],
       }
     },
   },

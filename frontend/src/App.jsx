@@ -27,6 +27,7 @@ import BranchDetails from './pages/BranchDetails';
 import ServiceDetails from './pages/ServiceDetails';
 import LeadDetails from './pages/agent/LeadDetails';
 import Blog from './pages/Blog';
+import ScrollToTop from './components/common/ScrollToTop';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
@@ -36,6 +37,7 @@ const AppContent = () => {
 
   return (
     <div className="flex flex-col min-h-screen font-inter">
+      <ScrollToTop />
       {!isLandingPage && <Navbar />}
       <main className="flex-grow">
         <Routes>

@@ -3,7 +3,31 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply antialiased text-gray-900 bg-white;
+  html {
+    scroll-behavior: smooth;
   }
+  body {
+    @apply antialiased text-slate-900 bg-white font-dmsans;
+  }
+}
+
+/* Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+::-webkit-scrollbar-thumb {
+  background: #02112e;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c5a059;
+}
+
+/* Modern Selection */
+::selection {
+  background: #c5a059;
+  color: #02112e;
 }

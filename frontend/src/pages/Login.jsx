@@ -54,7 +54,7 @@ const Login = () => {
               <Briefcase className="w-8 h-8" />
             </div>
           </motion.div>
-          <h1 className="text-3xl font-extrabold text-slate-900 mb-2">Swayamfin Portal</h1>
+          <h1 className="text-3xl font-extrabold text-slate-900 mb-2 lowercase">swayamfin.com portal</h1>
           <p className="text-slate-500 font-medium">Access your leads and business dashboard</p>
         </div>
 

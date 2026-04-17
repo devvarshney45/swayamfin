@@ -1,271 +1,196 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, TrendingUp, Users } from 'lucide-react';
+import { ShieldCheck, ArrowRight, CheckCircle2, AlertCircle, TrendingUp } from 'lucide-react';
 import { getUTMParams } from '../utils/helpers';
 
-// A simple CountUp hook to animate numbers
-const useCountUp = (end, duration = 2000) => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let startTimestamp = null;
-    const step = (timestamp) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      setCount(Math.floor(progress * end));
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      }
-    };
-    window.requestAnimationFrame(step);
-  }, [end, duration]);
-
-  return count;
-};
+// Modular Imports
+import TrustBar from './home/TrustBar';
+import ServicesSection from './home/ServicesSection';
+import USPsSection from './home/USPsSection';
+import Timeline from './home/Timeline';
+import PartnerNBFCs from './home/PartnerNBFCs';
+import EligibilityCalculator from './home/EligibilityCalculator';
+import CTASection from './home/CTASection';
 
 const Hero = () => {
-  const headlines = [
-    { main: "Empowering You for", highlight: "Financial Success", sub: "Fast Loans for Growing Businesses" },
-    { main: "Working Capital When", highlight: "You Need It Most", sub: "Apply in 5 Minutes" },
-    { main: "Your Dream Home is", highlight: "Closer Than You Think", sub: "Affordable Housing Loans" }
-  ];
-
-  const [currentIdx, setCurrentIdx] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIdx((prev) => (prev + 1) % headlines.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const totalDisbursements = useCountUp(125); // ₹125 Cr+
-  const clientsCount = useCountUp(750);
-  const loansCount = useCountUp(350);
-
   const [formData, setFormData] = useState({
-    fullName: '',
-    mobile: '',
-    email: '',
-    loanType: 'MSME',
-    amount: '',
-    city: ''
+    fullName: '', mobile: '', email: '', loanType: 'MSME', amount: '', city: ''
   });
-
   const [submitStatus, setSubmitStatus] = useState(null);
-
-  const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitStatus('submitting');
-    
     try {
-      const utms = getUTMParams();
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      const response = await fetch(`${apiUrl}/api/leads`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/leads`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, ...utms })
+        body: JSON.stringify({ ...formData, ...getUTMParams() })
       });
-      
-      const data = await response.json();
-      
       if (response.ok) {
         setSubmitStatus('success');
         setFormData({ fullName: '', mobile: '', email: '', loanType: 'MSME', amount: '', city: '' });
       } else if (response.status === 409) {
         setSubmitStatus('duplicate');
       } else {
-        console.error('Server error:', data.message);
         setSubmitStatus('error');
       }
-    } catch (error) {
-      console.error('Network error:', error);
+    } catch {
       setSubmitStatus('error');
     }
   };
 
   return (
-    <div className="relative bg-primary-lightBlue min-h-screen flex items-center justify-center overflow-hidden pt-8 pb-16">
-      <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 bg-primary-darkBlue rounded-l-[100px] transform skew-x-12 translate-x-32" />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full mt-[-20px] md:mt-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center lg:items-start pt-12">
-          
-          {/* Left Text Side */}
-          <motion.div className="lg:pt-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-primary-darkBlue text-xs font-black uppercase tracking-widest mb-6 shadow-sm ring-1 ring-slate-100">
-              <ShieldCheck className="w-4 h-4 text-success-green" />
-              RBI Compliant LSP Platform
-            </div>
+    <div className="bg-white font-dmsans">
+      {/* --- HERO SECTION --- */}
+      <section className="relative min-h-[90vh] flex items-center pt-24 pb-16 overflow-hidden bg-slate-50">
+        <div className="absolute top-0 right-0 w-1/2 h-full opacity-5 bg-primary-navy rounded-l-[200px] transform skew-x-12 translate-x-32" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
-            <div className="min-h-[280px] md:min-h-[200px] flex flex-col justify-start">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentIdx}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.5 }}
-                  className="space-y-6"
-                >
-                  <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-[1.1]">
-                    {headlines[currentIdx].main} <br />
-                    <span className="text-primary-blue">{headlines[currentIdx].highlight}</span>.
-                  </h1>
-                  <p className="text-lg md:text-xl text-gray-600 font-medium max-w-lg">
-                    {headlines[currentIdx].sub}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Statistics Bar */}
-            <div className="flex gap-8 mt-12 bg-white/50 backdrop-blur-sm p-6 rounded-[32px] inline-flex border border-white/50">
-              <div className="flex flex-col">
-                <span className="text-3xl font-black text-primary-darkBlue">₹{totalDisbursements}Cr+</span>
-                <span className="text-slate-400 text-[10px] font-bold uppercase tracking-tighter">Disbursed</span>
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              className="space-y-8 order-2 lg:order-1"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-primary-navy text-[10px] font-black uppercase tracking-widest shadow-sm ring-1 ring-slate-200">
+                <ShieldCheck className="w-4 h-4 text-primary-gold" />
+                RBI Compliant Fintech Partner
               </div>
-              <div className="w-px bg-slate-200 h-10 self-center"></div>
-              <div className="flex flex-col">
-                <span className="text-3xl font-black text-primary-darkBlue">{clientsCount}+</span>
-                <span className="text-slate-400 text-[10px] font-bold uppercase tracking-tighter">Happy Clients</span>
-              </div>
-              <div className="w-px bg-slate-200 h-10 self-center"></div>
-              <div className="flex flex-col">
-                <span className="text-3xl font-black text-primary-darkBlue">NBFC</span>
-                <span className="text-slate-400 text-[10px] font-bold uppercase tracking-tighter">Partners</span>
-              </div>
-            </div>
-          </motion.div>
+              
+              <h1 className="text-5xl md:text-7xl font-playfair font-black text-primary-navy leading-[1.1]">
+                Empowering India's <br />
+                <span className="text-primary-gold">MSME Growth</span>.
+              </h1>
+              
+              <p className="text-xl text-slate-500 font-medium max-w-lg leading-relaxed">
+                Unlock specialized credit solutions tailored for your business. Fast, transparent, and built for results.
+              </p>
 
-          {/* Right Form Side */}
-          <motion.div 
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="flex justify-center lg:justify-end"
-          >
-             <div className="bg-white p-8 rounded-fintech shadow-fintech w-full max-w-md border border-gray-100">
-                <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">Check Eligibility in Secs</h3>
-                
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                    <input 
-                      type="text" 
-                      name="fullName"
-                      value={formData.fullName}
-                      onChange={handleChange}
-                      placeholder="e.g. Rahul Sharma"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:border-transparent transition"
-                      required
-                    />
-                  </div>
+              <div className="flex flex-wrap gap-8 items-center pt-4">
+                <div className="flex flex-col">
+                  <span className="text-3xl font-black text-primary-navy">₹125Cr+</span>
+                  <span className="text-slate-400 text-[10px] font-black uppercase tracking-tighter">Disbursed</span>
+                </div>
+                <div className="w-px h-10 bg-slate-200 hidden sm:block"></div>
+                <div className="flex flex-col">
+                  <span className="text-3xl font-black text-primary-navy">750+</span>
+                  <span className="text-slate-400 text-[10px] font-black uppercase tracking-tighter">Enterprises</span>
+                </div>
+              </div>
+            </motion.div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white p-8 md:p-10 rounded-[48px] shadow-2xl shadow-primary-navy/5 border border-slate-100 max-w-lg lg:ml-auto relative order-1 lg:order-2"
+            >
+              <div className="absolute -top-4 -right-4 bg-primary-gold p-4 rounded-2xl shadow-lg rotate-12 hidden md:block">
+                <TrendingUp className="w-6 h-6 text-primary-navy" />
+              </div>
+
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-2 h-8 bg-primary-gold rounded-full" />
+                <h3 className="text-2xl font-black text-primary-navy font-playfair">Check Eligibility</h3>
+              </div>
+              
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-4">
+                  <input 
+                    type="text" 
+                    placeholder="Full Name"
+                    className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none"
+                    value={formData.fullName}
+                    onChange={e => setFormData({...formData, fullName: e.target.value})}
+                    required
+                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <input 
                       type="tel" 
-                      name="mobile"
+                      placeholder="Mobile Number"
+                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none"
                       value={formData.mobile}
-                      onChange={handleChange}
-                      placeholder="+91"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:border-transparent transition"
-                      pattern="\d{10}"
-                      title="10 digit mobile number"
+                      onChange={e => setFormData({...formData, mobile: e.target.value})}
                       required
                     />
+                    <input 
+                      type="email" 
+                      placeholder="Email (Optional)"
+                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none"
+                      value={formData.email}
+                      onChange={e => setFormData({...formData, email: e.target.value})}
+                    />
                   </div>
-
-                <input 
-                  type="email"
-                  className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-primary-blue transition-all font-bold placeholder:text-slate-300"
-                  placeholder="Email Address (Optional)"
-                  value={formData.email}
-                  onChange={e => setFormData({...formData, email: e.target.value})}
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Loan Type</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="relative">
                       <select 
-                        name="loanType"
+                        className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none appearance-none cursor-pointer"
                         value={formData.loanType}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:border-transparent transition bg-white"
+                        onChange={e => setFormData({...formData, loanType: e.target.value})}
                       >
-                        <option value="MSME">MSME</option>
+                        <option value="MSME">MSME Loan</option>
                         <option value="LAP">LAP</option>
                         <option value="Housing">Housing</option>
-                        <option value="Supply Chain Finance">Supply Chain</option>
+                        <option value="Supply Chain">Supply Chain</option>
                       </select>
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+                         <ArrowRight className="w-4 h-4 rotate-90" />
+                      </div>
                     </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Amount (₹)</label>
-                      <input 
-                        type="number" 
-                        name="amount"
-                        value={formData.amount}
-                        onChange={handleChange}
-                        placeholder="5,00,000"
-                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:border-transparent transition"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
                     <input 
-                      type="text" 
-                      name="city"
-                      value={formData.city}
-                      onChange={handleChange}
-                      placeholder="e.g. Mumbai"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:border-transparent transition"
+                      type="number" 
+                      placeholder="Amount (₹)"
+                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none"
+                      value={formData.amount}
+                      onChange={e => setFormData({...formData, amount: e.target.value})}
                       required
                     />
                   </div>
+                  <input 
+                    type="text" 
+                    placeholder="Search City"
+                    className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none"
+                    value={formData.city}
+                    onChange={e => setFormData({...formData, city: e.target.value})}
+                    required
+                  />
+                </div>
 
+                <button
+                  type="submit"
+                  disabled={submitStatus === 'submitting'}
+                  className="group relative w-full py-5 bg-primary-navy text-white font-black rounded-2xl overflow-hidden shadow-xl shadow-primary-navy/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                >
+                  <div className="absolute inset-0 bg-primary-gold translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                  <span className="relative z-10 uppercase tracking-widest text-xs group-hover:text-primary-navy">
+                    {submitStatus === 'submitting' ? 'Processing...' : 'Get Funding Proposal'}
+                  </span>
+                </button>
+
+                <AnimatePresence>
                   {submitStatus === 'success' && (
-                    <div className="p-3 mb-3 bg-green-50 text-success-green border border-green-200 rounded-lg text-sm text-center font-semibold">
-                      Your application was received successfully!
-                    </div>
-                  )}
-                  {submitStatus === 'duplicate' && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl text-amber-700">
-                      <AlertCircle className="w-5 h-5" />
-                      <p className="text-xs font-bold leading-tight">You've already submitted a request. Our team is already processing it!</p>
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="mt-4 p-4 bg-green-50 text-success-green rounded-2xl text-xs font-black text-center border border-green-100 uppercase tracking-widest">
+                      Application Submitted!
                     </motion.div>
                   )}
-                  {submitStatus === 'error' && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700">
-                      <AlertCircle className="w-5 h-5" />
-                      <p className="text-xs font-bold">Something went wrong. Please call us directly.</p>
-                    </motion.div>
-                  )}
-
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    type="submit"
-                    disabled={submitStatus === 'submitting'}
-                    className={`w-full py-3 px-4 text-white font-bold rounded-lg shadow-md transition duration-200 mt-2 ${submitStatus === 'submitting' ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary-blue hover:bg-primary-darkBlue'}`}
-                  >
-                    {submitStatus === 'submitting' ? 'Applying...' : 'Apply Now'}
-                  </motion.button>
-                </form>
-                <p className="text-xs text-center text-gray-500 mt-4">By applying, you agree to our Terms and Policies.</p>
-             </div>
-          </motion.div>
+                </AnimatePresence>
+              </form>
+            </motion.div>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* --- PAGE SECTIONS --- */}
+      <TrustBar />
+      <PartnerNBFCs />
+      <ServicesSection />
+      <USPsSection />
+      <Timeline />
+      <EligibilityCalculator />
+      <CTASection />
     </div>
+
   );
 };
 

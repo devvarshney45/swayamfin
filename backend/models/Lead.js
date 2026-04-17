@@ -20,7 +20,16 @@ const leadSchema = new mongoose.Schema({
   loanType: {
     type: String,
     required: [true, 'Loan type is required'],
-    enum: ['MSME', 'LAP', 'Housing', 'Supply Chain Finance'],
+    enum: [
+      'Home Loan', 
+      'MSME Loan', 
+      'LAP', 
+      'Micro LAP', 
+      'Hybrid Loan', 
+      'Unsecured Loan', 
+      'Machinery Loan', 
+      'Supply Chain Finance'
+    ],
   },
   amount: {
     type: Number,
@@ -34,7 +43,7 @@ const leadSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Fresh', 'Contacted', 'Qualified', 'Rejected'],
+    enum: ['Fresh', 'Contacted', 'Qualified', 'Converted', 'Rejected'],
     default: 'Fresh',
   },
   assignedBranch: {

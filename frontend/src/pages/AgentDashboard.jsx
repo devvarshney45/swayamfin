@@ -41,6 +41,8 @@ const AgentDashboard = () => {
       case 'Fresh': return 'bg-blue-100 text-primary-darkBlue';
       case 'Contacted': return 'bg-yellow-100 text-yellow-800';
       case 'Qualified': return 'bg-green-100 text-success-green';
+      case 'Converted': return 'bg-emerald-100 text-emerald-800';
+      case 'Rejected': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -131,26 +133,29 @@ const AgentDashboard = () => {
                 </div>
 
                 <div className="flex justify-between border-t border-gray-100 pt-3 mt-1 items-center">
-                  <div className="flex gap-2">
-                    <a href={`tel:${lead.mobile}`} className="flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-2 rounded-lg transition">
-                      <Phone className="w-4 h-4 mr-1"/> Call
+                  <div className="flex gap-2 w-full">
+                    <a href={`tel:${lead.mobile}`} className="flex-1 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-800 px-3 py-2.5 rounded-xl font-bold transition text-sm">
+                      <Phone className="w-4 h-4 mr-2"/> Call
                     </a>
                     <button 
                       onClick={() => updateStatus(lead._id, 'Qualified')}
-                      disabled={lead.status === 'Qualified'}
-                      className={`flex items-center justify-center px-3 py-2 rounded-lg transition ${
-                        lead.status === 'Qualified' 
+                      disabled={lead.status === 'Qualified' || lead.status === 'Converted'}
+                      className={`flex-1 flex items-center justify-center px-3 py-2.5 rounded-xl font-bold transition text-sm ${
+                        lead.status === 'Qualified' || lead.status === 'Converted'
                           ? 'bg-green-100 text-success-green cursor-default' 
-                          : 'bg-green-50 hover:bg-green-100 text-success-green'
+                          : 'bg-primary-gold/10 hover:bg-primary-gold/20 text-primary-darkBlue border border-primary-gold/20'
                       }`}
                     >
-                      {lead.status === 'Qualified' ? <CheckCircle2 className="w-4 h-4 mr-1"/> : <CheckCircle className="w-4 h-4 mr-1"/>}
-                      {lead.status === 'Qualified' ? 'Qualified' : 'Qualify'}
+                      {lead.status === 'Qualified' || lead.status === 'Converted' ? <CheckCircle2 className="w-4 h-4 mr-2"/> : <CheckCircle className="w-4 h-4 mr-2"/>}
+                      {lead.status === 'Qualified' || lead.status === 'Converted' ? 'Qualified' : 'Qualify'}
+                    </button>
+                    <button 
+                      onClick={() => window.location.href = `/agent/lead/${lead._id}`}
+                      className="flex items-center justify-center bg-primary-darkBlue text-white p-2.5 rounded-xl hover:bg-black transition"
+                    >
+                      <ChevronRight className="w-5 h-5" />
                     </button>
                   </div>
-                  <button className="text-gray-400 hover:text-primary-blue transition">
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
                 </div>
               </motion.div>
             ))}

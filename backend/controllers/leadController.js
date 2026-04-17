@@ -102,7 +102,7 @@ exports.getTodaysLeads = async (req, res) => {
 exports.updateLeadStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status, agentNotes } = req.body;
+    const { status, agentNotes, notes } = req.body; // Handle both notes and agentNotes
 
     const lead = await Lead.findById(id);
     
@@ -111,7 +111,7 @@ exports.updateLeadStatus = async (req, res) => {
     }
 
     if (status) lead.status = status;
-    if (agentNotes) lead.agentNotes = agentNotes;
+    if (agentNotes || notes) lead.agentNotes = agentNotes || notes;
 
     await lead.save();
 
@@ -155,11 +155,18 @@ exports.getLeadById = async (req, res) => {
  */
 exports.getAllLeads = async (req, res) => {
   try {
-    const { status, loanType, city } = req.query;
+    const { status, loanType, city, startDate, endDate } = req.query;
     const query = {};
-    if (status) query.status = status;
-    if (loanType) query.loanType = loanType;
-    if (city) query.city = new RegExp(city, 'i');
+    
+    if (status && status !== 'all') query.status = status;
+    if (loanType && loanType !== 'all') query.loanType = loanType;
+    if (city && city !== 'all') query.city = new RegExp(city.trim(), 'i');
+    
+    if (startDate || endDate) {
+      query.createdAt = {};
+      if (startDate) query.createdAt.$gte = new Date(startDate);
+      if (endDate) query.createdAt.$lte = new Date(endDate);
+    }
 
     const leads = await Lead.find(query)
       .populate('assignedBranch')
@@ -168,6 +175,7 @@ exports.getAllLeads = async (req, res) => {
 
     res.status(200).json({ success: true, count: leads.length, data: leads });
   } catch (error) {
+    console.error('Error fetching all leads:', error);
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 };

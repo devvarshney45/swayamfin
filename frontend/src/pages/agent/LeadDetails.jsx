@@ -47,8 +47,8 @@ const LeadDetails = () => {
     setIsSaving(true);
     try {
       const token = localStorage.getItem('swayamfin_token');
-      await axios.put(`${import.meta.env.VITE_API_URL}/api/leads/${id}`, 
-        { status, notes },
+      await axios.put(`${import.meta.env.VITE_API_URL}/api/leads/${id}/status`, 
+        { status, agentNotes: notes }, // Standardized key to agentNotes
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setIsSaving(false);
@@ -162,18 +162,17 @@ const LeadDetails = () => {
                <div className="space-y-6">
                  <div>
                    <label className="text-xs font-black text-slate-400 uppercase ml-1">Current Status</label>
-                   <select 
-                      value={status} 
-                      onChange={(e) => setStatus(e.target.value)}
-                      className="w-full mt-2 px-4 py-3 bg-slate-50 border-2 border-transparent focus:border-primary-blue rounded-xl outline-none font-bold text-slate-700 appearance-none"
-                   >
-                     <option value="new">New Lead</option>
-                     <option value="contacted">Contacted</option>
-                     <option value="follow_up">Follow Up Scheduled</option>
-                     <option value="qualified">Qualified</option>
-                     <option value="converted">Converted</option>
-                     <option value="lost">Lost / Rejected</option>
-                   </select>
+                    <select 
+                       value={status} 
+                       onChange={(e) => setStatus(e.target.value)}
+                       className="w-full mt-2 px-4 py-3 bg-slate-50 border-2 border-transparent focus:border-primary-blue rounded-xl outline-none font-bold text-slate-700 appearance-none"
+                    >
+                      <option value="Fresh">New Lead</option>
+                      <option value="Contacted">Contacted</option>
+                      <option value="Qualified">Qualified</option>
+                      <option value="Converted">Converted</option>
+                      <option value="Rejected">Rejected</option>
+                    </select>
                  </div>
 
                  <div>
