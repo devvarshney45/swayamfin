@@ -37,7 +37,17 @@ i18n
           services_title: "Customized Lending Solutions",
           services_subtitle: "Our Product Suite",
           services_desc: "Tailored financial products designed to bridge your capital requirements with speed, flexibility, and transparency.",
-          explore_details: "Explore Details"
+          explore_details: "Explore Details",
+          portal_back_dashboard: "Back to Dashboard",
+          portal_generate_case: "Generate New Case",
+          portal_register_desc: "Manually register a new loan inquiry into the system.",
+          portal_applicant_name: "Applicant Name",
+          portal_mobile_number: "Mobile Number",
+          portal_city_location: "City / Location",
+          portal_loan_type: "Loan Type",
+          portal_amount_required: "Loan Amount Required (₹)",
+          portal_create_assign: "Create Case & Assign",
+          portal_processing: "Processing..."
         }
       },
       hi: {
@@ -70,7 +80,17 @@ i18n
           services_title: "अनुकूलित ऋण समाधान",
           services_subtitle: "हमारा उत्पाद सूट",
           services_desc: "गति, लचीलेपन और पारदर्शिता के साथ आपकी पूंजी की आवश्यकताओं को पूरा करने के लिए डिज़ाइन किए गए व्यक्तिगत वित्तीय उत्पाद।",
-          explore_details: "विवरण देखें"
+          explore_details: "विवरण देखें",
+          portal_back_dashboard: "डैशबोर्ड पर वापस जाएं",
+          portal_generate_case: "नया केस जनरेट करें",
+          portal_register_desc: "सिस्टम में मैन्युअल रूप से नई ऋण पूछताछ दर्ज करें।",
+          portal_applicant_name: "आवेदक का नाम",
+          portal_mobile_number: "मोबाइल नंबर",
+          portal_city_location: "शहर / स्थान",
+          portal_loan_type: "ऋण का प्रकार",
+          portal_amount_required: "अनुरोधित ऋण राशि (₹)",
+          portal_create_assign: "केस बनाएं और सौंपें",
+          portal_processing: "प्रक्रिया जारी है..."
         }
       }
     },

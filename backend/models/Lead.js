@@ -17,7 +17,8 @@ const leadSchema = new mongoose.Schema({
     type: String, 
     enum: [
       'home_loan', 'micro_lap', 'supply_chain', 
-      'msme_structured', 'lap', 'hybrid'
+      'msme_structured', 'lap', 'hybrid',
+      'microfinance', 'structured', 'secured', 'unsecured', 'machinery_loan'
     ], 
     required: true 
   },

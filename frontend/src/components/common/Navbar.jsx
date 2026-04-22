@@ -32,6 +32,13 @@ const Navbar = () => {
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'hi' : 'en';
     i18n.changeLanguage(newLang);
+    
+    // Trigger Google Translate for whole-page conversion
+    const select = document.querySelector('.goog-te-combo');
+    if (select) {
+      select.value = newLang === 'en' ? 'en' : 'hi';
+      select.dispatchEvent(new Event('change'));
+    }
   };
 
   const services = [
