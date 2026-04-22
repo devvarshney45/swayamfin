@@ -7,38 +7,46 @@ import axios from 'axios';
 const branchData = {
   'agra': {
     city: 'Agra',
-    address: 'Sanjay Place, Civil Lines, Agra, Uttar Pradesh - 282002',
-    phone: '+91 0562-400XXXX',
+    address: '12/45, Sanjay Place, Agra, UP - 282002',
+    phone: '+91 87009 65594',
     email: 'agra@swayamfin.com',
     map: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3549.0!2d78.0!3d27.18!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDEwJzQ4LjAiTiA3OMKwMDAnMDAuMCJF!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin',
-    manager: 'Rahul Kumar'
+    manager: 'Nupur Prasad'
   },
-  'gurgaon': {
-    city: 'Gurugram',
-    address: 'Sector 44, Near Huda City Center, Gurugram, Haryana - 122003',
-    phone: '+91 6397003690',
-    email: 'gurgaon@swayamfin.com',
-    map: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3506.27!2d77.07!3d28.45!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDI3JzAwLjAiTiA3N8KwMDQnMTIuMCJF!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin',
-    manager: 'Sandeep Singh'
+  'mathura': {
+    city: 'Mathura',
+    address: 'Near Holi Gate, Mathura, UP - 281001',
+    phone: '+91 87009 65595',
+    email: 'mathura@swayamfin.com',
+    map: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.5!2d77.67!3d27.5!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDMwJzAwLjAiTiA3N8KwNDAnMTIuMCJF!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin',
+    manager: 'Sudhanshu Shekhar'
   },
-  'delhi': {
-    city: 'New Delhi (HQ)',
-    address: '619, Somdutt Chambers II, Bhikaji Cama, New Delhi – 110066',
-    phone: '+91 6397003690',
-    email: 'delhi@swayamfin.com',
-    map: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3504.144406563!2d77.1852!3d28.5654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDMzJzU1LjQiTiA3N8KwMTEnMDYuNyJF!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin',
+  'hathras': {
+    city: 'Hathras',
+    address: 'Main Market, Hathras, UP - 204101',
+    phone: '+91 87009 65592',
+    email: 'hathras@swayamfin.com',
+    map: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3525.0!2d78.0!3d27.6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDM2JzAwLjAiTiA3OMKwMDAnMDAuMCJF!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin',
+    manager: 'Madhu Priya Prasad'
+  },
+  'kosi': {
+    city: 'Kosi',
+    address: 'G.T. Road, Kosi Kalan, UP - 281403',
+    phone: '+91 87009 65592',
+    email: 'kosi@swayamfin.com',
+    map: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3515.0!2d77.4!3d27.8!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDQ4JzAwLjAiTiA3N8KwMjQnMDAuMCJF!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin',
     manager: 'Vikkrant Prasad'
   }
 };
 
 const BranchDetails = () => {
   const { slug } = useParams();
-  const branch = branchData[slug] || branchData['delhi'];
+  const branch = branchData[slug] || branchData['agra'];
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     mobile: '',
-    loanType: 'MSME Loan',
+    loanType: 'msme_structured',
     city: branch.city
   });
 
@@ -168,10 +176,10 @@ const BranchDetails = () => {
                       value={formData.loanType}
                       onChange={e => setFormData({...formData, loanType: e.target.value})}
                     >
-                      <option value="MSME Loan">MSME Loan</option>
-                      <option value="LAP">Loan Against Property</option>
-                      <option value="Housing Loan">Housing Loan</option>
-                      <option value="Supply Chain Finance">Supply Chain Finance</option>
+                      <option value="msme_structured">MSME Structured Product</option>
+                      <option value="lap">Loan Against Property (LAP)</option>
+                      <option value="home_loan">Housing Loan</option>
+                      <option value="supply_chain">Supply Chain Finance</option>
                     </select>
                   </div>
                   <button type="submit" className="w-full bg-primary-blue text-white py-5 rounded-2xl font-black shadow-xl shadow-primary-blue/20 flex items-center justify-center gap-2 group transition-all">

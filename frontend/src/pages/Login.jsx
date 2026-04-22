@@ -21,10 +21,13 @@ const Login = () => {
     setIsSubmitting(true);
     try {
       const user = await login(email, password);
-      if (user.role === 'Admin') {
+      // Fixed: Backend uses lowercase roles (admin, bsm, sales_person)
+      if (user.role === 'admin') {
         navigate('/admin/dashboard');
+      } else if (user.role === 'bsm') {
+        navigate('/bsm/dashboard');
       } else {
-        navigate(from, { replace: true });
+        navigate('/agent/dashboard');
       }
     } catch (err) {
       console.error(err);

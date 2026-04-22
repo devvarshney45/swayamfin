@@ -3,6 +3,20 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-primary: #FFFFFF;
+    --text-primary: #0F172A;
+    --accent-blue: #2563EB;
+    --border-soft: #E2E8F0;
+  }
+
+  .dark-theme {
+    --bg-primary: #020617; /* Deep Navy Black */
+    --text-primary: #F8FAFC;
+    --accent-primary: #c5a059; /* Gold */
+    --accent-indigo: #6366F1;
+  }
+
   html {
     scroll-behavior: smooth;
   }

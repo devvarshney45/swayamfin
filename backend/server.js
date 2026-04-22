@@ -24,8 +24,15 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/swayamfin')
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/leads', leadRoutes);
+// The routes below act on leads
+app.use('/api/leads', require('./routes/documentRoutes'));
+app.use('/api/leads', require('./routes/remarkRoutes'));
+
 app.use('/api/users', userRoutes);
 app.use('/api/branches', branchRoutes);
+app.use('/api/messages', require('./routes/messageRoutes'));
+
+app.use('/uploads', express.static('uploads'));
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'API is running' });

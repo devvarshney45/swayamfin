@@ -13,47 +13,24 @@ const EligibilityCalculator = () => {
   });
 
   return (
-    <section className="py-24 bg-white font-dmsans">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="bg-primary-navy rounded-[64px] p-10 md:p-20 flex flex-col lg:flex-row gap-20 items-center shadow-[0_40px_100px_-15px_rgba(2,17,46,0.3)] relative overflow-hidden group">
-          
-          {/* Decorative Sparkle */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-primary-gold opacity-[0.07] blur-[120px] -translate-y-1/2 translate-x-1/2 group-hover:opacity-10 transition-opacity duration-700"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-gold opacity-[0.03] blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
-          
-          <div className="flex-1 space-y-10 relative z-10 text-center lg:text-left">
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-primary-gold text-[10px] font-black uppercase tracking-[0.2em]"
-            >
-              <Calculator className="w-4 h-4" /> Strategic Assessment
-            </motion.div>
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-4xl md:text-6xl font-playfair font-black text-white leading-[1.1]"
-            >
-              Estimate Your <br />
-              <span className="text-primary-gold">Financial Power</span>
-            </motion.h2>
-            <p className="text-slate-400 font-medium text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Our algorithmic engine provides an instant projection of your borrowing capacity. High-speed, high-accuracy, zero credit impact.
-            </p>
-            
-            <div className="flex justify-center lg:justify-start gap-4 pt-4">
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-10 py-5 bg-primary-gold text-primary-navy font-black rounded-[24px] hover:bg-white transition-all duration-500 uppercase tracking-widest text-[10px] flex items-center gap-3 shadow-xl shadow-primary-gold/10"
-              >
-                Detailed Analysis <ArrowRight className="w-4 h-4" />
-              </motion.button>
+    <section className="py-24 bg-[#020617] relative overflow-hidden font-dmsans">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary-gold/5 blur-[120px] rounded-full" />
+      <div className="max-w-7xl mx-auto px-4 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} className="space-y-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-gold/10 text-primary-gold text-[10px] font-black uppercase tracking-widest border border-primary-gold/20">
+               Financial Planning
             </div>
-          </div>
-
-          <div className="w-full lg:w-[45%] bg-white/5 backdrop-blur-xl rounded-[48px] p-10 md:p-14 border border-white/10 ring-1 ring-white/5 relative z-10 shadow-inner">
+            <h2 className="text-4xl md:text-5xl font-playfair font-black text-white leading-tight">
+              Instant <span className="text-primary-gold italic">Eligibility</span> <br />Calculator
+            </h2>
+            <p className="text-slate-500 font-bold text-xs uppercase tracking-widest leading-relaxed max-w-md">
+              Estimate your loan eligibility and monthly repayments in seconds. 
+              Our calculator provides real-time insights based on current market rates.
+            </p>
+          </motion.div>
+            
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} className="w-full bg-white/5 backdrop-blur-xl rounded-[48px] p-10 md:p-14 border border-white/10 ring-1 ring-white/5 relative z-10 shadow-inner">
              <div className="space-y-12">
                 <div className="space-y-6">
                   <div className="flex justify-between items-end">
@@ -103,12 +80,10 @@ const EligibilityCalculator = () => {
                    <p className="text-[9px] text-white/20 mt-8 font-medium">INDICATIVE VALUES BASED ON AGGREGATE LENDING MODELS</p>
                 </div>
              </div>
-          </div>
-
+          </motion.div>
         </div>
       </div>
     </section>
-
   );
 };
 

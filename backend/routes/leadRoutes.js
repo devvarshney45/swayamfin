@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { createLead, getTodaysLeads, updateLeadStatus, getAllLeads, getLeadStats, getLeadById, addFollowUp } = require('../controllers/leadController');
-const { protect, adminOnly } = require('../middleware/authMiddleware');
+const { createLead, getLeads, getLeadById, updateLead, updateStatus, reassignLead } = require('../controllers/leadController');
+const { protect, bsmOnly } = require('../middleware/authMiddleware');
 
-// Define API routes
-router.post('/', createLead);
-router.get('/today', protect, getTodaysLeads);
-router.get('/all', protect, adminOnly, getAllLeads);
-router.get('/stats', protect, adminOnly, getLeadStats);
+router.post('/', createLead); // Public for Landing Page & Private for Agents (Internal assignment handled in controller)
+router.post('/website', createLead); // Webhook
+router.get('/', protect, getLeads);
 router.get('/:id', protect, getLeadById);
-router.put('/:id/status', protect, updateLeadStatus);
-router.post('/:id/followup', protect, addFollowUp);
+router.put('/:id', protect, updateLead);
+router.patch('/:id/status', protect, updateStatus);
+router.patch('/:id/assign', protect, bsmOnly, reassignLead);
 
 module.exports = router;

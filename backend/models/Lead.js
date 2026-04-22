@@ -1,136 +1,70 @@
 const mongoose = require('mongoose');
 
-// Sub-schema for daily follow-up entries
-const followUpSchema = new mongoose.Schema({
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-  note: {
-    type: String,
-    required: [true, 'Follow-up note is required'],
-    trim: true,
-  },
-  outcome: {
-    type: String,
-    enum: ['Interested', 'Not Reachable', 'Call Back', 'Documents Pending', 'Rejected', 'Converted', 'Other'],
-    default: 'Other',
-  },
-  addedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  },
-}, { timestamps: true });
-
 const leadSchema = new mongoose.Schema({
-  fullName: {
-    type: String,
-    required: [true, 'Full name is required'],
-    trim: true,
+  lead_number: { type: String, unique: true },
+  source: { 
+    type: String, 
+    enum: ['website', 'manual', 'referral', 'walk-in', 'phone_inquiry', 'other'], 
+    required: true 
   },
-  mobile: {
-    type: String,
-    required: [true, 'Mobile number is required'],
-    trim: true,
-    match: [/^\d{10}$/, 'Mobile number must be 10 digits'],
-  },
-  email: {
-    type: String,
-    trim: true,
-    lowercase: true,
-  },
-  loanType: {
-    type: String,
-    required: [true, 'Loan type is required'],
+  applicant_name: { type: String, required: true },
+  mobile: { type: String, required: true },
+  alternate_mobile: { type: String },
+  email: { type: String },
+  location_city: { type: String, required: true },
+  pincode: { type: String },
+  loan_type: { 
+    type: String, 
     enum: [
-      'Home Loan', 
-      'MSME Loan', 
-      'LAP', 
-      'Micro LAP', 
-      'Hybrid Loan', 
-      'Unsecured Loan', 
-      'Machinery Loan', 
-      'Supply Chain Finance'
-    ],
+      'home_loan', 'micro_lap', 'supply_chain', 
+      'msme_structured', 'lap', 'hybrid'
+    ], 
+    required: true 
   },
-  amount: {
-    type: Number,
-    required: [true, 'Loan amount is required'],
-    min: [10000, 'Minimum loan amount is 10,000'],
+  loan_amount_required: { type: Number, required: true },
+  branch_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Branch' },
+  assigned_to: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  status: { 
+    type: String, 
+    enum: [
+      'New', 'Contacted', 'In Progress', 'Document Submitted', 
+      'Sanctioned', 'Disbursed', 'Closed - Won', 'Dead Lead', 'On Hold'
+    ], 
+    default: 'New' 
   },
-  city: {
-    type: String,
-    required: [true, 'City is required'],
-    trim: true,
-    enum: ['Delhi', 'Noida', 'Agra', 'Gurgaon'],
+  stage: { 
+    type: String, 
+    enum: [
+      'new', 'contacted', 'in_progress', 'docs_submitted', 
+      'sanctioned', 'disbursed', 'closed', 'dead', 'on_hold'
+    ], 
+    default: 'new' 
   },
-  status: {
-    type: String,
-    enum: ['Fresh', 'Contacted', 'Qualified', 'Converted', 'Rejected'],
-    default: 'Fresh',
-  },
-  assignedBranch: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Branch',
-    default: null,
-  },
-  assignedAgent: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    default: null,
-  },
-  agentNotes: {
-    type: String,
-    default: '',
-  },
+  closing_date: { type: Date },
+  dead_reason: { type: String },
 
-  // --- Extra Client Details (editable by agent) ---
-  employmentType: {
-    type: String,
-    enum: ['Salaried', 'Self-Employed', 'Business Owner', 'Professional', 'Other', ''],
-    default: '',
-  },
-  monthlyIncome: {
-    type: Number,
-    default: null,
-  },
-  businessName: {
-    type: String,
-    trim: true,
-    default: '',
-  },
-  address: {
-    type: String,
-    trim: true,
-    default: '',
-  },
-  pincode: {
-    type: String,
-    trim: true,
-    default: '',
-  },
-
-  // --- Daily Follow-Up Logs ---
-  followUps: [followUpSchema],
-
-  // --- UTM Tracking ---
-  utm_source: {
-    type: String,
-    trim: true,
-  },
-  utm_medium: {
-    type: String,
-    trim: true,
-  },
-  utm_campaign: {
-    type: String,
-    trim: true,
-  },
+  // Personal Form Details (Tab 1)
+  father_or_spouse_name: { type: String },
+  date_of_birth: { type: Date },
+  gender: { type: String, enum: ['Male', 'Female', 'Other'] },
+  marital_status: { type: String, enum: ['Single', 'Married', 'Divorced', 'Widowed'] },
+  current_address: { type: String },
+  permanent_address: { type: String },
+  occupation_type: { type: String, enum: ['Salaried', 'Self-Employed', 'Business Owner', 'Farmer', 'Other'] },
+  monthly_income: { type: Number },
+  annual_turnover: { type: Number },
+  business_name: { type: String },
+  business_vintage_years: { type: Number },
+  gst_registered: { type: Boolean, default: false },
+  cibil_score: { type: Number },
 }, { 
   timestamps: true 
 });
 
-// Index for 24-hr deduplication logic
-leadSchema.index({ mobile: 1, createdAt: -1 });
+// Performance Indexes for Scaling
+leadSchema.index({ mobile: 1, createdAt: -1 }); // Fast deduplication
+leadSchema.index({ branch_id: 1, createdAt: -1 }); // Fast dashboard fetching
+leadSchema.index({ assigned_to: 1, status: 1 }); // Fast agent views
+leadSchema.index({ location_city: 1 }); // Fast branch mapping
 
 module.exports = mongoose.model('Lead', leadSchema);

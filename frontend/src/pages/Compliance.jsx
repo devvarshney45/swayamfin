@@ -46,27 +46,40 @@ const Compliance = () => {
                   <tr className="border-b-2 border-slate-100">
                     <th className="py-4 font-bold text-slate-900">Loan Product</th>
                     <th className="py-4 font-bold text-slate-900">Interest Range (p.a.)</th>
-                    <th className="py-4 font-bold text-slate-900">Processing Fees</th>
+                    <th className="py-4 font-bold text-slate-900">Max Tenure</th>
                   </tr>
                 </thead>
                 <tbody className="text-slate-600">
                   <tr className="border-b border-slate-50">
-                    <td className="py-4">Housing Loans</td>
-                    <td className="py-4">8.5% - 14%</td>
-                    <td className="py-4">0.5% - 2%</td>
+                    <td className="py-4 font-bold">Supply Chain Financing</td>
+                    <td className="py-4">12% - 18%</td>
+                    <td className="py-4">Up to 24 Months</td>
                   </tr>
                   <tr className="border-b border-slate-50">
-                    <td className="py-4">MSME Loans</td>
-                    <td className="py-4">12% - 24%</td>
-                    <td className="py-4">1% - 3%</td>
-                  </tr>
-                  <tr className="border-b border-slate-50">
-                    <td className="py-4">Supply Chain Finance</td>
-                    <td className="py-4">10% - 18%</td>
-                    <td className="py-4">0.5% - 1.5%</td>
+                    <td className="py-4 font-bold">Hybrid MSME Products</td>
+                    <td className="py-4">11% - 19%</td>
+                    <td className="py-4">Up to 10 Years</td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+            
+            <div className="mt-8 p-6 bg-slate-50 rounded-2xl border border-slate-100">
+               <h4 className="text-sm font-bold text-slate-900 mb-3 uppercase tracking-wider">Other Disclosures</h4>
+               <ul className="space-y-3 text-sm text-slate-600 font-medium">
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 bg-primary-blue rounded-full mt-1.5" />
+                    <span>**Processing Fees**: Range from 0.5% to 2% of the loan amount depending on the partner lender.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 bg-primary-blue rounded-full mt-1.5" />
+                    <span>**Penal Charges**: Late payment penalties are charged as per the partner lender's policy (usually 2% per month on overdue amount).</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <div className="w-1.5 h-1.5 bg-primary-blue rounded-full mt-1.5" />
+                    <span>**Prepayment**: Foreclosure charges vary from 0% to 5% based on the loan type and tenure.</span>
+                  </li>
+               </ul>
             </div>
             <p className="mt-6 text-sm text-slate-400 italic">
               * Rates are indicative and subject to change based on internal credit assessments.

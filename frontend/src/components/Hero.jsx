@@ -14,25 +14,58 @@ import CTASection from './home/CTASection';
 
 const Hero = () => {
   const [formData, setFormData] = useState({
-    fullName: '', mobile: '', email: '', loanType: 'MSME Loan', amount: '', city: ''
+    fullName: '', mobile: '', email: '', loanType: 'msme_structured', amount: '', city: ''
   });
   const [submitStatus, setSubmitStatus] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [touched, setTouched] = useState({ mobile: false, amount: false });
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const slides = [
+    {
+      title: <>Empowering You for <br /> <span className="text-primary-gold">Financial Success</span></>,
+      sub: "Fast Loans for Growing Businesses"
+    },
+    {
+      title: <>Working Capital <br /> <span className="text-primary-gold">When You Need It</span></>,
+      sub: "Apply in 5 Minutes — Fast Decisions"
+    },
+    {
+      title: <>Your Dream Home <br /> <span className="text-primary-gold">is Closer Than You Think</span></>,
+      sub: "Affordable Housing Loans — Tie-up with DMI Housing"
+    }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide(prev => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitStatus('submitting');
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/leads`, {
+      const payload = {
+        applicant_name: formData.fullName,
+        mobile: formData.mobile,
+        email: formData.email,
+        loan_type: formData.loanType,
+        loan_amount_required: Number(formData.amount),
+        location_city: formData.city,
+        ...getUTMParams()
+      };
+
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/leads`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, ...getUTMParams() })
+        body: JSON.stringify(payload)
       });
       const data = await response.json();
       if (response.ok) {
         setSubmitStatus('success');
-        setFormData({ fullName: '', mobile: '', email: '', loanType: 'MSME Loan', amount: '', city: '' });
+        setFormData({ fullName: '', mobile: '', email: '', loanType: 'msme_structured', amount: '', city: '' });
         setTouched({ mobile: false, amount: false });
       } else if (response.status === 409) {
         setSubmitStatus('duplicate');
@@ -47,10 +80,10 @@ const Hero = () => {
   };
 
   return (
-    <div className="bg-white font-dmsans">
+    <div className="bg-[#020617] font-dmsans">
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[90vh] flex items-center pt-24 pb-16 overflow-hidden bg-slate-50">
-        <div className="absolute top-0 right-0 w-1/2 h-full opacity-5 bg-primary-navy rounded-l-[200px] transform skew-x-12 translate-x-32" />
+      <section className="relative min-h-[90vh] flex items-center pt-24 pb-16 overflow-hidden bg-[#020617]">
+        <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 bg-primary-gold rounded-l-[200px] transform skew-x-12 translate-x-32 blur-[120px]" />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -60,29 +93,41 @@ const Hero = () => {
               animate={{ opacity: 1, x: 0 }} 
               className="space-y-8 order-2 lg:order-1"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-primary-navy text-[10px] font-black uppercase tracking-widest shadow-sm ring-1 ring-slate-200">
-                <ShieldCheck className="w-4 h-4 text-primary-gold" />
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 text-primary-gold text-[10px] font-black uppercase tracking-widest shadow-sm ring-1 ring-white/10">
+                <ShieldCheck className="w-4 h-4" />
                 RBI Compliant Fintech Partner
               </div>
               
-              <h1 className="text-5xl md:text-7xl font-playfair font-black text-primary-navy leading-[1.1]">
-                Empowering India's <br />
-                <span className="text-primary-gold">MSME Growth</span>.
-              </h1>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeSlide}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <h1 className="text-5xl md:text-7xl font-playfair font-black text-white leading-[1.1]">
+                    {slides[activeSlide].title}
+                  </h1>
+                  <p className="text-xl text-slate-400 font-medium max-w-lg leading-relaxed mt-4 italic">
+                    {slides[activeSlide].sub}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
               
-              <p className="text-xl text-slate-500 font-medium max-w-lg leading-relaxed">
-                Unlock specialized credit solutions tailored for your business. Fast, transparent, and built for results.
+              <p className="text-sm text-slate-500 font-bold max-w-lg leading-relaxed pt-2">
+                Trusted by 750+ businesses across India. MSME Loans, LAP, Housing Finance & Supply Chain Solutions — Customized for You.
               </p>
 
               <div className="flex flex-wrap gap-8 items-center pt-4">
                 <div className="flex flex-col">
-                  <span className="text-3xl font-black text-primary-navy">₹125Cr+</span>
-                  <span className="text-slate-400 text-[10px] font-black uppercase tracking-tighter">Disbursed</span>
+                  <span className="text-3xl font-black text-white">₹125Cr+</span>
+                  <span className="text-slate-500 text-[10px] font-black uppercase tracking-tighter">Disbursed</span>
                 </div>
-                <div className="w-px h-10 bg-slate-200 hidden sm:block"></div>
+                <div className="w-px h-10 bg-white/10 hidden sm:block"></div>
                 <div className="flex flex-col">
-                  <span className="text-3xl font-black text-primary-navy">750+</span>
-                  <span className="text-slate-400 text-[10px] font-black uppercase tracking-tighter">Enterprises</span>
+                  <span className="text-3xl font-black text-white">750+</span>
+                  <span className="text-slate-500 text-[10px] font-black uppercase tracking-tighter">Enterprises</span>
                 </div>
               </div>
             </motion.div>
@@ -90,15 +135,15 @@ const Hero = () => {
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white p-8 md:p-10 rounded-[48px] shadow-2xl shadow-primary-navy/5 border border-slate-100 max-w-lg lg:ml-auto relative order-1 lg:order-2"
+              className="bg-white/5 backdrop-blur-xl p-8 md:p-10 rounded-[48px] shadow-2xl shadow-black border border-white/10 max-w-lg lg:ml-auto relative order-1 lg:order-2"
             >
               <div className="absolute -top-4 -right-4 bg-primary-gold p-4 rounded-2xl shadow-lg rotate-12 hidden md:block">
-                <TrendingUp className="w-6 h-6 text-primary-navy" />
+                <TrendingUp className="w-6 h-6 text-[#020617]" />
               </div>
 
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-2 h-8 bg-primary-gold rounded-full" />
-                <h3 className="text-2xl font-black text-primary-navy font-playfair">Check Eligibility</h3>
+                <h3 className="text-2xl font-black text-white font-playfair">Check Eligibility</h3>
               </div>
               
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -106,7 +151,7 @@ const Hero = () => {
                   <input 
                     type="text" 
                     placeholder="Full Name"
-                    className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none"
+                    className="w-full px-6 py-4 bg-white/5 rounded-2xl border-2 border-white/5 focus:border-primary-gold transition-all font-bold text-sm outline-none text-white placeholder-slate-500"
                     value={formData.fullName}
                     onChange={e => setFormData({...formData, fullName: e.target.value})}
                     required
@@ -116,10 +161,10 @@ const Hero = () => {
                       <input 
                         type="tel" 
                         placeholder="Mobile Number"
-                        className={`w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 transition-all font-bold text-sm outline-none ${
+                        className={`w-full px-6 py-4 bg-white/5 rounded-2xl border-2 transition-all font-bold text-sm outline-none text-white placeholder-slate-500 ${
                           touched.mobile && formData.mobile.length > 0 && formData.mobile.length !== 10 
                             ? 'border-red-400 focus:border-red-500' 
-                            : 'border-transparent focus:border-primary-gold'
+                            : 'border-white/5 focus:border-primary-gold'
                         }`}
                         value={formData.mobile}
                         onChange={e => {
@@ -131,13 +176,13 @@ const Hero = () => {
                         pattern="\d{10}"
                       />
                       {touched.mobile && formData.mobile.length > 0 && formData.mobile.length !== 10 && (
-                        <span className="text-[10px] text-red-500 font-bold ml-2">Must be 10 digits</span>
+                        <span className="text-[10px] text-red-400 font-bold ml-2">Must be 10 digits</span>
                       )}
                     </div>
                     <input 
                       type="email" 
                       placeholder="Email (Optional)"
-                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none"
+                      className="w-full px-6 py-4 bg-white/5 rounded-2xl border-2 border-white/5 focus:border-primary-gold transition-all font-bold text-sm outline-none text-white placeholder-slate-500"
                       value={formData.email}
                       onChange={e => setFormData({...formData, email: e.target.value})}
                     />
@@ -145,16 +190,18 @@ const Hero = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="relative">
                       <select 
-                        className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none appearance-none cursor-pointer"
+                        className="w-full px-6 py-4 bg-white/5 rounded-2xl border-2 border-white/5 focus:border-primary-gold transition-all font-bold text-sm outline-none appearance-none cursor-pointer text-white"
                         value={formData.loanType}
                         onChange={e => setFormData({...formData, loanType: e.target.value})}
                       >
-                        <option value="MSME Loan">MSME Loan</option>
-                        <option value="LAP">LAP</option>
-                        <option value="Home Loan">Home Loan</option>
-                        <option value="Supply Chain Finance">Supply Chain Finance</option>
+                        <option value="home_loan" className="bg-[#111827]">Housing Loan</option>
+                        <option value="micro_lap" className="bg-[#111827]">Micro LAP</option>
+                        <option value="supply_chain" className="bg-[#111827]">Supply Chain Financing</option>
+                        <option value="msme_structured" className="bg-[#111827]">MSME Structured Product</option>
+                        <option value="lap" className="bg-[#111827]">Loan Against Property (LAP)</option>
+                        <option value="hybrid" className="bg-[#111827]">Hybrid MSME Product</option>
                       </select>
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 text-white">
                          <ArrowRight className="w-4 h-4 rotate-90" />
                       </div>
                     </div>
@@ -162,10 +209,10 @@ const Hero = () => {
                       <input 
                         type="number" 
                         placeholder="Amount (₹)"
-                        className={`w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 transition-all font-bold text-sm outline-none ${
+                        className={`w-full px-6 py-4 bg-white/5 rounded-2xl border-2 transition-all font-bold text-sm outline-none text-white placeholder-slate-500 ${
                           touched.amount && (formData.amount < 10000)
                             ? 'border-red-400 focus:border-red-500' 
-                            : 'border-transparent focus:border-primary-gold'
+                            : 'border-white/5 focus:border-primary-gold'
                         }`}
                         value={formData.amount}
                         onChange={e => setFormData({...formData, amount: e.target.value ? Number(e.target.value) : ''})}
@@ -174,24 +221,24 @@ const Hero = () => {
                         min="10000"
                       />
                       {touched.amount && formData.amount < 10000 && formData.amount !== '' && (
-                        <span className="text-[10px] text-red-500 font-bold ml-2">Min ₹10,000</span>
+                        <span className="text-[10px] text-red-400 font-bold ml-2">Min ₹10,000</span>
                       )}
                     </div>
                   </div>
                   <div className="relative">
                     <select
-                      className="w-full px-6 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-gold transition-all font-bold text-sm outline-none appearance-none cursor-pointer"
+                      className="w-full px-6 py-4 bg-white/5 rounded-2xl border-2 border-white/5 focus:border-primary-gold transition-all font-bold text-sm outline-none appearance-none cursor-pointer text-white"
                       value={formData.city}
                       onChange={e => setFormData({...formData, city: e.target.value})}
                       required
                     >
-                      <option value="" disabled>Select City</option>
-                      <option value="Delhi">Delhi</option>
-                      <option value="Noida">Noida</option>
-                      <option value="Agra">Agra</option>
-                      <option value="Gurgaon">Gurgaon</option>
+                      <option value="" disabled className="bg-[#111827]">Select Branch City</option>
+                      <option value="Agra" className="bg-[#111827]">Agra</option>
+                      <option value="Mathura" className="bg-[#111827]">Mathura</option>
+                      <option value="Hathras" className="bg-[#111827]">Hathras</option>
+                      <option value="Kosi" className="bg-[#111827]">Kosi</option>
                     </select>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 text-white">
                        <ArrowRight className="w-4 h-4 rotate-90" />
                     </div>
                   </div>
@@ -200,29 +247,29 @@ const Hero = () => {
                 <button
                   type="submit"
                   disabled={submitStatus === 'submitting'}
-                  className="group relative w-full py-5 bg-primary-navy text-white font-black rounded-2xl overflow-hidden shadow-xl shadow-primary-navy/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                  className="group relative w-full py-5 bg-primary-gold text-[#020617] font-black rounded-2xl overflow-hidden shadow-xl shadow-primary-gold/10 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
                 >
-                  <div className="absolute inset-0 bg-primary-gold translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                  <span className="relative z-10 uppercase tracking-widest text-xs group-hover:text-primary-navy">
+                  <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                  <span className="relative z-10 uppercase tracking-widest text-xs group-hover:text-primary-gold group-hover:bg-[#020617] px-4 py-1 rounded-lg transition-colors">
                     {submitStatus === 'submitting' ? 'Processing...' : 'Get Funding Proposal'}
                   </span>
                 </button>
 
                 <AnimatePresence mode="wait">
                   {submitStatus === 'success' && (
-                    <motion.div key="success" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-4 p-4 bg-green-50 text-success-green rounded-2xl text-xs font-black text-center border border-green-100 uppercase tracking-widest">
+                    <motion.div key="success" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-4 p-4 bg-green-500/10 text-emerald-400 rounded-2xl text-xs font-black text-center border border-emerald-500/20 uppercase tracking-widest">
                       <CheckCircle2 className="w-4 h-4 inline-block mr-2 mb-0.5" />
                       Application Submitted Successfully!
                     </motion.div>
                   )}
                   {submitStatus === 'duplicate' && (
-                    <motion.div key="duplicate" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-4 p-4 bg-amber-50 text-amber-600 rounded-2xl text-xs font-black text-center border border-amber-100 uppercase tracking-widest leading-relaxed">
+                    <motion.div key="duplicate" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-4 p-4 bg-amber-500/10 text-amber-400 rounded-2xl text-xs font-black text-center border border-amber-500/20 uppercase tracking-widest leading-relaxed">
                       <AlertCircle className="w-4 h-4 inline-block mr-2 mb-0.5" />
                       Duplicate Entry: This number was used in the last 24 hours.
                     </motion.div>
                   )}
                   {submitStatus === 'error' && (
-                    <motion.div key="error" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-4 p-4 bg-red-50 text-red-600 rounded-2xl text-[10px] font-black text-center border border-red-100 uppercase tracking-widest leading-relaxed">
+                    <motion.div key="error" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-4 p-4 bg-rose-500/10 text-rose-400 rounded-2xl text-[10px] font-black text-center border border-rose-500/20 uppercase tracking-widest leading-relaxed">
                       <AlertCircle className="w-4 h-4 inline-block mr-2 mb-0.5" />
                       {errorMessage}
                     </motion.div>

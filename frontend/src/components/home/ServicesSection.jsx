@@ -74,32 +74,27 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-slate-50 relative overflow-hidden">
-      {/* Background Decorative Elements */}
-      <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none">
-        <div className="absolute top-10 left-10 w-64 h-64 bg-primary-gold rounded-full blur-[100px]"></div>
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-primary-navy rounded-full blur-[150px]"></div>
-      </div>
+    <section id="services" className="py-24 bg-[#0B0F19] relative overflow-hidden">
+      {/* Decorative Blur */}
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary-gold opacity-[0.03] blur-[100px] rounded-full" />
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-indigo-600 opacity-[0.03] blur-[100px] rounded-full" />
 
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        <div className="mb-20 text-center">
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="inline-block px-4 py-1.5 bg-primary-gold/10 text-primary-gold text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-4"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 text-primary-gold text-[10px] font-black uppercase tracking-[0.3em] mb-6 border border-white/5 shadow-2xl"
           >
-            Financial Portfolio
+            Our Product Suite
           </motion.div>
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl md:text-5xl font-playfair font-black text-primary-navy mb-6"
-          >
-            Tailored Solutions for <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-gold to-amber-600">Every Financial Goal</span>
-          </motion.h2>
-          <p className="text-lg text-slate-500 font-medium">
-            From fueling your business growth to securing your family's future, our diverse range of products is designed to empower your journey.
+          
+          <h2 className="text-4xl md:text-5xl font-playfair font-black text-white mb-6">
+            Customized <span className="text-primary-gold italic">Lending Solutions</span>
+          </h2>
+          <p className="text-slate-500 font-bold max-w-2xl mx-auto text-sm leading-relaxed uppercase tracking-widest italic">
+            Tailored financial products designed to bridge your capital requirements 
+            with speed, flexibility, and transparency.
           </p>
         </div>
 
@@ -107,34 +102,27 @@ const ServicesSection = () => {
           {services.map((service, idx) => (
             <motion.div
               key={service.slug}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -12 }}
-              transition={{ delay: idx * 0.05 }}
-              viewport={{ once: true }}
-              className="group bg-white p-8 md:p-10 rounded-[48px] border border-slate-100/60 hover:border-primary-gold/50 hover:shadow-[0_40px_80px_-15px_rgba(2,17,46,0.1)] transition-all duration-500 flex flex-col h-full relative overflow-hidden"
+              transition={{ delay: idx * 0.1 }}
+              whileHover={{ y: -8 }}
+              className="group bg-white/5 backdrop-blur-sm p-10 rounded-[40px] border border-white/5 hover:border-primary-gold/30 hover:bg-white/10 transition-all duration-500 cursor-pointer shadow-lg hover:shadow-primary-gold/5 flex flex-col h-full"
             >
-              {/* Card Accent Gradient */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary-gold opacity-0 group-hover:opacity-5 blur-3xl transition-opacity duration-500" />
+              <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-primary-gold transition-colors duration-500">
+                <service.icon className="w-8 h-8 text-primary-gold group-hover:text-[#020617] transition-colors" />
+              </div>
               
-              <motion.div 
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                className="w-20 h-20 bg-slate-50 rounded-[28px] flex items-center justify-center text-primary-navy mb-10 group-hover:bg-primary-navy group-hover:text-primary-gold transition-all duration-500 shadow-sm group-hover:shadow-xl group-hover:shadow-primary-navy/10"
-              >
-                <service.icon className="w-10 h-10" />
-              </motion.div>
-              
-              <h3 className="text-2xl font-playfair font-black text-primary-navy mb-4 group-hover:text-primary-gold transition-colors leading-tight">
+              <h3 className="text-2xl font-black text-white mb-4 font-playfair">
                 {service.name}
               </h3>
               
-              <p className="text-sm text-slate-500 font-medium mb-8 leading-relaxed flex-grow opacity-80 group-hover:opacity-100 transition-opacity">
+              <p className="text-slate-500 font-bold text-xs leading-relaxed mb-8 group-hover:text-slate-300 transition-colors uppercase tracking-tight flex-grow">
                 {service.desc}
               </p>
 
               <div className="flex flex-wrap gap-2 mb-10">
                 {service.tags.map(tag => (
-                  <span key={tag} className="text-[9px] font-black tracking-widest uppercase px-3 py-1.5 bg-slate-50 text-slate-400 rounded-xl group-hover:bg-primary-gold/10 group-hover:text-primary-navy transition-all">
+                  <span key={tag} className="text-[9px] font-black tracking-widest uppercase px-3 py-1.5 bg-white/5 text-slate-400 rounded-xl group-hover:bg-primary-gold/10 group-hover:text-primary-gold transition-all">
                     {tag}
                   </span>
                 ))}
@@ -142,7 +130,7 @@ const ServicesSection = () => {
 
               <Link 
                 to={`/services/${service.slug}`}
-                className="flex items-center justify-between w-full py-4 px-6 bg-slate-50 rounded-2xl text-[10px] font-black text-primary-navy uppercase tracking-[0.2em] group-hover:bg-primary-navy group-hover:text-white transition-all duration-500"
+                className="flex items-center justify-between w-full py-4 px-6 bg-white/5 rounded-2xl text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] group-hover:bg-primary-gold group-hover:text-[#020617] transition-all duration-500"
               >
                 Explore Details
                 <ArrowRight className="w-4 h-4 text-primary-gold group-hover:translate-x-1 transition-transform" />

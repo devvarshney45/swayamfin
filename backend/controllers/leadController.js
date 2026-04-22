@@ -1,15 +1,21 @@
 const Lead = require('../models/Lead');
 const Branch = require('../models/Branch');
 const User = require('../models/User');
+const Remark = require('../models/Remark');
+const notificationService = require('../utils/notificationService');
 
-/**
- * Validates duplication and creates a lead with round robin routing
- */
 exports.createLead = async (req, res) => {
   try {
-    const { fullName, mobile, email, loanType, amount, city, utm_source, utm_medium, utm_campaign } = req.body;
+    const { 
+      source, applicant_name, mobile, alternate_mobile, email, 
+      location_city, pincode, loan_type, loan_amount_required 
+    } = req.body;
 
-    // 1. Lead Deduplication
+    if (!applicant_name || !mobile || !location_city || !loan_type || !loan_amount_required) {
+      return res.status(400).json({ message: 'Please provide all required fields: name, mobile, city, loan type, and amount.' });
+    }
+
+    // Deduplication check
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const existingLead = await Lead.findOne({
       mobile,
@@ -17,266 +23,226 @@ exports.createLead = async (req, res) => {
     });
 
     if (existingLead) {
-      return res.status(409).json({ 
-        success: false, 
-        message: 'A lead with this mobile number was already submitted within the last 24 hours.' 
-      });
+      return res.status(409).json({ message: 'A lead with this mobile number was already submitted within the last 24 hours.' });
     }
 
-    // 2. Round-Robin Lead Routing — auto-assign branch + agent
-    let assignedBranch = null;   
-    let assignedAgent = null;    
+    // Branch Mapping & Round Robin
+    let assigned_to = null;
+    let branch_id = null;
+
+    const branch = await Branch.findOne({ city: new RegExp(`^${location_city.trim()}$`, 'i'), is_active: true });
     
-    // Exact mapping logic checking MongoDB for nearest city and finding agent with oldest 'lastAssigned'
-    const branch = await Branch.findOne({ city: new RegExp(`^${city.trim()}$`, 'i') });
     if (branch) {
-       assignedBranch = branch._id;
-       const nextAgent = await User.findOne({ branch: branch._id, role: 'Agent' }).sort({ lastAssigned: 1 });
-       if (nextAgent) {
-         assignedAgent = nextAgent._id;
-         nextAgent.lastAssigned = Date.now();
-         await nextAgent.save();
-       }
+      branch_id = branch._id;
+      // Find active sales_person with oldest assignment
+      const nextAgent = await User.findOne({ 
+        branch_id: branch._id, 
+        role: 'sales_person',
+        is_active: true 
+      }).sort({ lastAssigned: 1 });
+
+      if (nextAgent) {
+        assigned_to = nextAgent._id;
+        nextAgent.lastAssigned = Date.now();
+        await nextAgent.save();
+      }
     }
 
-    // 3. Create Lead
+    // Generate Lead Number
+    const year = new Date().getFullYear();
+    const branchCode = branch ? branch.code : 'ADM';
+    const count = await Lead.countDocuments({ 
+      createdAt: { $gte: new Date(`${year}-01-01`) },
+      branch_id 
+    });
+    const lead_number = `${branchCode}-${year}-${String(count + 1).padStart(4, '0')}`;
+
     const newLead = await Lead.create({
-      fullName,
+      lead_number,
+      source: source || 'website',
+      applicant_name,
       mobile,
+      alternate_mobile,
       email,
-      loanType,
-      amount,
-      city: city.trim(),
-      assignedBranch,
-      assignedAgent,
-      utm_source,
-      utm_medium,
-      utm_campaign,
+      location_city: location_city.trim(),
+      pincode,
+      loan_type,
+      loan_amount_required,
+      branch_id,
+      assigned_to,
     });
 
-    res.status(201).json({
-      success: true,
-      data: newLead,
-      message: 'Lead captured successfully!',
-    });
+    // Send WhatsApp Notification if agent assigned
+    if (assigned_to) {
+      const agent = await User.findById(assigned_to);
+      if (agent) {
+        await notificationService.sendWhatsAppAssignment(agent, newLead);
+        
+        // Log Initial Assignment
+        await Remark.create({
+          lead_id: newLead._id,
+          user_id: assigned_to, // Initially assigned to this user
+          remark_text: `Lead automatically assigned to ${agent.full_name} via Round-robin.`,
+          remark_type: 'system'
+        });
+      }
+    }
+
+    // [NEW] Send Welcome WhatsApp to Customer
+    await notificationService.sendCustomerWelcome(newLead);
+
+    res.status(201).json({ success: true, data: newLead });
   } catch (error) {
     console.error('Error creating lead:', error);
-    
-    // Handle Mongoose Validation Errors
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(err => err.message);
-      return res.status(400).json({ 
-        success: false, 
-        message: messages.join(', ') || 'Validation Error' 
-      });
-    }
-
-    res.status(500).json({ success: false, message: 'Server Error. Could not process lead.' });
-  }
-};
-
-/**
- * Gets all leads assigned to the authenticated agent today
- */
-exports.getTodaysLeads = async (req, res) => {
-  try {
-    const agentId = req.user ? req.user.id : null; 
-    
-    const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
-
-    const query = {
-      createdAt: { $gte: startOfToday }
-    };
-    
-    if (agentId) {
-      query.assignedAgent = agentId;
-    }
-
-    const leads = await Lead.find(query).sort({ createdAt: -1 });
-
-    res.status(200).json({
-      success: true,
-      count: leads.length,
-      data: leads,
-    });
-  } catch (error) {
-    console.error('Error fetching today\'s leads:', error);
-    res.status(500).json({ success: false, message: 'Could not fetch leads.' });
-  }
-};
-
-/**
- * Updates status / logs call data / extra client details for a lead
- */
-exports.updateLeadStatus = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status, agentNotes, notes, employmentType, monthlyIncome, businessName, address, pincode } = req.body;
-
-    const lead = await Lead.findById(id);
-    
-    if (!lead) {
-      return res.status(404).json({ success: false, message: 'Lead not found.' });
-    }
-
-    if (status) lead.status = status;
-    if (agentNotes || notes) lead.agentNotes = agentNotes || notes;
-    if (employmentType !== undefined) lead.employmentType = employmentType;
-    if (monthlyIncome !== undefined) lead.monthlyIncome = monthlyIncome;
-    if (businessName !== undefined) lead.businessName = businessName;
-    if (address !== undefined) lead.address = address;
-    if (pincode !== undefined) lead.pincode = pincode;
-
-    await lead.save();
-
-    res.status(200).json({
-      success: true,
-      data: lead,
-      message: 'Lead updated successfully.',
-    });
-  } catch (error) {
-    console.error('Error updating lead status:', error);
-    res.status(500).json({ success: false, message: 'Could not update lead.' });
-  }
-};
-
-/**
- * Gets a single lead by ID with full populated data
- */
-exports.getLeadById = async (req, res) => {
-  try {
-    const lead = await Lead.findById(req.params.id)
-      .populate('assignedBranch')
-      .populate('assignedAgent', 'name email cityName')
-      .populate('followUps.addedBy', 'name');
-
-    if (!lead) {
-      return res.status(404).json({ success: false, message: 'Lead not found' });
-    }
-
-    // Security: Check if agent is assigned or user is admin
-    if (req.user.role !== 'Admin' && lead.assignedAgent?._id.toString() !== req.user.id) {
-      return res.status(403).json({ success: false, message: 'Not authorized' });
-    }
-
-    res.status(200).json(lead);
-  } catch (error) {
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 };
 
-/**
- * Add a daily follow-up entry to a lead
- */
-exports.addFollowUp = async (req, res) => {
+exports.getLeads = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { note, outcome } = req.body;
+    const userRole = req.user.role;
+    let query = {};
 
-    if (!note || !note.trim()) {
-      return res.status(400).json({ success: false, message: 'Follow-up note is required.' });
-    }
-
-    const lead = await Lead.findById(id);
-    if (!lead) {
-      return res.status(404).json({ success: false, message: 'Lead not found.' });
-    }
-
-    // Security check
-    if (req.user.role !== 'Admin' && lead.assignedAgent?.toString() !== req.user.id) {
-      return res.status(403).json({ success: false, message: 'Not authorized' });
-    }
-
-    lead.followUps.push({
-      note: note.trim(),
-      outcome: outcome || 'Other',
-      addedBy: req.user.id,
-      date: new Date(),
-    });
-
-    // Auto-update status to 'Contacted' if still 'Fresh'
-    if (lead.status === 'Fresh') {
-      lead.status = 'Contacted';
-    }
-
-    await lead.save();
-
-    // Re-fetch with populated data
-    const updatedLead = await Lead.findById(id)
-      .populate('assignedBranch')
-      .populate('assignedAgent', 'name email cityName')
-      .populate('followUps.addedBy', 'name');
-
-    res.status(201).json({
-      success: true,
-      data: updatedLead,
-      message: 'Follow-up added successfully.',
-    });
-  } catch (error) {
-    console.error('Error adding follow-up:', error);
-    res.status(500).json({ success: false, message: 'Could not add follow-up.' });
-  }
-};
-
-/**
- * Gets all leads for Super Admin (global view)
- */
-exports.getAllLeads = async (req, res) => {
-  try {
-    const { status, loanType, city, startDate, endDate } = req.query;
-    const query = {};
-    
-    if (status && status !== 'all') query.status = status;
-    if (loanType && loanType !== 'all') query.loanType = loanType;
-    if (city && city !== 'all') query.city = new RegExp(city.trim(), 'i');
-    
-    if (startDate || endDate) {
-      query.createdAt = {};
-      if (startDate) query.createdAt.$gte = new Date(startDate);
-      if (endDate) query.createdAt.$lte = new Date(endDate);
-    }
+    if (userRole === 'sales_person') {
+      query.assigned_to = req.user._id;
+    } else if (userRole === 'bsm') {
+      query.branch_id = req.user.branch_id;
+    } // admin sees all
 
     const leads = await Lead.find(query)
-      .populate('assignedBranch')
-      .populate('assignedAgent', 'name email')
+      .populate('assigned_to', 'full_name')
+      .populate('branch_id', 'code name')
       .sort({ createdAt: -1 });
 
     res.status(200).json({ success: true, count: leads.length, data: leads });
   } catch (error) {
-    console.error('Error fetching all leads:', error);
-    res.status(500).json({ success: false, message: 'Server Error' });
+    res.status(500).json({ success: false });
   }
 };
 
-/**
- * Gets lead statistics for Admin Dashboard
- */
-exports.getLeadStats = async (req, res) => {
+exports.getLeadById = async (req, res) => {
   try {
-    const totalLeads = await Lead.countDocuments();
-    const statusStats = await Lead.aggregate([
-      { $group: { _id: '$status', count: { $sum: 1 } } }
-    ]);
-    const loanTypeStats = await Lead.aggregate([
-      { $group: { _id: '$loanType', count: { $sum: 1 } } }
-    ]);
-    const cityStats = await Lead.aggregate([
-      { $group: { _id: '$city', count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $limit: 5 }
-    ]);
+    const lead = await Lead.findById(req.params.id)
+      .populate('assigned_to', 'full_name email phone')
+      .populate('branch_id', 'name code city');
 
-    res.status(200).json({
-      success: true,
-      data: {
-        totalLeads,
-        statusStats,
-        loanTypeStats,
-        cityStats
+    if (!lead) return res.status(404).json({ message: 'Lead not found' });
+
+    if (req.user.role === 'sales_person' && lead.assigned_to?._id.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to view this lead' });
+    }
+    if (req.user.role === 'bsm' && lead.branch_id?._id.toString() !== req.user.branch_id.toString()) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    res.status(200).json(lead);
+  } catch (err) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+exports.updateLead = async (req, res) => {
+  try {
+    const lead = await Lead.findById(req.params.id);
+    if (!lead) return res.status(404).json({ message: 'Not found' });
+
+    if (req.user.role === 'sales_person' && lead.assigned_to?.toString() !== req.user.id) {
+        return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    // Merge updates
+    Object.assign(lead, req.body);
+    await lead.save();
+
+    res.json({ success: true, data: lead });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.updateStatus = async (req, res) => {
+  try {
+    const { status, stage, dead_reason } = req.body;
+    const lead = await Lead.findById(req.params.id);
+    if (!lead) return res.status(404).json({ message: 'Not found' });
+
+    const oldStatus = lead.status;
+    if (status) {
+      lead.status = status;
+      // Automated mapping to stages
+      const statusToStage = {
+        'New': 'new',
+        'Contacted': 'contacted',
+        'In Progress': 'in_progress',
+        'Document Submitted': 'docs_submitted',
+        'Sanctioned': 'sanctioned',
+        'Disbursed': 'disbursed',
+        'Closed - Won': 'closed',
+        'Dead Lead': 'dead',
+        'On Hold': 'on_hold'
+      };
+      if (statusToStage[status]) lead.stage = statusToStage[status];
+    }
+    if (dead_reason) lead.dead_reason = dead_reason;
+
+    if (status === 'Dead Lead' || status === 'Closed - Won' || status === 'Disbursed') {
+      lead.closing_date = Date.now();
+    }
+
+    await lead.save();
+
+    // Log Activity as System Remark
+    if (status && status !== oldStatus) {
+      await Remark.create({
+        lead_id: lead._id,
+        user_id: req.user.id,
+        remark_text: `Status updated from ${oldStatus} to ${status}`,
+        remark_type: 'system'
+      });
+
+      // [NEW] Trigger Customer WhatsApp for Sanctioned/Disbursed
+      if (status === 'Sanctioned' || status === 'Disbursed') {
+        await notificationService.sendCustomerStatusUpdate(lead, status);
       }
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
+    }
+
+    res.json({ success: true, data: lead });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.reassignLead = async (req, res) => {
+  try {
+    const { new_assigned_to } = req.body;
+    const lead = await Lead.findById(req.params.id);
+    if (!lead) return res.status(404).json({ message: 'Not found' });
+    
+    // Only BSM and Admin can reassign
+    if (req.user.role === 'bsm' && lead.branch_id?.toString() !== req.user.branch_id.toString()) {
+        return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    const oldAgentId = lead.assigned_to;
+    lead.assigned_to = new_assigned_to;
+    await lead.save();
+
+    // Send WhatsApp Notification on Reassignment
+    const agent = await User.findById(new_assigned_to);
+    if (agent) {
+      await notificationService.sendWhatsAppAssignment(agent, lead);
+      
+      // Log Activity
+      await Remark.create({
+        lead_id: lead._id,
+        user_id: req.user.id,
+        remark_text: `Lead reassigned to ${agent.full_name}`,
+        remark_type: 'system'
+      });
+    }
+
+    res.json({ success: true, data: lead });
+  } catch(err) {
+    res.status(500).json({ message: 'Server Error' });
   }
 };

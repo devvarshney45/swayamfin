@@ -12,17 +12,17 @@ const AdLandingPage = () => {
   const [touched, setTouched] = useState({ mobile: false });
 
   const loanTypeMap = {
-    'msme-loan': 'MSME Loan',
-    'lap': 'LAP',
-    'housing-loan': 'Home Loan',
-    'supply-chain': 'Supply Chain Finance'
+    'msme-loan': 'msme_structured',
+    'lap': 'lap',
+    'housing-loan': 'home_loan',
+    'supply-chain': 'supply_chain'
   };
 
   const [formData, setFormData] = useState({
     fullName: '',
     mobile: '',
     email: '',
-    loanType: loanTypeMap[slug] || 'MSME Loan',
+    loanType: loanTypeMap[slug] || 'msme_structured',
     amount: 500000,
     city: ''
   });
@@ -179,10 +179,10 @@ const AdLandingPage = () => {
                 onChange={e => setFormData({...formData, city: e.target.value})}
               >
                 <option value="" disabled>Select City</option>
-                <option value="Delhi">Delhi</option>
-                <option value="Noida">Noida</option>
                 <option value="Agra">Agra</option>
-                <option value="Gurgaon">Gurgaon</option>
+                <option value="Mathura">Mathura</option>
+                <option value="Hathras">Hathras</option>
+                <option value="Kosi">Kosi</option>
               </select>
               <select 
                 className="w-full px-6 py-4.5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-primary-blue focus:bg-white transition-all outline-none font-bold appearance-none text-slate-700"

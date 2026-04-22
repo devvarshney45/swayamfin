@@ -22,10 +22,12 @@ import Grievance from './pages/Grievance';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminLeads from './pages/admin/AdminLeads';
 import AdminAgents from './pages/admin/AdminAgents';
+import BsmDashboard from './pages/bsm/BsmDashboard';
 import AdLandingPage from './pages/AdLandingPage';
 import BranchDetails from './pages/BranchDetails';
 import ServiceDetails from './pages/ServiceDetails';
 import LeadDetails from './pages/agent/LeadDetails';
+import NewLead from './pages/agent/NewLead';
 import Blog from './pages/Blog';
 import ScrollToTop from './components/common/ScrollToTop';
 import { AuthProvider } from './context/AuthContext';
@@ -70,23 +72,43 @@ const AppContent = () => {
           <Route 
             path="/agent/dashboard" 
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['sales_person']}>
                 <AgentDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/agent/lead/new" 
+            element={
+              <ProtectedRoute allowedRoles={['sales_person', 'admin']}>
+                <NewLead />
               </ProtectedRoute>
             } 
           />
           <Route 
             path="/agent/lead/:id" 
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['sales_person', 'bsm', 'admin']}>
                 <LeadDetails />
               </ProtectedRoute>
             } 
           />
+          
+          {/* BSM PORTAL */}
+          <Route 
+            path="/bsm/dashboard" 
+            element={
+              <ProtectedRoute allowedRoles={['bsm']}>
+                <BsmDashboard />
+              </ProtectedRoute>
+            } 
+          />
+
+          {/* ADMIN PORTAL */}
           <Route 
             path="/admin/dashboard" 
             element={
-              <ProtectedRoute adminOnly={true}>
+              <ProtectedRoute allowedRoles={['admin']}>
                 <AdminDashboard />
               </ProtectedRoute>
             } 
@@ -94,7 +116,7 @@ const AppContent = () => {
           <Route 
             path="/admin/leads" 
             element={
-              <ProtectedRoute adminOnly={true}>
+              <ProtectedRoute allowedRoles={['admin']}>
                 <AdminLeads />
               </ProtectedRoute>
             } 
@@ -102,7 +124,7 @@ const AppContent = () => {
           <Route 
             path="/admin/agents" 
             element={
-              <ProtectedRoute adminOnly={true}>
+              <ProtectedRoute allowedRoles={['admin']}>
                 <AdminAgents />
               </ProtectedRoute>
             } 

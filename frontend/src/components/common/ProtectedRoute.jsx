@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-const ProtectedRoute = ({ children, adminOnly = false }) => {
+const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
 
@@ -18,7 +18,9 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
     return <Navigate to="/agent/login" state={{ from: location }} replace />;
   }
 
-  if (adminOnly && user.role !== 'Admin') {
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    if (user.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
+    if (user.role === 'bsm') return <Navigate to="/bsm/dashboard" replace />;
     return <Navigate to="/agent/dashboard" replace />;
   }
 

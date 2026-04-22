@@ -66,22 +66,30 @@ const Footer = () => {
             </div>
             <div className="flex gap-4 items-center text-sm text-slate-200 font-black">
               <Phone className="w-4 h-4 text-primary-gold flex-shrink-0" />
-              <span>+91 6397003690</span>
+              <span>+91 87009 65592 / 011-44728117</span>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-white/5 mb-8">
-           {['Agra Branch', 'Delhi HQ', 'Noida Branch', 'Gurgaon Branch'].map((loc) => (
+           {['Agra Branch', 'Mathura Branch', 'Hathras Branch', 'Kosi Branch'].map((loc) => (
              <div key={loc} className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-primary-gold transition cursor-pointer">
                 <Building2 className="w-3 h-3" /> {loc}
              </div>
            ))}
         </div>
 
-        <div className="pt-8 border-t border-white/5 text-[10px] text-slate-500 font-bold text-center">
-          <p>© {currentYear} Swayamfin Financial Services Pvt. Ltd. | RBI REGISTERED NBFC PARTNER</p>
-          <p className="mt-2 italic opacity-50">Lending decisions are at the sole discretion of partner lenders.</p>
+        <div className="pt-8 border-t border-white/5 text-[10px] text-slate-500 font-bold text-center space-y-4">
+          <p className="max-w-4xl mx-auto leading-relaxed opacity-60">
+            "Swayamfin is a brand of Green Miles Mobility Pvt. Ltd., operating as a Loan Service Provider (LSP). 
+            Loans are sourced, processed, and facilitated on behalf of regulated NBFC and HFC partners. 
+            Swayamfin does not lend directly. All lending decisions are at the sole discretion of the partner lender."
+          </p>
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 opacity-80">
+            <span>© {currentYear} Green Miles Mobility Pvt. Ltd.</span>
+            <span>CIN: U66190DL2019PTC359196</span>
+            <span>Partner: DMI Housing Finance Pvt. Ltd.</span>
+          </div>
         </div>
       </div>
     </footer>

@@ -9,14 +9,13 @@ exports.protect = async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     try {
-      // Get token from header
       token = req.headers.authorization.split(' ')[1];
-
-      // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'swayamfin_secret_key_123');
 
-      // Get user from token
-      req.user = await User.findById(decoded.id).select('-password');
+      req.user = await User.findById(decoded.id).select('-password_hash');
+      if (!req.user || !req.user.is_active) {
+        return res.status(401).json({ message: 'User not found or inactive' });
+      }
 
       next();
     } catch (err) {
@@ -31,9 +30,17 @@ exports.protect = async (req, res, next) => {
 };
 
 exports.adminOnly = (req, res, next) => {
-  if (req.user && req.user.role === 'Admin') {
+  if (req.user && req.user.role === 'admin') {
     next();
   } else {
     res.status(403).json({ message: 'Not authorized as an admin' });
+  }
+};
+
+exports.bsmOnly = (req, res, next) => {
+  if (req.user && (req.user.role === 'bsm' || req.user.role === 'admin')) {
+    next();
+  } else {
+    res.status(403).json({ message: 'Not authorized as a BSM' });
   }
 };
