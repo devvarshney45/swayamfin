@@ -252,7 +252,7 @@ const Hero = () => {
                   className="group relative w-full py-5 bg-primary-gold text-[#020617] font-black rounded-2xl overflow-hidden shadow-xl shadow-primary-gold/10 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
                 >
                   <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                  <span className="relative z-10 uppercase tracking-widest text-xs group-hover:text-primary-gold group-hover:bg-[#020617] px-4 py-1 rounded-lg transition-colors">
+                  <span className={`relative z-10 uppercase tracking-widest text-xs ${isDark ? '' : 'text-[#020617] group-hover:text-white'} px-4 py-1 rounded-lg transition-colors`}>
                     {submitStatus === 'submitting' ? 'Processing...' : 'Get Funding Proposal'}
                   </span>
                 </button>

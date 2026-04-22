@@ -47,6 +47,28 @@ html.light-site .site-hero {
   background-color: #f8fafc !important;
 }
 
+/* Global Light Mode Adjustments for Dark Components */
+html.light-site .text-white:not(.keep-white),
+html.light-site .text-slate-100,
+html.light-site .text-slate-200 {
+  color: #0f172a !important;
+}
+
+html.light-site .text-slate-300,
+html.light-site .text-slate-400 {
+  color: #475569 !important;
+}
+
+html.light-site .bg-white\/5,
+html.light-site .bg-white\/10 {
+  background-color: rgba(15, 23, 42, 0.05) !important;
+}
+
+html.light-site .border-white\/5,
+html.light-site .border-white\/10 {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
 /* Transition for smooth theme switching */
 *,
 *::before,
