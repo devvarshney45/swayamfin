@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
@@ -16,6 +17,7 @@ import { useTheme } from '../../context/ThemeContext';
 
 const ServicesSection = () => {
   const { isDark } = useTheme();
+  const { t } = useTranslation();
   const services = [
     { 
       name: 'Home Loan', 
@@ -88,15 +90,14 @@ const ServicesSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full ${isDark ? 'bg-white/5 border-white/5' : 'bg-slate-100 border-slate-200'} text-primary-gold text-[10px] font-black uppercase tracking-[0.3em] mb-6 border shadow-2xl`}
           >
-            Our Product Suite
+            {t('services_subtitle')}
           </motion.div>
           
           <h2 className={`text-4xl md:text-5xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-6`}>
-            Customized <span className="text-primary-gold italic">Lending Solutions</span>
+            {t('services_title').split(' ')[0]} <span className="text-primary-gold italic">{t('services_title').split(' ').slice(1).join(' ')}</span>
           </h2>
           <p className="text-slate-500 font-bold max-w-2xl mx-auto text-sm leading-relaxed uppercase tracking-widest italic">
-            Tailored financial products designed to bridge your capital requirements 
-            with speed, flexibility, and transparency.
+            {t('services_desc')}
           </p>
         </div>
 
@@ -134,7 +135,7 @@ const ServicesSection = () => {
                   to={`/services/${service.slug}`}
                   className={`flex items-center justify-between w-full py-4 px-6 ${isDark ? 'bg-white/5 text-slate-300' : 'bg-slate-50 text-slate-600'} rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] group-hover:bg-primary-gold group-hover:text-[#020617] transition-all duration-500`}
                 >
-                  Explore Details
+                  {t('explore_details')}
                   <ArrowRight className="w-4 h-4 text-primary-gold group-hover:translate-x-1 transition-transform" />
                 </Link>
               </motion.div>

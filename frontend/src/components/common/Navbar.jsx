@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { 
@@ -24,8 +25,14 @@ import { useTheme } from '../../context/ThemeContext';
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const [activeDropdown, setActiveDropdown] = useState(null);
   const { isDark, toggleTheme } = useTheme();
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'en' ? 'hi' : 'en';
+    i18n.changeLanguage(newLang);
+  };
 
   const services = [
     { name: 'Home Loan', slug: 'housing-loans', icon: Home, desc: 'Your dream home made easy' },
@@ -69,9 +76,8 @@ const Navbar = () => {
               </Link>
             </div>
 
-            {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-7">
-              <Link to="/" className={`text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} hover:text-primary-gold transition-colors uppercase tracking-tight`}>Home</Link>
+              <Link to="/" className={`text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} hover:text-primary-gold transition-colors uppercase tracking-tight`}>{t('nav_home')}</Link>
               
               {/* Product Mega Menu */}
               <div 
@@ -80,7 +86,7 @@ const Navbar = () => {
                 onMouseLeave={() => setActiveDropdown(null)}
               >
                 <button className={`flex items-center gap-1.5 text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} hover:text-primary-gold transition-colors uppercase tracking-tight py-8`}>
-                  Services <ChevronDown className="w-4 h-4 text-primary-gold" />
+                  {t('nav_services')} <ChevronDown className="w-4 h-4 text-primary-gold" />
                 </button>
                 
                 {activeDropdown === 'services' && (
@@ -129,10 +135,20 @@ const Navbar = () => {
                 )}
               </div>
 
-              <Link to="/process" className={`text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} hover:text-primary-gold transition-colors uppercase tracking-tight`}>Process</Link>
-              <Link to="/about" className={`text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} hover:text-primary-gold transition-colors uppercase tracking-tight`}>Company</Link>
+              <Link to="/process" className={`text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} hover:text-primary-gold transition-colors uppercase tracking-tight`}>{t('nav_partners')}</Link>
+              <Link to="/about" className={`text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} hover:text-primary-gold transition-colors uppercase tracking-tight`}>{t('nav_about')}</Link>
               
               <div className="w-px h-6 bg-white/10" />
+
+              {/* Language Toggle */}
+              <button
+                onClick={toggleLanguage}
+                title={i18n.language === 'en' ? 'Switch to Hindi' : 'Switch to English'}
+                className={`w-12 h-9 rounded-xl ${isDark ? 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'} border flex items-center justify-center gap-1.5 py-1 px-2 hover:text-primary-gold transition-all group`}
+              >
+                <Globe className="w-4 h-4" />
+                <span className="text-[10px] font-black uppercase">{i18n.language === 'en' ? 'EN' : 'HI'}</span>
+              </button>
 
               {/* Theme Toggle */}
               <button

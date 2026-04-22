@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { ShieldCheck, ArrowRight, CheckCircle2, AlertCircle, TrendingUp } from 'lucide-react';
 import { getUTMParams } from '../utils/helpers';
 import { useTheme } from '../context/ThemeContext';
@@ -15,6 +16,7 @@ import CTASection from './home/CTASection';
 
 const Hero = () => {
   const { isDark } = useTheme();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     fullName: '', mobile: '', email: '', loanType: 'msme_structured', amount: '', city: ''
   });
@@ -25,16 +27,16 @@ const Hero = () => {
 
   const slides = [
     {
-      title: <>Empowering You for <br /> <span className="text-primary-gold">Financial Success</span></>,
-      sub: "Fast Loans for Growing Businesses"
+      title: <>{t('hero_title_1')}</>,
+      sub: t('hero_sub_1')
     },
     {
-      title: <>Working Capital <br /> <span className="text-primary-gold">When You Need It</span></>,
-      sub: "Apply in 5 Minutes — Fast Decisions"
+      title: <>{t('hero_title_2')}</>,
+      sub: t('hero_sub_2')
     },
     {
-      title: <>Your Dream Home <br /> <span className="text-primary-gold">is Closer Than You Think</span></>,
-      sub: "Affordable Housing Loans — Tie-up with DMI Housing"
+      title: <>{t('hero_title_3')}</>,
+      sub: t('hero_sub_3')
     }
   ];
 
@@ -97,7 +99,7 @@ const Hero = () => {
             >
               <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${isDark ? 'bg-white/5 ring-white/10' : 'bg-slate-100 ring-slate-200'} text-primary-gold text-[10px] font-black uppercase tracking-widest shadow-sm ring-1`}>
                 <ShieldCheck className="w-4 h-4" />
-                RBI Compliant Fintech Partner
+                {t('hero_badge')}
               </div>
               
               <AnimatePresence mode="wait">
@@ -124,12 +126,12 @@ const Hero = () => {
               <div className="flex flex-wrap gap-8 items-center pt-4">
                 <div className="flex flex-col">
                   <span className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>₹125Cr+</span>
-                  <span className="text-slate-500 text-[10px] font-black uppercase tracking-tighter">Disbursed</span>
+                  <span className="text-slate-500 text-[10px] font-black uppercase tracking-tighter">{t('hero_stats_disbursed')}</span>
                 </div>
                 <div className={`w-px h-10 ${isDark ? 'bg-white/10' : 'bg-slate-200'} hidden sm:block`}></div>
                 <div className="flex flex-col">
                   <span className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>750+</span>
-                  <span className="text-slate-500 text-[10px] font-black uppercase tracking-tighter">Enterprises</span>
+                  <span className="text-slate-500 text-[10px] font-black uppercase tracking-tighter">{t('hero_stats_enterprises')}</span>
                 </div>
               </div>
             </motion.div>
@@ -145,14 +147,14 @@ const Hero = () => {
 
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-2 h-8 bg-primary-gold rounded-full" />
-                <h3 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'} font-playfair`}>Check Eligibility</h3>
+                <h3 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'} font-playfair`}>{t('form_title')}</h3>
               </div>
               
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-4">
                   <input 
                     type="text" 
-                    placeholder="Full Name"
+                    placeholder={t('form_name')}
                     className={`w-full px-6 py-4 ${isDark ? 'bg-white/5 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 focus:border-primary-gold transition-all font-bold text-sm outline-none placeholder-slate-500`}
                     value={formData.fullName}
                     onChange={e => setFormData({...formData, fullName: e.target.value})}
@@ -162,7 +164,7 @@ const Hero = () => {
                     <div className="flex flex-col gap-1">
                       <input 
                         type="tel" 
-                        placeholder="Mobile Number"
+                        placeholder={t('form_mobile')}
                         className={`w-full px-6 py-4 ${isDark ? 'bg-white/5 text-white' : 'bg-slate-50 text-slate-900'} rounded-2xl border-2 transition-all font-bold text-sm outline-none placeholder-slate-500 ${
                           touched.mobile && formData.mobile.length > 0 && formData.mobile.length !== 10 
                             ? 'border-red-400 focus:border-red-500' 
@@ -183,7 +185,7 @@ const Hero = () => {
                     </div>
                     <input 
                       type="email" 
-                      placeholder="Email (Optional)"
+                      placeholder={t('form_email')}
                       className={`w-full px-6 py-4 ${isDark ? 'bg-white/5 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 focus:border-primary-gold transition-all font-bold text-sm outline-none placeholder-slate-500`}
                       value={formData.email}
                       onChange={e => setFormData({...formData, email: e.target.value})}
@@ -253,7 +255,7 @@ const Hero = () => {
                 >
                   <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                   <span className={`relative z-10 uppercase tracking-widest text-xs ${isDark ? '' : 'text-[#020617] group-hover:text-white'} px-4 py-1 rounded-lg transition-colors`}>
-                    {submitStatus === 'submitting' ? 'Processing...' : 'Get Funding Proposal'}
+                    {submitStatus === 'submitting' ? t('form_submitting') : t('form_submit')}
                   </span>
                 </button>
 
