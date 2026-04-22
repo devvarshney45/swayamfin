@@ -22,7 +22,38 @@
   }
   body {
     @apply antialiased text-slate-900 bg-white font-dmsans;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
+}
+
+/* ========================
+   LIGHT SITE OVERRIDES
+   Applied when user toggles to light mode on public website
+   ======================== */
+html.light-site body {
+  background-color: #F8FAFC !important;
+}
+
+html.light-site .public-nav {
+  background-color: #ffffff !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+html.light-site .public-nav .nav-link {
+  color: #0f172a !important;
+}
+
+html.light-site .site-hero {
+  background-color: #f8fafc !important;
+}
+
+/* Transition for smooth theme switching */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
 }
 
 /* Premium Scrollbar */
@@ -38,6 +69,11 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #c5a059;
+}
+
+/* Light mode scrollbar */
+html.light-site ::-webkit-scrollbar-thumb {
+  background: #2563eb;
 }
 
 /* Modern Selection */

@@ -15,13 +15,17 @@ import {
   Home,
   Truck,
   ShieldCheck,
-  Globe
+  Globe,
+  Sun,
+  Moon
 } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const { isDark, toggleTheme } = useTheme();
 
   const services = [
     { name: 'Home Loan', slug: 'housing-loans', icon: Home, desc: 'Your dream home made easy' },
@@ -43,9 +47,9 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-[#020617] border-b border-white/5 sticky top-0 z-[100] shadow-2xl font-dmsans">
+      <nav className={`${isDark ? 'bg-[#020617] border-white/5' : 'bg-white border-slate-200'} border-b sticky top-0 z-[100] shadow-2xl font-dmsans transition-colors duration-300`}>
         {/* Top bar for Trust signal */}
-        <div className="bg-[#0B0F19] text-white text-[10px] py-1.5 text-center font-bold uppercase tracking-widest hidden md:block border-b border-white/5">
+        <div className={`${isDark ? 'bg-[#0B0F19] text-white border-white/5' : 'bg-slate-50 text-slate-600 border-slate-200'} text-[10px] py-1.5 text-center font-bold uppercase tracking-widest hidden md:block border-b`}>
            <span className="opacity-60">RBI REGISTERED NBFC PARTNER</span> • <span className="text-primary-gold">ISO 9001:2015 CERTIFIED</span>
         </div>
 
@@ -58,8 +62,8 @@ const Navbar = () => {
                 <div className="bg-primary-gold p-2 rounded-xl group-hover:scale-105 transition-transform duration-300 shadow-lg shadow-primary-gold/10">
                   <AreaChart className="w-6 h-6 text-[#020617]" />
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-2xl font-playfair font-black text-white tracking-tight leading-none lowercase">swayamfin.com</span>
+             <div className="flex flex-col">
+                  <span className={`text-2xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-tight leading-none lowercase`}>swayamfin.com</span>
                   <span className="text-[9px] font-black text-primary-gold tracking-[0.2em] leading-tight uppercase italic opacity-60">Financial Services</span>
                 </div>
               </Link>
@@ -67,7 +71,7 @@ const Navbar = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-7">
-              <Link to="/" className="text-sm font-bold text-slate-300 hover:text-primary-gold transition-colors uppercase tracking-tight">Home</Link>
+              <Link to="/" className={`text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} hover:text-primary-gold transition-colors uppercase tracking-tight`}>Home</Link>
               
               {/* Product Mega Menu */}
               <div 
@@ -75,23 +79,23 @@ const Navbar = () => {
                 onMouseEnter={() => setActiveDropdown('services')}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
-                <button className="flex items-center gap-1.5 text-sm font-bold text-slate-300 hover:text-primary-gold transition-colors uppercase tracking-tight py-8">
+                <button className={`flex items-center gap-1.5 text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} hover:text-primary-gold transition-colors uppercase tracking-tight py-8`}>
                   Services <ChevronDown className="w-4 h-4 text-primary-gold" />
                 </button>
                 
                 {activeDropdown === 'services' && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 w-[600px] bg-[#0B0F19] border border-white/5 shadow-2xl rounded-3xl p-6 grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className={`absolute top-full left-1/2 -translate-x-1/2 w-[600px] ${isDark ? 'bg-[#0B0F19] border-white/5' : 'bg-white border-slate-200'} border shadow-2xl rounded-3xl p-6 grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300`}>
                     {services.map((item) => (
                       <Link 
                         key={item.slug}
                         to={`/services/${item.slug}`}
-                        className="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 transition border border-transparent hover:border-white/10 group"
+                        className={`flex items-center gap-4 p-4 rounded-2xl ${isDark ? 'hover:bg-white/5 hover:border-white/10' : 'hover:bg-slate-50 hover:border-slate-200'} transition border border-transparent group`}
                       >
-                        <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-primary-gold group-hover:text-[#020617] transition-colors">
+                        <div className={`w-10 h-10 ${isDark ? 'bg-white/5 text-slate-400' : 'bg-slate-100 text-slate-500'} rounded-xl flex items-center justify-center group-hover:bg-primary-gold group-hover:text-[#020617] transition-colors`}>
                           <item.icon className="w-5 h-5" />
                         </div>
                         <div>
-                          <p className="font-black text-sm text-white leading-none mb-1">{item.name}</p>
+                          <p className={`font-black text-sm ${isDark ? 'text-white' : 'text-slate-900'} leading-none mb-1`}>{item.name}</p>
                           <p className="text-[11px] text-slate-500 font-bold">{item.desc}</p>
                         </div>
                       </Link>
@@ -106,17 +110,17 @@ const Navbar = () => {
                 onMouseEnter={() => setActiveDropdown('branches')}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
-                <button className="flex items-center gap-1.5 text-sm font-bold text-slate-300 hover:text-primary-gold transition-colors uppercase tracking-tight py-8">
+                <button className={`flex items-center gap-1.5 text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} hover:text-primary-gold transition-colors uppercase tracking-tight py-8`}>
                   Branches <ChevronDown className="w-4 h-4 text-primary-gold" />
                 </button>
                 
                 {activeDropdown === 'branches' && (
-                  <div className="absolute top-full left-0 w-48 bg-[#0B0F19] border border-white/5 shadow-2xl rounded-2xl p-2 animate-in fade-in slide-in-from-top-2">
+                  <div className={`absolute top-full left-0 w-48 ${isDark ? 'bg-[#0B0F19] border-white/5' : 'bg-white border-slate-200'} border shadow-2xl rounded-2xl p-2 animate-in fade-in slide-in-from-top-2`}>
                     {branches.map((item) => (
                       <Link 
                         key={item.slug}
                         to={`/branches/${item.slug}`}
-                        className="block px-4 py-3 text-sm font-bold text-slate-300 hover:text-primary-gold hover:bg-white/5 rounded-xl transition-all"
+                        className={`block px-4 py-3 text-sm font-bold ${isDark ? 'text-slate-300 hover:bg-white/5' : 'text-slate-700 hover:bg-slate-50'} hover:text-primary-gold rounded-xl transition-all`}
                       >
                         {item.name}
                       </Link>
@@ -125,16 +129,25 @@ const Navbar = () => {
                 )}
               </div>
 
-              <Link to="/process" className="text-sm font-bold text-slate-300 hover:text-primary-gold transition-colors uppercase tracking-tight">Process</Link>
-              <Link to="/about" className="text-sm font-bold text-slate-300 hover:text-primary-gold transition-colors uppercase tracking-tight">Company</Link>
+              <Link to="/process" className={`text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} hover:text-primary-gold transition-colors uppercase tracking-tight`}>Process</Link>
+              <Link to="/about" className={`text-sm font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} hover:text-primary-gold transition-colors uppercase tracking-tight`}>Company</Link>
               
               <div className="w-px h-6 bg-white/10" />
+
+              {/* Theme Toggle */}
+              <button
+                onClick={toggleTheme}
+                title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                className={`w-9 h-9 rounded-xl ${isDark ? 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200'} border flex items-center justify-center hover:text-primary-gold transition-all`}
+              >
+                {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </button>
               
               <a href="https://wa.me/916397003690" className="flex items-center gap-2 text-success-green hover:opacity-80 transition group">
                 <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <MessageCircle className="w-4 h-4 fill-current" />
                 </div>
-                <span className="text-sm font-black tracking-tight text-white/90 group-hover:text-success-green transition-colors">6397003690</span>
+                <span className={`text-sm font-black tracking-tight ${isDark ? 'text-white/90' : 'text-slate-700'} group-hover:text-success-green transition-colors`}>6397003690</span>
               </a>
 
               {user ? (

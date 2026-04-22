@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, ArrowRight, CheckCircle2, AlertCircle, TrendingUp } from 'lucide-react';
 import { getUTMParams } from '../utils/helpers';
+import { useTheme } from '../context/ThemeContext';
 
 // Modular Imports
 import TrustBar from './home/TrustBar';
@@ -13,6 +14,7 @@ import EligibilityCalculator from './home/EligibilityCalculator';
 import CTASection from './home/CTASection';
 
 const Hero = () => {
+  const { isDark } = useTheme();
   const [formData, setFormData] = useState({
     fullName: '', mobile: '', email: '', loanType: 'msme_structured', amount: '', city: ''
   });
@@ -80,9 +82,9 @@ const Hero = () => {
   };
 
   return (
-    <div className="bg-[#020617] font-dmsans">
+    <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} font-dmsans transition-colors duration-300`}>
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[90vh] flex items-center pt-24 pb-16 overflow-hidden bg-[#020617]">
+      <section className={`relative min-h-[90vh] flex items-center pt-24 pb-16 overflow-hidden ${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'}`}>
         <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 bg-primary-gold rounded-l-[200px] transform skew-x-12 translate-x-32 blur-[120px]" />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">

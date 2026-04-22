@@ -8,8 +8,10 @@ import {
   CheckCircle2,
   Gem
 } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const USPsSection = () => {
+  const { isDark } = useTheme();
   const highlights = [
     {
       title: 'Decade of Trust',
@@ -38,7 +40,7 @@ const USPsSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-[#020617] relative overflow-hidden font-dmsans">
+    <section className={`py-24 ${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} relative overflow-hidden font-dmsans transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div
@@ -50,7 +52,7 @@ const USPsSection = () => {
               Why Partner With Us
             </div>
             
-            <h2 className="text-4xl md:text-5xl font-playfair font-black text-white leading-tight">
+            <h2 className={`text-4xl md:text-5xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-tight`}>
               Speeding Up Your <br />
               <span className="text-primary-gold italic">Growth Engine</span>
             </h2>
@@ -66,7 +68,7 @@ const USPsSection = () => {
                    <div className="w-5 h-5 bg-primary-gold/20 rounded-full flex items-center justify-center">
                      <CheckCircle2 className="w-3 h-3 text-primary-gold" />
                    </div>
-                   <span className="text-slate-300 font-bold text-xs uppercase tracking-tight">{item}</span>
+                   <span className={`${isDark ? 'text-slate-300' : 'text-slate-800'} font-bold text-xs uppercase tracking-tight`}>{item}</span>
                  </div>
                ))}
             </div>
@@ -80,17 +82,17 @@ const USPsSection = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="group bg-white/5 backdrop-blur-md p-8 rounded-[32px] border border-white/5 hover:border-primary-gold/30 transition-all duration-300 relative overflow-hidden"
+                className={`group ${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-slate-200'} backdrop-blur-md p-8 rounded-[32px] border hover:border-primary-gold/30 transition-all duration-300 relative overflow-hidden shadow-sm`}
               >
                 {/* Decorative Background Accent */}
-                <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-white/5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                <div className={`absolute -bottom-10 -right-10 w-32 h-32 ${isDark ? 'bg-white/5' : 'bg-slate-50'} rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`} />
                 
                 <div className={`w-16 h-16 ${usp.color} rounded-[24px] flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-sm group-hover:shadow-md`}>
                   <usp.icon className="w-8 h-8" />
                 </div>
                 
-                <h4 className="text-xl font-black text-white mb-4 transition-colors">{usp.title}</h4>
-                <p className="text-sm text-slate-400 font-medium leading-relaxed transition-opacity">
+                <h4 className={`text-xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-4 transition-colors`}>{usp.title}</h4>
+                <p className="text-sm text-slate-500 font-medium leading-relaxed transition-opacity">
                   {usp.desc}
                 </p>
               </motion.div>

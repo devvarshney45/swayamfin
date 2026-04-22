@@ -12,8 +12,10 @@ import {
   AreaChart,
   ArrowRight
 } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const ServicesSection = () => {
+  const { isDark } = useTheme();
   const services = [
     { 
       name: 'Home Loan', 
@@ -74,7 +76,7 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" className="py-24 bg-[#0B0F19] relative overflow-hidden">
+    <section id="services" className={`py-24 ${isDark ? 'bg-[#0B0F19]' : 'bg-white'} relative overflow-hidden transition-colors duration-300`}>
       {/* Decorative Blur */}
       <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary-gold opacity-[0.03] blur-[100px] rounded-full" />
       <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-indigo-600 opacity-[0.03] blur-[100px] rounded-full" />
@@ -84,12 +86,12 @@ const ServicesSection = () => {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 text-primary-gold text-[10px] font-black uppercase tracking-[0.3em] mb-6 border border-white/5 shadow-2xl"
+            className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full ${isDark ? 'bg-white/5 border-white/5' : 'bg-slate-100 border-slate-200'} text-primary-gold text-[10px] font-black uppercase tracking-[0.3em] mb-6 border shadow-2xl`}
           >
             Our Product Suite
           </motion.div>
           
-          <h2 className="text-4xl md:text-5xl font-playfair font-black text-white mb-6">
+          <h2 className={`text-4xl md:text-5xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-6`}>
             Customized <span className="text-primary-gold italic">Lending Solutions</span>
           </h2>
           <p className="text-slate-500 font-bold max-w-2xl mx-auto text-sm leading-relaxed uppercase tracking-widest italic">
@@ -106,13 +108,13 @@ const ServicesSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
               whileHover={{ y: -8 }}
-              className="group bg-white/5 backdrop-blur-sm p-10 rounded-[40px] border border-white/5 hover:border-primary-gold/30 hover:bg-white/10 transition-all duration-500 cursor-pointer shadow-lg hover:shadow-primary-gold/5 flex flex-col h-full"
+              className={`group ${isDark ? 'bg-white/5 border-white/5 hover:bg-white/10' : 'bg-slate-50 border-slate-100 hover:bg-white'} backdrop-blur-sm p-10 rounded-[40px] border hover:border-primary-gold/30 transition-all duration-500 cursor-pointer shadow-lg hover:shadow-primary-gold/5 flex flex-col h-full`}
             >
-              <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-primary-gold transition-colors duration-500">
+              <div className={`w-16 h-16 ${isDark ? 'bg-white/5' : 'bg-slate-100'} rounded-2xl flex items-center justify-center mb-8 group-hover:bg-primary-gold transition-colors duration-500`}>
                 <service.icon className="w-8 h-8 text-primary-gold group-hover:text-[#020617] transition-colors" />
               </div>
               
-              <h3 className="text-2xl font-black text-white mb-4 font-playfair">
+              <h3 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-4 font-playfair`}>
                 {service.name}
               </h3>
               
@@ -122,7 +124,7 @@ const ServicesSection = () => {
 
               <div className="flex flex-wrap gap-2 mb-10">
                 {service.tags.map(tag => (
-                  <span key={tag} className="text-[9px] font-black tracking-widest uppercase px-3 py-1.5 bg-white/5 text-slate-400 rounded-xl group-hover:bg-primary-gold/10 group-hover:text-primary-gold transition-all">
+                  <span key={tag} className={`text-[9px] font-black tracking-widest uppercase px-3 py-1.5 ${isDark ? 'bg-white/5 text-slate-400' : 'bg-slate-100 text-slate-500'} rounded-xl group-hover:bg-primary-gold/10 group-hover:text-primary-gold transition-all`}>
                     {tag}
                   </span>
                 ))}
@@ -130,7 +132,7 @@ const ServicesSection = () => {
 
               <Link 
                 to={`/services/${service.slug}`}
-                className="flex items-center justify-between w-full py-4 px-6 bg-white/5 rounded-2xl text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] group-hover:bg-primary-gold group-hover:text-[#020617] transition-all duration-500"
+                className={`flex items-center justify-between w-full py-4 px-6 ${isDark ? 'bg-white/5 text-slate-300' : 'bg-slate-100 text-slate-600'} rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] group-hover:bg-primary-gold group-hover:text-[#020617] transition-all duration-500`}
               >
                 Explore Details
                 <ArrowRight className="w-4 h-4 text-primary-gold group-hover:translate-x-1 transition-transform" />

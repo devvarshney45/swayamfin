@@ -1,22 +1,25 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Users, Target, Shield, Award } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 const About = () => {
+  const { isDark } = useTheme();
   return (
-    <div className="bg-[#020617] min-h-screen font-dmsans">
+  return (
+    <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen font-dmsans transition-colors duration-300`}>
       {/* Hero Section */}
-      <div className="bg-[#0B0F19] text-white py-24 px-4 relative overflow-hidden">
+      <div className={`${isDark ? 'bg-[#0B0F19]' : 'bg-white border-b border-slate-200'} text-white py-24 px-4 relative overflow-hidden transition-colors duration-300`}>
         <div className="absolute top-0 right-0 w-1/3 h-full bg-primary-gold/5 transform skew-x-12 translate-x-1/2 blur-[80px]"></div>
         <div className="max-w-7xl mx-auto relative z-10 text-center">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-playfair font-black mb-6"
+            className={`text-4xl md:text-6xl font-playfair font-black mb-6 ${isDark ? 'text-white' : 'text-slate-900'}`}
           >
             Empowering Your <span className="text-primary-gold italic">Financial Journey</span>
           </motion.h1>
-          <p className="text-xl text-slate-400 max-w-3xl mx-auto font-medium leading-relaxed italic">
+          <p className={`${isDark ? 'text-slate-400' : 'text-slate-500'} text-xl max-w-3xl mx-auto font-medium leading-relaxed italic`}>
             Swayamfin is a leading Loan Service Provider (LSP) dedicated to bridging the credit gap for MSMEs and retail borrowers across India.
           </p>
         </div>
