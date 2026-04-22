@@ -95,7 +95,7 @@ const Hero = () => {
               animate={{ opacity: 1, x: 0 }} 
               className="space-y-8 order-2 lg:order-1"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 text-primary-gold text-[10px] font-black uppercase tracking-widest shadow-sm ring-1 ring-white/10">
+              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${isDark ? 'bg-white/5 ring-white/10' : 'bg-slate-100 ring-slate-200'} text-primary-gold text-[10px] font-black uppercase tracking-widest shadow-sm ring-1`}>
                 <ShieldCheck className="w-4 h-4" />
                 RBI Compliant Fintech Partner
               </div>
@@ -108,27 +108,27 @@ const Hero = () => {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <h1 className="text-5xl md:text-7xl font-playfair font-black text-white leading-[1.1]">
+                  <h1 className={`text-5xl md:text-7xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-[1.1]`}>
                     {slides[activeSlide].title}
                   </h1>
-                  <p className="text-xl text-slate-400 font-medium max-w-lg leading-relaxed mt-4 italic">
+                  <p className={`text-xl ${isDark ? 'text-slate-400' : 'text-slate-600'} font-medium max-w-lg leading-relaxed mt-4 italic`}>
                     {slides[activeSlide].sub}
                   </p>
                 </motion.div>
               </AnimatePresence>
               
-              <p className="text-sm text-slate-500 font-bold max-w-lg leading-relaxed pt-2">
+              <p className={`text-sm ${isDark ? 'text-slate-500' : 'text-slate-600'} font-bold max-w-lg leading-relaxed pt-2`}>
                 Trusted by 750+ businesses across India. MSME Loans, LAP, Housing Finance & Supply Chain Solutions — Customized for You.
               </p>
 
               <div className="flex flex-wrap gap-8 items-center pt-4">
                 <div className="flex flex-col">
-                  <span className="text-3xl font-black text-white">₹125Cr+</span>
+                  <span className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>₹125Cr+</span>
                   <span className="text-slate-500 text-[10px] font-black uppercase tracking-tighter">Disbursed</span>
                 </div>
-                <div className="w-px h-10 bg-white/10 hidden sm:block"></div>
+                <div className={`w-px h-10 ${isDark ? 'bg-white/10' : 'bg-slate-200'} hidden sm:block`}></div>
                 <div className="flex flex-col">
-                  <span className="text-3xl font-black text-white">750+</span>
+                  <span className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>750+</span>
                   <span className="text-slate-500 text-[10px] font-black uppercase tracking-tighter">Enterprises</span>
                 </div>
               </div>
@@ -137,7 +137,7 @@ const Hero = () => {
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white/5 backdrop-blur-xl p-8 md:p-10 rounded-[48px] shadow-2xl shadow-black border border-white/10 max-w-lg lg:ml-auto relative order-1 lg:order-2"
+              className={`${isDark ? 'bg-white/5 backdrop-blur-xl border-white/10 shadow-black shadow-2xl' : 'bg-white border-slate-200 shadow-xl shadow-slate-200/50'} p-8 md:p-10 rounded-[48px] border max-w-lg lg:ml-auto relative order-1 lg:order-2 transition-all duration-300`}
             >
               <div className="absolute -top-4 -right-4 bg-primary-gold p-4 rounded-2xl shadow-lg rotate-12 hidden md:block">
                 <TrendingUp className="w-6 h-6 text-[#020617]" />
@@ -145,7 +145,7 @@ const Hero = () => {
 
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-2 h-8 bg-primary-gold rounded-full" />
-                <h3 className="text-2xl font-black text-white font-playfair">Check Eligibility</h3>
+                <h3 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'} font-playfair`}>Check Eligibility</h3>
               </div>
               
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -153,7 +153,7 @@ const Hero = () => {
                   <input 
                     type="text" 
                     placeholder="Full Name"
-                    className="w-full px-6 py-4 bg-white/5 rounded-2xl border-2 border-white/5 focus:border-primary-gold transition-all font-bold text-sm outline-none text-white placeholder-slate-500"
+                    className={`w-full px-6 py-4 ${isDark ? 'bg-white/5 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 focus:border-primary-gold transition-all font-bold text-sm outline-none placeholder-slate-500`}
                     value={formData.fullName}
                     onChange={e => setFormData({...formData, fullName: e.target.value})}
                     required
@@ -163,10 +163,10 @@ const Hero = () => {
                       <input 
                         type="tel" 
                         placeholder="Mobile Number"
-                        className={`w-full px-6 py-4 bg-white/5 rounded-2xl border-2 transition-all font-bold text-sm outline-none text-white placeholder-slate-500 ${
+                        className={`w-full px-6 py-4 ${isDark ? 'bg-white/5 text-white' : 'bg-slate-50 text-slate-900'} rounded-2xl border-2 transition-all font-bold text-sm outline-none placeholder-slate-500 ${
                           touched.mobile && formData.mobile.length > 0 && formData.mobile.length !== 10 
                             ? 'border-red-400 focus:border-red-500' 
-                            : 'border-white/5 focus:border-primary-gold'
+                            : isDark ? 'border-white/5 focus:border-primary-gold' : 'border-slate-100 focus:border-primary-gold'
                         }`}
                         value={formData.mobile}
                         onChange={e => {
@@ -184,7 +184,7 @@ const Hero = () => {
                     <input 
                       type="email" 
                       placeholder="Email (Optional)"
-                      className="w-full px-6 py-4 bg-white/5 rounded-2xl border-2 border-white/5 focus:border-primary-gold transition-all font-bold text-sm outline-none text-white placeholder-slate-500"
+                      className={`w-full px-6 py-4 ${isDark ? 'bg-white/5 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 focus:border-primary-gold transition-all font-bold text-sm outline-none placeholder-slate-500`}
                       value={formData.email}
                       onChange={e => setFormData({...formData, email: e.target.value})}
                     />
@@ -192,18 +192,18 @@ const Hero = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="relative">
                       <select 
-                        className="w-full px-6 py-4 bg-white/5 rounded-2xl border-2 border-white/5 focus:border-primary-gold transition-all font-bold text-sm outline-none appearance-none cursor-pointer text-white"
+                        className={`w-full px-6 py-4 ${isDark ? 'bg-white/5 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 focus:border-primary-gold transition-all font-bold text-sm outline-none appearance-none cursor-pointer`}
                         value={formData.loanType}
                         onChange={e => setFormData({...formData, loanType: e.target.value})}
                       >
-                        <option value="home_loan" className="bg-[#111827]">Housing Loan</option>
-                        <option value="micro_lap" className="bg-[#111827]">Micro LAP</option>
-                        <option value="supply_chain" className="bg-[#111827]">Supply Chain Financing</option>
-                        <option value="msme_structured" className="bg-[#111827]">MSME Structured Product</option>
-                        <option value="lap" className="bg-[#111827]">Loan Against Property (LAP)</option>
-                        <option value="hybrid" className="bg-[#111827]">Hybrid MSME Product</option>
+                        <option value="home_loan" className={isDark ? "bg-[#111827]" : "bg-white"}>Housing Loan</option>
+                        <option value="micro_lap" className={isDark ? "bg-[#111827]" : "bg-white"}>Micro LAP</option>
+                        <option value="supply_chain" className={isDark ? "bg-[#111827]" : "bg-white"}>Supply Chain Financing</option>
+                        <option value="msme_structured" className={isDark ? "bg-[#111827]" : "bg-white"}>MSME Structured Product</option>
+                        <option value="lap" className={isDark ? "bg-[#111827]" : "bg-white"}>Loan Against Property (LAP)</option>
+                        <option value="hybrid" className={isDark ? "bg-[#111827]" : "bg-white"}>Hybrid MSME Product</option>
                       </select>
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 text-white">
+                      <div className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 ${isDark ? 'text-white' : 'text-slate-900'}`}>
                          <ArrowRight className="w-4 h-4 rotate-90" />
                       </div>
                     </div>
@@ -211,10 +211,10 @@ const Hero = () => {
                       <input 
                         type="number" 
                         placeholder="Amount (₹)"
-                        className={`w-full px-6 py-4 bg-white/5 rounded-2xl border-2 transition-all font-bold text-sm outline-none text-white placeholder-slate-500 ${
+                        className={`w-full px-6 py-4 ${isDark ? 'bg-white/5 text-white' : 'bg-slate-50 text-slate-900'} rounded-2xl border-2 transition-all font-bold text-sm outline-none placeholder-slate-500 ${
                           touched.amount && (formData.amount < 10000)
                             ? 'border-red-400 focus:border-red-500' 
-                            : 'border-white/5 focus:border-primary-gold'
+                            : isDark ? 'border-white/5 focus:border-primary-gold' : 'border-slate-100 focus:border-primary-gold'
                         }`}
                         value={formData.amount}
                         onChange={e => setFormData({...formData, amount: e.target.value ? Number(e.target.value) : ''})}
@@ -229,18 +229,18 @@ const Hero = () => {
                   </div>
                   <div className="relative">
                     <select
-                      className="w-full px-6 py-4 bg-white/5 rounded-2xl border-2 border-white/5 focus:border-primary-gold transition-all font-bold text-sm outline-none appearance-none cursor-pointer text-white"
+                      className={`w-full px-6 py-4 ${isDark ? 'bg-white/5 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 focus:border-primary-gold transition-all font-bold text-sm outline-none appearance-none cursor-pointer`}
                       value={formData.city}
                       onChange={e => setFormData({...formData, city: e.target.value})}
                       required
                     >
-                      <option value="" disabled className="bg-[#111827]">Select Branch City</option>
-                      <option value="Agra" className="bg-[#111827]">Agra</option>
-                      <option value="Mathura" className="bg-[#111827]">Mathura</option>
-                      <option value="Hathras" className="bg-[#111827]">Hathras</option>
-                      <option value="Kosi" className="bg-[#111827]">Kosi</option>
+                      <option value="" disabled className={isDark ? "bg-[#111827]" : "bg-white"}>Select Branch City</option>
+                      <option value="Agra" className={isDark ? "bg-[#111827]" : "bg-white"}>Agra</option>
+                      <option value="Mathura" className={isDark ? "bg-[#111827]" : "bg-white"}>Mathura</option>
+                      <option value="Hathras" className={isDark ? "bg-[#111827]" : "bg-white"}>Hathras</option>
+                      <option value="Kosi" className={isDark ? "bg-[#111827]" : "bg-white"}>Kosi</option>
                     </select>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 text-white">
+                    <div className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 ${isDark ? 'text-white' : 'text-slate-900'}`}>
                        <ArrowRight className="w-4 h-4 rotate-90" />
                     </div>
                   </div>

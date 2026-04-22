@@ -138,7 +138,7 @@ const Navbar = () => {
               <button
                 onClick={toggleTheme}
                 title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                className={`w-9 h-9 rounded-xl ${isDark ? 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10' : 'bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200'} border flex items-center justify-center hover:text-primary-gold transition-all`}
+                className={`w-9 h-9 rounded-xl ${isDark ? 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'} border flex items-center justify-center hover:text-primary-gold transition-all`}
               >
                 {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
@@ -166,7 +166,7 @@ const Navbar = () => {
                   </Link>
                   <button 
                     onClick={() => { logout(); navigate('/agent/login'); }}
-                    className="p-2.5 rounded-full bg-white/5 text-slate-400 hover:bg-rose-500/20 hover:text-rose-400 transition-colors group"
+                    className={`p-2.5 rounded-full ${isDark ? 'bg-white/5 text-slate-400 hover:bg-rose-500/20' : 'bg-slate-100 text-slate-600 hover:bg-rose-100'} hover:text-rose-400 transition-colors group`}
                     title="Logout"
                   >
                     <LogOut className="w-5 h-5 transition-transform group-hover:scale-110" />
@@ -184,7 +184,7 @@ const Navbar = () => {
                <a href="tel:+916397003690" className="p-2.5 bg-green-500/10 rounded-xl text-success-green">
                   <PhoneCall className="w-5 h-5" />
                </a>
-              <Link to={user ? (user.role === 'admin' ? '/admin/dashboard' : user.role === 'bsm' ? '/bsm/dashboard' : user.role === 'hr' ? '/hr/dashboard' : '/agent/dashboard') : '/agent/login'} className="p-2.5 bg-white/5 rounded-xl text-slate-300">
+              <Link to={user ? (user.role === 'admin' ? '/admin/dashboard' : user.role === 'bsm' ? '/bsm/dashboard' : user.role === 'hr' ? '/hr/dashboard' : '/agent/dashboard') : '/agent/login'} className={`p-2.5 ${isDark ? 'bg-white/5 text-slate-300' : 'bg-slate-100 text-slate-600'} rounded-xl`}>
                  <User className="w-5 h-5" />
               </Link>
             </div>
@@ -194,7 +194,7 @@ const Navbar = () => {
       </nav>
 
       {/* Mobile Sticky Bar - Brief 2.4 */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#0B0F19] border-t border-white/5 p-3 z-[150] flex gap-3 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+      <div className={`lg:hidden fixed bottom-0 left-0 right-0 ${isDark ? 'bg-[#0B0F19]' : 'bg-white'} border-t ${isDark ? 'border-white/5' : 'border-slate-200'} p-3 z-[150] flex gap-3 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] transition-colors duration-300`}>
         <a href="https://wa.me/916397003690" className="flex-1 bg-success-green text-white flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-xs uppercase tracking-widest">
           <MessageCircle className="w-5 h-5 fill-current" /> WhatsApp
         </a>

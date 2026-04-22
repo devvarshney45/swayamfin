@@ -12,59 +12,61 @@ import {
   ShieldCheck,
   Building2
 } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 const Footer = () => {
+  const { isDark } = useTheme();
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-primary-navy text-white pt-20 pb-10 font-dmsans">
+    <footer className={`${isDark ? 'bg-[#020617]' : 'bg-white border-t border-slate-200'} text-white pt-20 pb-10 font-dmsans transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div className="space-y-6">
             <Link to="/" className="flex items-center gap-3 group">
               <div className="bg-primary-gold p-2 rounded-xl transition-transform shadow-lg shadow-primary-gold/20">
-                <AreaChart className="w-6 h-6 text-primary-navy" />
+                <Building2 className={`w-6 h-6 ${isDark ? 'text-[#020617]' : 'text-white'}`} />
               </div>
-              <span className="text-2xl font-playfair font-black tracking-tight lowercase">swayamfin.com</span>
+              <span className={`text-2xl font-playfair font-black tracking-tight lowercase ${isDark ? 'text-white' : 'text-slate-900'}`}>swayamfin.com</span>
             </Link>
-            <p className="text-sm text-slate-400 font-medium leading-relaxed">
+            <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'} font-medium leading-relaxed`}>
               Empowering India's growth through specialized MSME and Supply Chain financing.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary-gold transition-colors"><Linkedin className="w-5 h-5" /></a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary-gold transition-colors"><Twitter className="w-5 h-5" /></a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary-gold transition-colors"><Instagram className="w-5 h-5" /></a>
+              <a href="#" className={`w-10 h-10 rounded-full ${isDark ? 'bg-white/5' : 'bg-slate-100'} flex items-center justify-center hover:bg-primary-gold transition-colors ${isDark ? 'text-white' : 'text-slate-600'} hover:text-[#020617]`}><Linkedin className="w-5 h-5" /></a>
+              <a href="#" className={`w-10 h-10 rounded-full ${isDark ? 'bg-white/5' : 'bg-slate-100'} flex items-center justify-center hover:bg-primary-gold transition-colors ${isDark ? 'text-white' : 'text-slate-600'} hover:text-[#020617]`}><Twitter className="w-5 h-5" /></a>
+              <a href="#" className={`w-10 h-10 rounded-full ${isDark ? 'bg-white/5' : 'bg-slate-100'} flex items-center justify-center hover:bg-primary-gold transition-colors ${isDark ? 'text-white' : 'text-slate-600'} hover:text-[#020617]`}><Instagram className="w-5 h-5" /></a>
             </div>
           </div>
 
           <div>
             <h4 className="text-lg font-playfair font-bold mb-8 text-primary-gold">Products</h4>
             <ul className="space-y-4">
-              <li><Link to="/services/msme-loans" className="text-sm text-slate-400 hover:text-white transition font-black uppercase tracking-tight">MSME Loans</Link></li>
-              <li><Link to="/services/supply-chain" className="text-sm text-slate-400 hover:text-white transition font-black uppercase tracking-tight">Supply Chain</Link></li>
-              <li><Link to="/services/housing-loans" className="text-sm text-slate-400 hover:text-white transition font-black uppercase tracking-tight">Housing Loans</Link></li>
-              <li><Link to="/services/lap" className="text-sm text-slate-400 hover:text-white transition font-black uppercase tracking-tight">LAP</Link></li>
+              <li><Link to="/services/msme-loans" className={`text-sm ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'} transition font-black uppercase tracking-tight`}>MSME Loans</Link></li>
+              <li><Link to="/services/supply-chain" className={`text-sm ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'} transition font-black uppercase tracking-tight`}>Supply Chain</Link></li>
+              <li><Link to="/services/housing-loans" className={`text-sm ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'} transition font-black uppercase tracking-tight`}>Housing Loans</Link></li>
+              <li><Link to="/services/lap" className={`text-sm ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'} transition font-black uppercase tracking-tight`}>LAP</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-lg font-playfair font-bold mb-8 text-primary-gold">Quick Links</h4>
             <ul className="space-y-4">
-              <li><Link to="/about" className="text-sm text-slate-400 hover:text-white transition font-black uppercase tracking-tight">About Us</Link></li>
-              <li><Link to="/process" className="text-sm text-slate-400 hover:text-white transition font-black uppercase tracking-tight">How It Works</Link></li>
-              <li><Link to="/contact" className="text-sm text-slate-400 hover:text-white transition font-black uppercase tracking-tight">Contact</Link></li>
-              <li><Link to="/privacy-policy" className="text-sm text-slate-400 hover:text-white transition font-black uppercase tracking-tight">Privacy Policy</Link></li>
+              <li><Link to="/about" className={`text-sm ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'} transition font-black uppercase tracking-tight`}>About Us</Link></li>
+              <li><Link to="/process" className={`text-sm ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'} transition font-black uppercase tracking-tight`}>How It Works</Link></li>
+              <li><Link to="/contact" className={`text-sm ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'} transition font-black uppercase tracking-tight`}>Contact</Link></li>
+              <li><Link to="/privacy-policy" className={`text-sm ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'} transition font-black uppercase tracking-tight`}>Privacy Policy</Link></li>
             </ul>
           </div>
 
           <div className="space-y-6">
             <h4 className="text-lg font-playfair font-bold mb-8 text-primary-gold">Contact</h4>
-            <div className="flex gap-4 items-start text-xs text-slate-400 font-bold leading-tight">
+            <div className={`flex gap-4 items-start text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'} font-bold leading-tight`}>
               <MapPin className="w-4 h-4 text-primary-gold flex-shrink-0" />
               <span>619, Somdutt Chambers II, Bhikaji Cama, New Delhi – 110066</span>
             </div>
-            <div className="flex gap-4 items-center text-sm text-slate-200 font-black">
+            <div className={`flex gap-4 items-center text-sm ${isDark ? 'text-slate-200' : 'text-slate-900'} font-black`}>
               <Phone className="w-4 h-4 text-primary-gold flex-shrink-0" />
               <span>+91 87009 65592 / 011-44728117</span>
             </div>
