@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   password_hash: { type: String, required: true },
   role: { 
     type: String, 
-    enum: ['sales_person', 'bsm', 'admin'], 
+    enum: ['sales_person', 'bsm', 'admin', 'hr'], 
     required: true 
   },
   branch_id: { 

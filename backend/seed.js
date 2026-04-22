@@ -79,6 +79,51 @@ async function seed() {
     is_active: true
   });
 
+  // HRs
+  await User.create({
+    full_name: 'Pooja HR Agra',
+    email: 'agra.hr@swipfin.com',
+    phone: '8700965596',
+    password_hash: commonPassword,
+    role: 'hr',
+    branch_id: branches[0]._id, // Agra
+    employee_code: 'HR001',
+    is_active: true
+  });
+
+  await User.create({
+    full_name: 'Rahul HR Mathura',
+    email: 'mathura.hr@swipfin.com',
+    phone: '8700965597',
+    password_hash: commonPassword,
+    role: 'hr',
+    branch_id: branches[1]._id, // Mathura
+    employee_code: 'HR002',
+    is_active: true
+  });
+
+  await User.create({
+    full_name: 'Neha HR Hathras',
+    email: 'hathras.hr@swipfin.com',
+    phone: '8700965598',
+    password_hash: commonPassword,
+    role: 'hr',
+    branch_id: branches[2]._id, // Hathras
+    employee_code: 'HR003',
+    is_active: true
+  });
+
+  await User.create({
+    full_name: 'Vikas HR Kosi',
+    email: 'kosi.hr@swipfin.com',
+    phone: '8700965599',
+    password_hash: commonPassword,
+    role: 'hr',
+    branch_id: branches[3]._id, // Kosi
+    employee_code: 'HR004',
+    is_active: true
+  });
+
   // Sales Agents (2 per branch for Round-Robin testing)
   const agents = [
     { name: 'Agra Agent 1', branch: branches[0]._id, email: 'agra.sp1@swipfin.com', code: 'SP001' },

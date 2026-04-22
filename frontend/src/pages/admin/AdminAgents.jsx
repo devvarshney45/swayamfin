@@ -236,6 +236,7 @@ const AdminAgents = () => {
                   <span className={`text-[10px] font-black uppercase tracking-[0.1em] px-3 py-1 rounded-full border ${
                     u.role === 'admin' ? 'bg-purple-50 text-purple-700 border-purple-200' : 
                     u.role === 'bsm' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 
+                    u.role === 'hr' ? 'bg-pink-50 text-pink-700 border-pink-200' :
                     'bg-blue-50 text-blue-700 border-blue-200'
                   }`}>
                     {u.role.replace('_', ' ')}
@@ -323,6 +324,7 @@ const AdminAgents = () => {
                         onChange={e => setFormData({...formData, role: e.target.value})}
                       >
                         <option value="sales_person">Sales Person</option>
+                        <option value="hr">Human Resources (HR)</option>
                         <option value="bsm">Branch Sales Manager (BSM)</option>
                         <option value="admin">Administrator</option>
                       </select>

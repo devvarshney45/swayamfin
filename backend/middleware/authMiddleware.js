@@ -38,9 +38,9 @@ exports.adminOnly = (req, res, next) => {
 };
 
 exports.bsmOnly = (req, res, next) => {
-  if (req.user && (req.user.role === 'bsm' || req.user.role === 'admin')) {
+  if (req.user && (req.user.role === 'bsm' || req.user.role === 'hr' || req.user.role === 'admin')) {
     next();
   } else {
-    res.status(403).json({ message: 'Not authorized as a BSM' });
+    res.status(403).json({ message: 'Not authorized for this level' });
   }
 };
