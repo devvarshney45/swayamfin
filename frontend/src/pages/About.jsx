@@ -6,7 +6,6 @@ import { useTheme } from '../context/ThemeContext';
 const About = () => {
   const { isDark } = useTheme();
   return (
-  return (
     <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen font-dmsans transition-colors duration-300`}>
       {/* Hero Section */}
       <div className={`${isDark ? 'bg-[#0B0F19]' : 'bg-white border-b border-slate-200'} text-white py-24 px-4 relative overflow-hidden transition-colors duration-300`}>
