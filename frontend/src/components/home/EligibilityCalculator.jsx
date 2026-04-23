@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calculator, ArrowRight, ShieldCheck, TrendingUp, Sparkles, PieChart } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 const EligibilityCalculator = () => {
   const { isDark } = useTheme();
+  const { t } = useTranslation();
   const [monthlyIncome, setMonthlyIncome] = useState(50000);
   const [existingEMIs, setExistingEMIs] = useState(0);
   const [loanTenure, setLoanTenure] = useState(15);
@@ -35,23 +37,23 @@ const EligibilityCalculator = () => {
           
           <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
             <div className={`inline-flex items-center gap-2 px-6 py-2 rounded-full ${isDark ? 'bg-white/5 border-white/10' : 'bg-slate-100 border-slate-200'} border text-primary-gold text-[10px] font-black uppercase tracking-[0.3em] mb-8 shadow-sm`}>
-               <Calculator className="w-3 h-3" /> Real-time Simulation
+               <Calculator className="w-3 h-3" /> {t('calc_tag')}
             </div>
             <h2 className={`text-5xl md:text-7xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-tight tracking-tighter mb-8`}>
-               Loan <span className="text-blue-600 italic">Eligibility</span> Calculator
+               {t('calc_title').split(' ').slice(0, 2).join(' ')} <span className="text-blue-600 italic">Eligibility</span> Calculator
             </h2>
             <p className={`text-xl ${isDark ? 'text-slate-400' : 'text-slate-600'} font-medium leading-relaxed mb-12 italic`}>
-              Precise financial modeling to help you understand your borrowing capacity before you apply.
+              {t('calc_desc')}
             </p>
             
             <div className="grid grid-cols-2 gap-8">
                <div className="space-y-2">
                   <p className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>9.5%<span className="text-blue-600 italic text-sm ml-1 select-none">*</span></p>
-                  <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Base Interest Rate</p>
+                  <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">{t('calc_rate')}</p>
                </div>
                <div className="space-y-2">
                   <p className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>Up to 25Y</p>
-                  <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Flexible Tenure</p>
+                  <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">{t('calc_tenure')}</p>
                </div>
             </div>
 
@@ -59,7 +61,7 @@ const EligibilityCalculator = () => {
                <div className="p-4 bg-emerald-500 text-white rounded-2xl shadow-lg group-hover:rotate-12 transition-transform">
                   <ShieldCheck className="w-6 h-6" />
                </div>
-               <p className={`${isDark ? 'text-slate-300' : 'text-slate-700'} text-xs font-bold leading-relaxed`}>Your data is encrypted. This simulation does not impact your credit score.</p>
+               <p className={`${isDark ? 'text-slate-300' : 'text-slate-700'} text-xs font-bold leading-relaxed`}>{t('calc_data_sec')}</p>
             </div>
           </motion.div>
 
@@ -75,7 +77,7 @@ const EligibilityCalculator = () => {
                {/* Income Slider */}
                <div className="space-y-6">
                   <div className="flex justify-between items-center">
-                    <label className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Net Monthly Income</label>
+                    <label className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t('calc_income')}</label>
                     <span className="text-2xl font-black text-blue-600 italic">₹{(monthlyIncome).toLocaleString()}</span>
                   </div>
                   <input 
@@ -88,7 +90,7 @@ const EligibilityCalculator = () => {
                {/* Existing EMIs Slider */}
                <div className="space-y-6">
                   <div className="flex justify-between items-center">
-                    <label className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Current EMIs</label>
+                    <label className={`text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{t('calc_emis')}</label>
                     <span className="text-2xl font-black text-rose-500 italic">₹{(existingEMIs).toLocaleString()}</span>
                   </div>
                   <input 
@@ -100,14 +102,14 @@ const EligibilityCalculator = () => {
 
                {/* Result Card */}
                <div className={`${isDark ? 'bg-blue-600/10 border-blue-500/20' : 'bg-blue-600 border-blue-700 shadow-2xl shadow-blue-600/30'} p-10 rounded-[48px] border text-center transition-all group hover:scale-[1.02]`}>
-                  <p className="text-white text-[11px] font-black uppercase tracking-[0.4em] mb-4 opacity-70">Projected Loan Eligibility</p>
+                  <p className="text-white text-[11px] font-black uppercase tracking-[0.4em] mb-4 opacity-70">{t('calc_result')}</p>
                   <h3 className="text-white text-5xl md:text-6xl font-black tracking-tighter font-playfair mb-2">
                     ₹{(eligibleAmount / 100000).toFixed(1)}L
                   </h3>
-                  <p className="text-blue-100 text-[10px] font-bold opacity-60">Estimated at {interestRate}% for {loanTenure} Years</p>
+                  <p className="text-blue-100 text-[10px] font-bold opacity-60">{t('calc_est')} {interestRate}% for {loanTenure} {t('calc_yrs')}</p>
 
                   <button className="mt-10 w-full py-5 bg-white text-blue-600 rounded-[24px] font-black uppercase tracking-[0.2em] text-[10px] shadow-xl hover:bg-blue-50 transition-all flex items-center justify-center gap-3">
-                     Apply Now <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+                     {t('cta_btn')} <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
                   </button>
                </div>
             </div>

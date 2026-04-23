@@ -82,8 +82,8 @@ html.light-site .rounded-full .text-white {
   color: #ffffff !important;
 }
 
-html.light-site .bg-[#020617],
-html.light-site .bg-[#0B0F19] {
+html.light-site .bg-\[\#020617\],
+html.light-site .bg-\[\#0B0F19\] {
   background-color: #ffffff !important;
 }
 
@@ -91,14 +91,14 @@ html.light-site .bg-white\/5 {
   background-color: rgba(0, 0, 0, 0.03) !important;
 }
 
-html.light-site select.bg-[#111827],
-html.light-site input.bg-[#111827] {
+html.light-site select.bg-\[\#111827\],
+html.light-site input.bg-\[\#111827\] {
   background-color: #f8fafc !important;
   color: #0f172a !important;
   border-color: #e2e8f0 !important;
 }
 
-html.light-site [color-scheme:dark] {
+html.light-site {
   color-scheme: light !important;
 }
 

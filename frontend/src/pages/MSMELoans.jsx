@@ -25,7 +25,7 @@ const MSMELoans = () => {
              </motion.div>
              <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-5xl md:text-7xl font-black text-white mb-6 uppercase tracking-tighter leading-tight">
                 MSME Structured <span className="text-blue-100">Loans</span>
-             </h1 >
+             </motion.h1>
              <p className="text-blue-50 text-lg mb-10 font-medium">
                 Customized financial structures for micro, small, and medium enterprises. Quick sanctions for inventory, working capital, and expansion.
              </p>
