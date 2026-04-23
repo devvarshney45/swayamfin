@@ -168,7 +168,10 @@ const ServiceDetails = () => {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
-    return (
+    }
+  };
+
+  return (
     <div className={`${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-900'} min-h-screen pt-32 pb-40 font-inter transition-colors duration-500 overflow-x-hidden relative`}>
       
       {/* Kinetic Component Architecture */}
