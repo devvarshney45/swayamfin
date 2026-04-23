@@ -20,7 +20,11 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user._id, role: user.role, branch_id: user.branch_id?._id },
+      { 
+        id: user._id, 
+        role: user.role, 
+        branch_id: user.branch_id ? user.branch_id._id : null 
+      },
       process.env.JWT_SECRET || 'swayamfin_secret_key_123',
       { expiresIn: '8h' }
     );
