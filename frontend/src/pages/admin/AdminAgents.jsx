@@ -149,7 +149,7 @@ const AdminAgents = () => {
   );
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-800'} px-4 md:px-12 pt-28 md:pt-36 font-inter transition-colors duration-300`}>
+    <div className={`min-h-screen ${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-800'} px-4 md:px-12 pt-24 md:pt-28 font-inter transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto">
         <AdminTabs />
         
