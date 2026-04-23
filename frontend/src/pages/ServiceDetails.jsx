@@ -14,14 +14,19 @@ import {
   Building2,
   Home,
   Truck,
-  Briefcase
+  Briefcase,
+  ChevronRight,
+  Shield,
+  Target
 } from 'lucide-react';
 import { getUTMParams } from '../utils/helpers';
+import { useTheme } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 const serviceData = {
   'housing-loans': {
     title: 'Home Loan',
-    tagline: 'Step Into Your Dream Home Today',
+    tagline: 'Strategic Mortgage Optimization',
     icon: Home,
     description: 'In partnership with leading HFCs like DMI Housing Finance, we offer specialized home loans for purchase, construction, and renovation with minimal documentation.',
     features: [
@@ -46,7 +51,7 @@ const serviceData = {
   },
   'supply-chain': {
     title: 'Supply Chain Financing',
-    tagline: 'Working Capital Against Invoices & POs',
+    tagline: 'Velocity Control for Invoices & POs',
     icon: Truck,
     description: 'Specialized financing for manufacturers, distributors, and retailers to manage cash flow gaps between supply and payment. Unlock the value in your supply chain.',
     features: [
@@ -71,7 +76,7 @@ const serviceData = {
   },
   'msme-loans': {
     title: 'Structured MSME Products',
-    tagline: 'Customized Debt Solutions for Growth',
+    tagline: 'Dynamic Credit for Growth Cycles',
     icon: Briefcase,
     description: 'Tailored credit structures combining term loans and working capital to suit specific business cycles of MSMEs across various industries.',
     features: [
@@ -96,7 +101,7 @@ const serviceData = {
   },
   'lap': {
     title: 'Loan Against Property (LAP)',
-    tagline: 'Unlock the Hidden Value of Your Real Estate',
+    tagline: 'Asset Liquidity & Equity Extraction',
     icon: Building2,
     description: 'Maximize the value of your residential, commercial, or industrial property to get long-term financing at lower interest rates for business expansion.',
     features: [
@@ -118,115 +123,20 @@ const serviceData = {
       { q: 'Which properties are accepted?', a: 'Self-occupied residential, commercial, and even industrial land in some cases.' },
       { q: 'Can I take a loan for an under-construction property?', a: 'No, the property must be complete and have an OC/registry.' }
     ]
-  },
-  'micro-lap': {
-    title: 'Micro LAP',
-    tagline: 'Big Funding for Small Properties',
-    icon: Building2,
-    description: 'Specialized property-backed loans for small ticket sizes, specifically designed for small shop owners and micro-enterprises.',
-    features: [
-      'Ticket size: ₹2L to ₹15L',
-      'Quick processing for small properties',
-      'Minimal documentation for Lal-Dora properties',
-      'Flexible income assessment',
-      'Doorstep service for documentation'
-    ],
-    eligibility: [
-      'Small business owner/Self-employed',
-      'Property ownership proof (Registry/GPA)',
-      'Stable residing address for 3+ years',
-      'Basic bank statements'
-    ],
-    rates: '14% - 18% p.a.',
-    fees: '2% processing fee',
-    faqs: [
-      { q: 'Is GST required?', a: 'No, for Micro LAP we can assess income based on register/kacha books.' }
-    ]
-  },
-  'hybrid-msme': {
-    title: 'Hybrid MSME Products',
-    tagline: 'Best of Secured & Unsecured Credit',
-    icon: Zap,
-    description: 'A unique lending model that provides a combination of secured and unsecured credit to maximize your borrowing capacity.',
-    features: [
-      'Partial collateral based limits',
-      'Higher ticket size than pure unsecured loans',
-      'Blended interest rates',
-      'Fast-track approval process',
-      'Ideal for expanding retail chains'
-    ],
-    eligibility: [
-      'Min Annual Turnover: ₹1 Cr',
-      'GST & IT returns for 2 years',
-      'Some form of collateral (Residential/Gold/FD)',
-      'Clear repayment track record'
-    ],
-    rates: '11% - 15% p.a.',
-    fees: '1% - 1.5% processing fee',
-    faqs: [
-      { q: 'What is the benefit of Hybrid?', a: 'You get more money than just an unsecured loan, at a lower cost than a pure business loan.' }
-    ]
-  },
-  'unsecured-msme': {
-    title: 'Unsecured MSME Loans',
-    tagline: 'Growth Capital Without Collateral',
-    icon: ShieldCheck,
-    description: 'Quick business loans based on your digital footprint, GST filings, and banking performance. No property or asset pledge required.',
-    features: [
-      'Zero collateral required',
-      'Disbursement in 3-5 working days',
-      'Tenure: 12 to 36 months',
-      'Minimal physical documentation',
-      'End-to-end digital journey possible'
-    ],
-    eligibility: [
-      'Vibrant GST history of 12+ months',
-      'Stable Banking with avg balance',
-      'Business vintage: 3 years',
-      'No major defaults in last 12 months'
-    ],
-    rates: '15% - 20% p.a.',
-    fees: '2% - 3% processing fee',
-    faqs: [
-      { q: 'What is the max loan amount?', a: 'Usually up to ₹50 Lakhs depending on GST turnovers.' }
-    ]
-  },
-  'machinery-loan': {
-    title: 'Machinery Loans',
-    tagline: 'Scale Your Production Capacity',
-    icon: TrendingUp,
-    description: 'Dedicated funding for purchase of new or used machinery and industrial equipment to modernize your manufacturing facility.',
-    features: [
-      'Lending up to 80% of invoice value',
-      'Customized EMI to match production cycles',
-      'Faster approvals than standard term loans',
-      'Machinery itself acts as collateral',
-      'Direct payment to OEM/Suppliers'
-    ],
-    eligibility: [
-      'Established manufacturing unit',
-      'Purchase quotation from approved vendors',
-      'ITR for last 2-3 years',
-      'Stable electricity/utility bill proofs'
-    ],
-    rates: '11% - 14% p.a.',
-    fees: '1% processing fee',
-    faqs: [
-      { q: 'Can I buy used machinery?', a: 'Yes, we fund used machinery up to 5-7 years old after valuation.' }
-    ]
   }
 };
 
 const ServiceDetails = () => {
   const { slug } = useParams();
+  const { isDark } = useTheme();
+  const { t } = useTranslation();
   const data = serviceData[slug] || serviceData['msme-loans'];
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
   const [formData, setFormData] = useState({
-    fullName: '', mobile: '', email: '', city: '', amount: '5L-25L', loanType: data.title
+    fullName: '', mobile: '', email: '', city: 'Agra', amount: '5L-25L', loanType: data.title
   });
 
-  // Sync loanType if data changes
   useEffect(() => {
     setFormData(prev => ({ ...prev, loanType: data.title }));
   }, [data.title]);
@@ -243,7 +153,7 @@ const ServiceDetails = () => {
       });
       if (response.ok) {
         setSubmitStatus('success');
-        setFormData({ fullName: '', mobile: '', email: '', city: '', amount: '5L-25L', loanType: data.title });
+        setFormData({ fullName: '', mobile: '', email: '', city: 'Agra', amount: '5L-25L', loanType: data.title });
       } else if (response.status === 409) {
          setSubmitStatus('duplicate');
       } else {
@@ -257,214 +167,271 @@ const ServiceDetails = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen font-dmsans">
-      {/* Dynamic Hero Head */}
-      <div className="bg-primary-navy pt-32 pb-48 px-4 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-primary-gold opacity-[0.07] blur-[120px] -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-gold opacity-[0.03] blur-[100px] translate-y-1/2 -translate-x-1/2" />
-        
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+    <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen font-dmsans transition-colors duration-500 overflow-hidden`}>
+      
+      {/* Institutional Hero */}
+      <section className="relative pt-32 pb-48 md:pt-48 md:pb-64 overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className={`absolute top-0 right-0 w-2/3 h-2/3 ${isDark ? 'bg-blue-600/5' : 'bg-blue-500/5'} blur-[140px] rounded-full translate-x-1/2 -translate-y-1/2`} />
+          <div className={`absolute bottom-0 left-0 w-1/2 h-1/2 ${isDark ? 'bg-primary-gold/5' : 'bg-primary-gold/3'} blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2`} />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24 items-center">
             
-            <div className="space-y-10">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 bg-white/5 text-primary-gold px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/10 backdrop-blur-md">
-                <ShieldCheck className="w-4 h-4" /> Global Financial Standards
+            <div className="lg:col-span-12 xl:col-span-7 space-y-10">
+              <nav className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] opacity-40">
+                 <Link to="/" className="hover:text-blue-600 transition-colors">Home</Link>
+                 <ChevronRight className="w-3 h-3" />
+                 <Link to="/services" className="hover:text-blue-600 transition-colors">Services</Link>
+                 <ChevronRight className="w-3 h-3" />
+                 <span className="text-blue-600">{data.title}</span>
+              </nav>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-blue-600/10 border border-blue-500/20 text-primary-gold text-[10px] font-black uppercase tracking-[0.4em] shadow-inner">
+                <ShieldCheck className="w-4 h-4" /> Strategic Credit Line
               </motion.div>
-              <motion.h1 
-                initial={{ opacity: 0, y: 30 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                className="text-4xl md:text-7xl font-playfair font-black text-white leading-[1.1]"
-              >
-                {data.title}
-              </motion.h1>
-              <motion.p 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
-                className="text-xl text-slate-400 max-w-xl font-medium leading-relaxed"
-              >
-                {data.tagline}
-              </motion.p>
+              
+              <h1 className={`text-4xl md:text-9xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-[0.9] tracking-tighter`}>
+                {data.title.split(' ').map((word, i) => (
+                  <span key={i} className={i % 2 === 1 ? 'text-blue-600 italic' : ''}>{word} </span>
+                ))}
+              </h1>
+              
+              <p className={`text-xl md:text-3xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic max-w-2xl leading-relaxed`}>
+                "{data.tagline}"
+              </p>
+
+              <div className="flex gap-1">
+                 {[1,2,3,4,5].map(i => <div key={i} className="w-10 h-1 bg-blue-600 rounded-full" style={{ opacity: i * 0.15 }} />)}
+              </div>
             </div>
 
-            {/* Instant Proposal Form - Now in Hero */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-white p-8 md:p-12 rounded-[48px] shadow-2xl border border-white/10 relative z-10"
-            >
-              <div className="mb-10 flex items-center gap-4 border-b border-slate-50 pb-8">
-                <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-100 shrink-0">
-                  <Zap className="w-8 h-8 text-primary-gold fill-current" />
-                </div>
-                <div>
-                  <h3 className="text-3xl font-black text-primary-navy font-playfair leading-tight">Instant Proposal</h3>
-                  <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mt-1">Quick 2-minute decision</p>
-                </div>
-              </div>
-
-              <AnimatePresence mode="wait">
-                {submitStatus === 'success' ? (
-                  <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8">
-                    <div className="w-20 h-20 bg-green-50 text-success-green rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle2 className="w-10 h-10" />
-                    </div>
-                    <h4 className="text-2xl font-black text-primary-navy mb-2">Request Lodged!</h4>
-                    <p className="text-sm text-slate-500 font-medium mb-8">Priority advisor will call in <span className="text-primary-navy font-black">24 hours</span>.</p>
-                    <button onClick={() => setSubmitStatus(null)} className="text-primary-gold font-black text-xs uppercase tracking-[0.2em]">New Application</button>
-                  </motion.div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <input 
-                      required 
-                      placeholder="Full Name" 
-                      className="w-full px-7 py-4.5 bg-slate-50 border-2 border-transparent focus:border-primary-gold rounded-2xl outline-none font-bold text-sm text-primary-navy transition-all"
-                      value={formData.fullName}
-                      onChange={e => setFormData({...formData, fullName: e.target.value})}
-                    />
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <input 
-                        required 
-                        type="tel" 
-                        placeholder="Mobile" 
-                        className="w-full px-7 py-4.5 bg-slate-50 border-2 border-transparent focus:border-primary-gold rounded-2xl outline-none font-bold text-sm text-primary-navy transition-all"
-                        value={formData.mobile}
-                        onChange={e => setFormData({...formData, mobile: e.target.value})}
-                      />
-                      <select
-                        required 
-                        className="w-full px-7 py-4.5 bg-slate-50 border-2 border-transparent focus:border-primary-gold rounded-2xl outline-none font-bold text-sm text-primary-navy transition-all appearance-none cursor-pointer"
-                        value={formData.city}
-                        onChange={e => setFormData({...formData, city: e.target.value})}
-                      >
-                        <option value="" disabled>Select City</option>
-                        <option value="Delhi">Delhi</option>
-                        <option value="Noida">Noida</option>
-                        <option value="Agra">Agra</option>
-                        <option value="Gurgaon">Gurgaon</option>
-                      </select>
-                    </div>
-                    <select 
-                      className="w-full px-7 py-4.5 bg-slate-50 border-2 border-transparent focus:border-primary-gold rounded-2xl outline-none font-bold appearance-none text-primary-navy text-sm cursor-pointer transition-all"
-                      value={formData.amount}
-                      onChange={e => setFormData({...formData, amount: e.target.value})}
-                    >
-                      <option value="Under 5L">Desired: Under ₹5L</option>
-                      <option value="5L-25L">Desired: ₹5L - ₹25L</option>
-                      <option value="25L-1Cr">Desired: ₹25L - ₹1Cr</option>
-                      <option value="1Cr+">Desired: ₹1Cr+</option>
-                    </select>
-
-                    <button 
-                      disabled={isSubmitting}
-                      className="group relative w-full bg-primary-navy text-white py-5 rounded-2xl font-black shadow-2xl shadow-primary-navy/40 overflow-hidden hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mt-4"
-                    >
-                      <div className="absolute inset-0 bg-primary-gold translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                      <span className="relative z-10 flex items-center justify-center gap-3 uppercase tracking-widest text-[10px] group-hover:text-primary-navy">
-                        {isSubmitting ? 'Encrypting...' : 'Secure Application'} <ArrowRight className="w-4 h-4" />
-                      </span>
-                    </button>
-                    <p className="text-[9px] text-center text-slate-400 font-bold uppercase tracking-widest mt-6 italic">Secure 256-bit SSL encrypted journey</p>
-                  </form>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 -mt-24 mb-32 relative z-20">
-        <div className="space-y-24">
-          
-          {/* Main Value Proposition - Now Full Width */}
-          <section className="bg-white p-10 md:p-16 rounded-[64px] shadow-[0_40px_100px_-20px_rgba(2,17,46,0.12)] border border-slate-100">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-              <div className="lg:col-span-1 space-y-6">
-                <div className="flex items-center gap-4">
-                   <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-primary-navy shadow-inner">
-                      {data.icon ? <data.icon className="w-8 h-8" /> : <FileText className="w-8 h-8" />}
+            {/* Application Cockpit */}
+            <div className="lg:col-span-12 xl:col-span-5 relative mt-12 md:mt-0">
+               <motion.div 
+                 initial={{ opacity: 0, scale: 0.95 }}
+                 animate={{ opacity: 1, scale: 1 }}
+                 className={`${isDark ? 'bg-[#0B1221]/90 border-white/5 shadow-black' : 'bg-white/95 border-slate-200 shadow-22xl shadow-slate-200/50'} p-8 md:p-14 rounded-[50px] md:rounded-[80px] border backdrop-blur-3xl relative overflow-hidden group`}
+               >
+                 <div className="absolute top-0 right-0 w-48 h-48 bg-blue-600/5 blur-3xl rounded-full -mr-24 -mt-24 group-hover:scale-150 transition-transform duration-1000" />
+                 
+                 <div className="space-y-10 relative z-10">
+                   <div className="flex items-center gap-5 border-b border-white/5 pb-8">
+                     <div className="w-16 h-16 bg-blue-600/10 text-blue-600 rounded-2xl flex items-center justify-center border border-blue-600/20 group-hover:rotate-12 transition-transform">
+                        <Zap className="w-8 h-8" />
+                     </div>
+                     <div>
+                        <h3 className={`text-2xl md:text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Initial Proposal</h3>
+                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest opacity-60">System Ready for Entry</p>
+                     </div>
                    </div>
-                   <h2 className="text-4xl font-black text-primary-navy font-playfair">Product <br />Overview</h2>
-                </div>
-                <p className="text-lg text-slate-500 leading-relaxed font-medium">
-                  {data.description}
-                </p>
-              </div>
 
-              <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                {data.features.map((f, i) => (
-                  <motion.div 
-                    key={i} 
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="flex items-center gap-4 p-6 bg-slate-50 rounded-3xl border border-slate-100/50 group hover:bg-primary-navy transition-all duration-500"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:bg-primary-gold transition-colors">
-                      <CheckCircle2 className="text-primary-gold w-5 h-5 group-hover:text-primary-navy transition-colors" />
-                    </div>
-                    <span className="text-primary-navy font-bold text-sm group-hover:text-white transition-colors">{f}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
+                   <AnimatePresence mode="wait">
+                     {submitStatus === 'success' ? (
+                       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-10">
+                         <div className="w-24 h-24 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-8 border border-emerald-500/20 shadow-inner">
+                           <CheckCircle2 className="w-12 h-12" />
+                         </div>
+                         <h4 className="text-2xl font-black mb-4 uppercase tracking-tighter italic">Application Deployed</h4>
+                         <p className={`text-[11px] md:text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'} font-bold leading-relaxed max-w-[200px] mx-auto uppercase tracking-widest`}>Advisor will intercept your request within 2 hours.</p>
+                         <button onClick={() => setSubmitStatus(null)} className="mt-10 text-blue-600 font-black uppercase tracking-[0.3em] text-[10px] hover:underline">New Request Protocol</button>
+                       </motion.div>
+                     ) : (
+                       <form onSubmit={handleSubmit} className="space-y-6">
+                         <InputField label="Entity / Applicant Identity" placeholder="Full Legal Name" value={formData.fullName} onChange={v => setFormData({...formData, fullName: v})} isDark={isDark} />
+                         
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                           <InputField label="Primary Contact" placeholder="Mobile Number" type="tel" value={formData.mobile} onChange={v => setFormData({...formData, mobile: v.replace(/\D/g, '').slice(0,10)})} isDark={isDark} />
+                           <InputField label="Business Mail" placeholder="Work Email" type="email" value={formData.email} onChange={v => setFormData({...formData, email: v})} isDark={isDark} />
+                         </div>
 
-          {/* Strategic Details */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div className="bg-slate-900 p-12 md:p-16 rounded-[48px] border border-white/5 shadow-2xl">
-              <h3 className="text-xl font-black text-white mb-10 uppercase tracking-widest text-[10px] opacity-60 flex items-center gap-3">
-                <div className="w-2 h-2 bg-primary-gold rounded-full" /> Eligibility Roadmap
-              </h3>
-              <ul className="space-y-8">
-                {data.eligibility.map((e, i) => (
-                  <li key={i} className="flex gap-5 text-slate-300 font-bold text-base items-start">
-                    <div className="w-5 h-5 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] text-primary-gold flex-shrink-0 mt-0.5">{i+1}</div>
-                    {e}
-                  </li>
-                ))}
-              </ul>
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                               <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 opacity-60">Regional Node</label>
+                               <div className="relative group/sel">
+                                 <select 
+                                   className={`w-full px-6 py-4.5 ${isDark ? 'bg-white/2 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 outline-none focus:border-blue-600 font-black text-xs appearance-none transition-all cursor-pointer`}
+                                   value={formData.city}
+                                   onChange={e => setFormData({...formData, city: e.target.value})}
+                                 >
+                                   {['Agra', 'Mathura', 'Hathras', 'Kosi'].map(city => (
+                                     <option key={city} value={city}>{city}</option>
+                                   ))}
+                                 </select>
+                               </div>
+                            </div>
+                            <div className="space-y-2">
+                               <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 opacity-60">Requirement Scale</label>
+                               <div className="relative group/sel">
+                                 <select 
+                                   className={`w-full px-6 py-4.5 ${isDark ? 'bg-white/2 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 outline-none focus:border-blue-600 font-black text-xs appearance-none transition-all cursor-pointer`}
+                                   value={formData.amount}
+                                   onChange={e => setFormData({...formData, amount: e.target.value})}
+                                 >
+                                   <option value="5L-25L">₹5L - ₹25L</option>
+                                   <option value="25L-1Cr">₹25L - ₹1Cr</option>
+                                   <option value="1Cr-5Cr">₹1Cr - ₹5Cr</option>
+                                   <option value="5Cr+">₹5Cr+</option>
+                                 </select>
+                               </div>
+                            </div>
+                         </div>
+
+                         <button 
+                           disabled={isSubmitting}
+                           className="w-full bg-[#020617] text-white py-8 rounded-[32px] font-black uppercase tracking-[0.4em] text-[10px] shadow-22xl shadow-black/80 flex items-center justify-center gap-4 group/btn overflow-hidden relative mt-4 active:scale-95 transition-all"
+                         >
+                           <div className="absolute inset-0 bg-blue-600 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500" />
+                           <span className="relative z-10 flex items-center gap-3">
+                              {isSubmitting ? 'Syncing...' : 'Initialize Analysis'} <ArrowRight className="w-5 h-5 text-primary-gold group-hover/btn:translate-x-2 transition-transform" />
+                           </span>
+                         </button>
+                         <div className="flex items-center justify-center gap-3 opacity-40">
+                           <Shield className="w-4 h-4 text-blue-500" />
+                           <span className="text-[9px] font-black uppercase tracking-widest text-slate-500 italic">Institutional Encryption Active</span>
+                        </div>
+                       </form>
+                     )}
+                   </AnimatePresence>
+                 </div>
+               </motion.div>
             </div>
 
-            <div className="bg-primary-gold p-12 md:p-16 rounded-[48px] shadow-2xl shadow-primary-gold/10 flex flex-col justify-between">
-              <div>
-                <h3 className="text-xl font-black text-primary-navy mb-10 uppercase tracking-widest text-[10px] opacity-60">Rates & Terms</h3>
-                <div className="space-y-12">
-                  <div>
-                    <p className="text-[10px] text-primary-navy/40 font-black uppercase tracking-widest mb-3">Interest Structure</p>
-                    <p className="text-5xl md:text-6xl font-black text-primary-navy font-playfair">{data.rates}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-primary-navy/40 font-black uppercase tracking-widest mb-3">Service Fee</p>
-                    <p className="text-3xl font-black text-primary-navy/80 font-playfair">{data.fees}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-white/20 p-5 rounded-3xl flex items-center gap-4 backdrop-blur-sm mt-12 border border-white/10">
-                <AlertCircle className="w-6 h-6 text-primary-navy flex-shrink-0" />
-                <p className="text-[10px] font-black text-primary-navy uppercase tracking-widest leading-relaxed">*Final terms subject to credit appraisal.</p>
-              </div>
-            </div>
           </div>
-
-          {/* Intelligent FAQ */}
-          <section className="space-y-12">
-            <h2 className="text-4xl font-black text-primary-navy flex items-center gap-4 font-playfair">
-              <HelpCircle className="text-primary-gold w-10 h-10" /> Frequently Asked
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {data.faqs.map((faq, i) => (
-                <div key={i} className="group bg-white p-10 rounded-[40px] border border-slate-100 hover:border-primary-gold transition-all duration-500 shadow-sm hover:shadow-xl">
-                  <p className="font-black text-primary-navy mb-4 text-xl font-playfair">{faq.q}</p>
-                  <p className="text-slate-500 font-medium text-base leading-relaxed opacity-80 group-hover:opacity-100">{faq.a}</p>
-                </div>
-              ))}
-            </div>
-          </section>
         </div>
-      </div>
+      </section>
 
+      {/* Strategic Content Layers */}
+      <div className="max-w-7xl mx-auto px-6 md:px-10 -mt-24 md:-mt-32 mb-48 relative z-20">
+         <div className="space-y-16 md:space-y-32">
+            
+            {/* Core Value Layer */}
+            <motion.section 
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className={`${isDark ? 'bg-[#0B1221] border-white/5 shadow-black' : 'bg-white border-slate-100 shadow-22xl shadow-slate-200/40'} p-10 md:p-24 rounded-[64px] md:rounded-[100px] border shadow-22xl relative overflow-hidden group`}
+            >
+               <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/5 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2" />
+               
+               <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24 relative z-10">
+                  <div className="lg:col-span-5 space-y-10 text-center lg:text-left">
+                     <div className="flex justify-center lg:justify-start">
+                        <div className={`w-20 h-20 md:w-24 md:h-24 ${isDark ? 'bg-white/5 text-blue-500' : 'bg-blue-600 text-white shadow-22xl shadow-blue-600/30'} rounded-[36px] flex items-center justify-center group-hover:rotate-12 transition-transform`}>
+                           {data.icon ? <data.icon className="w-10 h-10 md:w-12 md:h-12" /> : <FileText className="w-10 h-10 md:w-12 md:h-12" />}
+                        </div>
+                     </div>
+                     <h2 className={`text-3xl md:text-6xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-tight tracking-tighter uppercase`}>Operational <br /> <span className="text-blue-600 italic">Scope</span></h2>
+                     <p className={`text-lg md:text-xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic leading-relaxed`}>{data.description}</p>
+                  </div>
+
+                  <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+                     {data.features.map((f, i) => (
+                       <div key={i} className={`p-8 md:p-10 ${isDark ? 'bg-white/2 border-white/5' : 'bg-slate-50/50 border-slate-100'} rounded-[40px] md:rounded-[50px] border group/feat hover:bg-blue-600 transition-all duration-700`}>
+                          <div className={`w-12 h-12 rounded-2xl ${isDark ? 'bg-white/5' : 'bg-white shadow-sm'} flex items-center justify-center mb-6 group-hover/feat:bg-white`}>
+                             <CheckCircle2 className="w-6 h-6 text-blue-600" />
+                          </div>
+                          <span className={`text-[11px] md:text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-300' : 'text-slate-700'} group-hover/feat:text-white leading-relaxed`}>{f}</span>
+                       </div>
+                     ))}
+                  </div>
+               </div>
+            </motion.section>
+
+            {/* Strategic Details Layer */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16">
+               <motion.div 
+                 initial={{ opacity: 0, x: -40 }}
+                 whileInView={{ opacity: 1, x: 0 }}
+                 viewport={{ once: true }}
+                 className={`${isDark ? 'bg-[#0B1221] border-white/5 shadow-black' : 'bg-[#020617] border-white/5 shadow-22xl shadow-black/80'} p-12 md:p-20 rounded-[64px] md:rounded-[80px] border shadow-22xl relative group`}
+               >
+                  <div className="absolute top-0 left-0 w-64 h-64 bg-blue-600/5 blur-3xl rounded-full -ml-32 -mt-32" />
+                  <div className="relative z-10 space-y-12">
+                     <div className="flex items-center gap-4">
+                        <Target className="w-6 h-6 text-blue-500" />
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">Eligibility Protocol</h3>
+                     </div>
+                     <ul className="space-y-10">
+                        {data.eligibility.map((e, i) => (
+                           <li key={i} className="flex gap-6 items-start group/li">
+                              <div className={`w-10 h-10 ${isDark ? 'bg-white/5 text-blue-500' : 'bg-white/10 text-blue-400'} rounded-xl flex items-center justify-center text-[11px] font-black shrink-0 border border-white/5 group-hover/li:bg-blue-600 group-hover/li:text-white transition-all`}>{i+1}</div>
+                              <span className={`text-base md:text-lg font-medium italic ${isDark ? 'text-slate-400' : 'text-slate-300'}`}>{e}</span>
+                           </li>
+                        ))}
+                     </ul>
+                  </div>
+               </motion.div>
+
+               <motion.div 
+                 initial={{ opacity: 0, x: 40 }}
+                 whileInView={{ opacity: 1, x: 0 }}
+                 viewport={{ once: true }}
+                 className={`${isDark ? 'bg-primary-gold/10' : 'bg-primary-gold'} p-12 md:p-20 rounded-[64px] md:rounded-[80px] border border-primary-gold/5 flex flex-col justify-between group shadow-22xl`}
+               >
+                  <div className="space-y-16">
+                     <div className="flex items-center gap-4">
+                        <TrendingUp className={`w-6 h-6 ${isDark ? 'text-primary-gold' : 'text-primary-navy'}`} />
+                        <h3 className={`text-[10px] font-black uppercase tracking-[0.4em] ${isDark ? 'text-slate-500' : 'text-primary-navy/40'}`}>Market Index & Velocity</h3>
+                     </div>
+                     <div className="space-y-16 mt-4">
+                        <div className="border-b border-primary-navy/5 pb-10">
+                           <p className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-primary-navy/40'} mb-4`}>Benchmark Yield</p>
+                           <p className={`text-5xl md:text-8xl font-playfair font-black ${isDark ? 'text-white' : 'text-[#020617]'} tracking-tighter leading-none`}>{data.rates}</p>
+                        </div>
+                        <div>
+                           <p className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-primary-navy/40'} mb-4`}>Deployment Fee</p>
+                           <p className={`text-2xl md:text-4xl font-black ${isDark ? 'text-white' : 'text-[#020617]'} tracking-tighter uppercase opacity-80`}>{data.fees}</p>
+                        </div>
+                     </div>
+                  </div>
+                  <div className={`${isDark ? 'bg-white/2 border-white/5' : 'bg-[#020617]/10 border-white/5'} p-6 rounded-[36px] flex items-center gap-5 mt-16 border`}>
+                      <AlertCircle className={`w-6 h-6 shrink-0 ${isDark ? 'text-primary-gold' : 'text-[#020617]'}`} />
+                      <p className={`text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-500' : 'text-[#020617]/60'} leading-relaxed`}>*Final Deployment parameters subject to institutional credit appraisal.</p>
+                  </div>
+               </motion.div>
+            </div>
+
+            {/* Precision FAQ Layer */}
+            <section className="space-y-16 pt-12">
+               <div className="flex flex-col items-center text-center space-y-6">
+                  <div className="w-16 h-16 bg-blue-600/10 text-blue-600 rounded-3xl flex items-center justify-center">
+                     <HelpCircle className="w-8 h-8" />
+                  </div>
+                  <h2 className={`text-4xl md:text-7xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-tighter uppercase`}>Knowledge <span className="text-blue-600 italic">Nexus</span></h2>
+               </div>
+               
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+                  {data.faqs.map((faq, i) => (
+                    <div key={i} className={`p-12 md:p-14 ${isDark ? 'bg-white/2 border-white/5' : 'bg-white border-slate-100 shadow-xl shadow-slate-200/40'} rounded-[50px] md:rounded-[64px] border group hover:border-blue-600 transition-all duration-700`}>
+                       <h4 className={`text-xl md:text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-6 font-playfair tracking-tight leading-tight uppercase`}>{faq.q}</h4>
+                       <div className="w-12 h-1 bg-blue-600 mb-8 opacity-20 group-hover:w-full transition-all duration-1000" />
+                       <p className={`text-base md:text-lg ${isDark ? 'text-slate-500' : 'text-slate-500'} font-medium italic leading-relaxed`}>{faq.a}</p>
+                    </div>
+                  ))}
+               </div>
+            </section>
+
+         </div>
+      </div>
     </div>
   );
 };
+
+// Internal Refined Input Component
+const InputField = ({ label, placeholder, value, onChange, type = 'text', isDark }) => (
+  <div className="space-y-2">
+    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 opacity-60">{label}</label>
+    <input 
+      required
+      type={type}
+      placeholder={placeholder}
+      className={`w-full px-6 py-4.5 ${isDark ? 'bg-white/2 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 outline-none focus:border-blue-600 font-black text-xs transition-all shadow-inner`}
+      value={value}
+      onChange={e => onChange(e.target.value)}
+    />
+  </div>
+);
 
 export default ServiceDetails;

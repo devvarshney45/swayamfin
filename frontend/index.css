@@ -131,28 +131,56 @@ body {
   transition-timing-function: ease;
 }
 
-/* Premium Scrollbar */
+/* Premium Scrollbar - Institutional Minimalist Protocol */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #f8fafc;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #02112e;
-  border-radius: 10px;
+  background: rgba(197, 160, 89, 0.2);
+  border-radius: 20px;
+  transition: all 0.5s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #c5a059;
 }
 
-/* Light mode scrollbar */
+/* Light mode scrollbar - Corporate Blue Protocol */
 html.light-site ::-webkit-scrollbar-thumb {
+  background: rgba(37, 99, 235, 0.2);
+}
+html.light-site ::-webkit-scrollbar-thumb:hover {
   background: #2563eb;
 }
 
-/* Modern Selection */
+/* Modern Selection Architecture */
 ::selection {
-  background: #c5a059;
-  color: #02112e;
+  background: rgba(197, 160, 89, 0.9);
+  color: #020617;
+}
+
+html.light-site ::selection {
+  background: rgba(37, 99, 235, 0.9);
+  color: #ffffff;
+}
+
+/* Smooth Navigation Interactions */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(197, 160, 89, 0.1);
+}
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: rgba(197, 160, 89, 0.3);
+}
+
+/* Typography Smoothing */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
