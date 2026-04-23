@@ -71,7 +71,7 @@ const AdminDashboard = () => {
   );
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-800'} p-4 md:p-8 lg:p-12 pt-32 md:pt-44 font-dmsans transition-colors duration-300 pb-32`}>
+    <div className={`min-h-screen ${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-800'} px-4 md:px-8 lg:px-12 pt-48 md:pt-60 font-dmsans transition-colors duration-300 pb-32`}>
       <div className="max-w-7xl mx-auto">
         <AdminTabs />
         
