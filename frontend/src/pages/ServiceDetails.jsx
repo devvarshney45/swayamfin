@@ -290,7 +290,7 @@ const ServiceDetails = () => {
                      </motion.div>
                    ) : (
                      <form onSubmit={handleSubmit} className="space-y-8">
-                       <InputGroup label="Entity / Applicant Identity" placeholder="Full Legal Name" value={formData.fullName} onChange={v => setFormData({...formData, fullName: v})} isDark={isDark} />
+                       <InputGroup label="Entity Applicant Identity" placeholder="Full Legal Name" value={formData.fullName} onChange={v => setFormData({...formData, fullName: v})} isDark={isDark} />
                        
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                          <InputGroup label="Interface Link" placeholder="+91 XXXX XXXX" type="tel" value={formData.mobile} onChange={v => setFormData({...formData, mobile: v.replace(/\D/g, '').slice(0,10)})} isDark={isDark} />
@@ -304,11 +304,11 @@ const ServiceDetails = () => {
 
                        <button 
                          disabled={isSubmitting}
-                         className="w-full bg-[#020617] text-white py-10 rounded-[40px] font-black uppercase tracking-[0.5em] text-[10px] shadow-3xl shadow-black/80 flex items-center justify-center gap-6 group/btn overflow-hidden relative active:scale-95 transition-all"
+                         className="w-full bg-[#020617] text-white py-10 rounded-[40px] font-black uppercase tracking-[0.5em] text-[10px] shadow-3xl shadow-black/80 flex items-center justify-center gap-6 group-btn overflow-hidden relative active:scale-95 transition-all"
                        >
-                         <div className="absolute inset-0 bg-blue-600 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500" />
+                         <div className="absolute inset-0 bg-blue-600 translate-y-full group-hover-btn:translate-y-0 transition-transform duration-500" />
                          <span className="relative z-10 flex items-center gap-3">
-                            {isSubmitting ? 'Syncing...' : 'Initiate Session'} <Zap className="w-6 h-6 text-primary-gold group-hover/btn:rotate-12 transition-transform" />
+                            {isSubmitting ? 'Syncing...' : 'Initiate Session'} <Zap className="w-6 h-6 text-primary-gold group-hover-btn:rotate-12 transition-transform" />
                          </span>
                        </button>
 
@@ -431,7 +431,7 @@ const InputGroup = ({ label, placeholder, value, onChange, type = 'text', isDark
 const SelectGroup = ({ label, options, labels, value, onChange, isDark }) => (
   <div className="space-y-4">
     <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] ml-2 opacity-60 block leading-none">{label}</label>
-    <div className="relative group/sel">
+    <div className="relative group-sel">
        <select 
          className={`w-full px-8 py-6 ${isDark ? 'bg-white/5 border-white/10 text-white shadow-3xl shadow-black/40' : 'bg-slate-100 border-slate-200 text-slate-900 shadow-inner'} rounded-[32px] border-2 outline-none focus:border-blue-600 font-black text-xs appearance-none transition-all cursor-pointer`}
          value={value}
@@ -441,7 +441,7 @@ const SelectGroup = ({ label, options, labels, value, onChange, isDark }) => (
            <option key={opt} value={opt}>{labels ? labels[i] : opt}</option>
          ))}
        </select>
-       <ChevronDown className="absolute right-8 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-500 opacity-40 pointer-events-none group-hover/sel:opacity-100 transition-opacity" />
+       <ChevronDown className="absolute right-8 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-500 opacity-40 pointer-events-none group-hover-sel:opacity-100 transition-opacity" />
     </div>
   </div>
 );
