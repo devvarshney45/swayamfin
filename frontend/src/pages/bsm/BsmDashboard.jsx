@@ -26,7 +26,7 @@ import { useTranslation } from 'react-i18next';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 const BsmDashboard = () => {
-  const { user: authUser } = useAuth();
+  const { user: authUser, logout } = useAuth();
   const { isDark } = useTheme();
   const { t } = useTranslation();
   const [leads, setLeads] = useState([]);
@@ -105,7 +105,7 @@ const BsmDashboard = () => {
                 </div>
              </div>
              <button 
-               onClick={() => { localStorage.removeItem('swayamfin_token'); window.location.href = '/agent/login'; }}
+               onClick={() => { logout(); navigate('/agent/login'); }}
                className={`${isDark ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-white border-slate-200 text-slate-500 shadow-sm'} px-6 py-4 rounded-2xl flex items-center gap-3 font-black text-[10px] uppercase tracking-widest transition-all border hover:text-rose-500`}
              >
                <LogOut className="w-4 h-4" /> Sign Out
