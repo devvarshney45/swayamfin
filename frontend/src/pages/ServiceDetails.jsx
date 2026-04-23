@@ -177,9 +177,9 @@ const ServiceDetails = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 lg:gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-16 items-start">
             
-            <div className="space-y-6">
+            <div className="lg:col-span-12 xl:col-span-7 space-y-6">
               <nav className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] opacity-40">
                  <Link to="/" className="hover:text-blue-600 transition-colors">Home</Link>
                  <ChevronRight className="w-3 h-3" />
@@ -208,7 +208,7 @@ const ServiceDetails = () => {
             </div>
 
             {/* Application Cockpit */}
-            <div className="xl:col-span-1 relative mt-8 xl:mt-0">
+            <div className="lg:col-span-12 xl:col-span-5 relative mt-12 xl:mt-0 xl:p-8">
                <motion.div 
                  initial={{ opacity: 0, scale: 0.95 }}
                  animate={{ opacity: 1, scale: 1 }}
@@ -303,7 +303,7 @@ const ServiceDetails = () => {
       </section>
 
       {/* Strategic Content Layers */}
-      <div className="max-w-7xl mx-auto px-6 md:px-10 -mt-24 md:-mt-32 mb-48 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 mt-16 md:mt-24 mb-32 relative z-20">
          <div className="space-y-16 md:space-y-32">
             
             {/* Core Value Layer */}

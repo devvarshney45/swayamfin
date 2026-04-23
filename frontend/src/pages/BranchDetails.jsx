@@ -86,10 +86,10 @@ const BranchDetails = () => {
             <span className="text-blue-600">{branch.city} Hub</span>
         </nav>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
           
           {/* Narrative Pillar */}
-          <div className="space-y-8">
+          <div className="lg:col-span-7 space-y-8">
             <motion.div 
               initial={{ opacity: 0, x: -40 }} 
               animate={{ opacity: 1, x: 0 }} 
@@ -144,7 +144,7 @@ const BranchDetails = () => {
           </div>
 
           {/* Regional Onboarding Cockpit */}
-          <div className="lg:col-span-12 xl:col-span-5 xl:sticky xl:top-32">
+          <div className="lg:col-span-5 lg:sticky lg:top-32 mt-12 lg:mt-0">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
