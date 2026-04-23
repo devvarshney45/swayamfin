@@ -85,7 +85,7 @@ const BsmDashboard = () => {
   const deadLeads = leads.filter(l => l.status === 'Dead Lead').length;
 
   return (
-    <div className={`${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-900'} min-h-screen pb-20 font-inter transition-colors duration-300`}>
+    <div className={`${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-900'} min-h-screen pt-24 md:pt-28 pb-20 font-inter transition-colors duration-300 relative`}>
       {/* Premium Header */}
       <div className={`${isDark ? 'bg-white/2 border-white/5 shadow-2xl shadow-black/50' : 'bg-white/80 border-slate-200 shadow-xl shadow-slate-200/50'} border-b pt-28 md:pt-36 pb-20 sticky top-0 z-20 backdrop-blur-2xl transition-all rounded-b-[60px]`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">

@@ -96,7 +96,7 @@ const AgentDashboard = () => {
   };
 
   return (
-    <div className={(isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-900') + ' min-h-screen pb-32 font-dmsans transition-colors duration-300'}>
+    <div className={`${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-900'} min-h-screen pt-24 md:pt-28 pb-20 font-inter transition-colors duration-300 relative`}>
       {/* Mobile-First Header */}
       <div className={(isDark ? 'bg-white/2 border-white/5 shadow-22xl shadow-black/50' : 'bg-white/90 border-slate-200 shadow-xl shadow-slate-200/50') + ' border-b sticky top-0 z-40 backdrop-blur-2xl transition-all'}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
