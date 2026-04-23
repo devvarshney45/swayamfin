@@ -49,15 +49,15 @@ const Branches = () => {
   ];
 
   return (
-    <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen pt-32 pb-48 font-dmsans transition-colors duration-500 overflow-hidden`}>
+    <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen pt-24 pb-24 md:pt-32 md:pb-40 font-dmsans transition-colors duration-500 overflow-x-hidden`}>
       
       {/* Background Accents */}
       <div className={`absolute top-0 right-0 w-[800px] h-[800px] ${isDark ? 'bg-blue-600/5' : 'bg-blue-500/5'} blur-[160px] rounded-full translate-x-1/2 -translate-y-1/2`} />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
         
         {/* Network Header */}
-        <div className="text-center mb-24 md:mb-40 space-y-8">
+        <div className="text-center mb-12 md:mb-20 space-y-4">
            <motion.div 
              initial={{ opacity: 0, y: 10 }}
              animate={{ opacity: 1, y: 0 }}
@@ -69,7 +69,7 @@ const Branches = () => {
            <motion.h1 
              initial={{ opacity: 0, y: 30 }}
              animate={{ opacity: 1, y: 0 }}
-             className={`text-4xl md:text-9xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-[0.9] tracking-tighter uppercase`}
+             className={`text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-tight tracking-tight uppercase`}
            >
              Strategic <br /> <span className="text-blue-600 italic">Presence</span>
            </motion.h1>

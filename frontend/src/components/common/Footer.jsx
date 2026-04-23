@@ -27,14 +27,14 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className={`${isDark ? 'bg-[#020617]' : 'bg-white border-t border-slate-200'} pt-24 md:pt-32 pb-12 font-dmsans transition-colors duration-500 overflow-hidden relative`}>
+    <footer className={`${isDark ? 'bg-[#020617]' : 'bg-white border-t border-slate-200'} pt-14 md:pt-20 pb-24 md:pb-12 font-dmsans transition-colors duration-500 overflow-hidden relative`}>
       {/* Decorative Background Elements */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-600/5 blur-[120px] rounded-full -translate-y-1/2" />
       <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-primary-gold/5 blur-[100px] rounded-full translate-y-1/2" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20 mb-14 md:mb-20">
           {/* Brand Identity Protocol */}
           <div className="lg:col-span-4 space-y-10 group">
             <Link to="/" className="flex items-center gap-4 group/logo">
@@ -59,11 +59,11 @@ const Footer = () => {
           </div>
 
           {/* Institutional Navigation Protocols */}
-          <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-12 md:gap-8">
+          <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-8">
             {/* Credit Scope */}
             <div>
-              <h4 className="text-[10px] font-black mb-10 text-blue-600 uppercase tracking-[0.4em]">Credit Scope</h4>
-              <ul className="space-y-5">
+              <h4 className="text-[10px] font-black mb-5 text-blue-600 uppercase tracking-[0.4em]">Credit Scope</h4>
+              <ul className="space-y-3">
                 <li><FooterLink to="/services/msme-loans" label="MSME Enterprise" isDark={isDark} /></li>
                 <li><FooterLink to="/services/supply-chain" label="Supply Chain V1" isDark={isDark} /></li>
                 <li><FooterLink to="/services/housing-loans" label="Housing Project" isDark={isDark} /></li>
@@ -73,8 +73,8 @@ const Footer = () => {
 
             {/* Platform Ecosystem */}
             <div>
-              <h4 className="text-[10px] font-black mb-10 text-blue-600 uppercase tracking-[0.4em]">Ecosystem</h4>
-              <ul className="space-y-5">
+              <h4 className="text-[10px] font-black mb-5 text-blue-600 uppercase tracking-[0.4em]">Ecosystem</h4>
+              <ul className="space-y-3">
                 <li><FooterLink to="/about" label="Mission Profile" isDark={isDark} /></li>
                 <li><FooterLink to="/process" label="Intel Hub" isDark={isDark} /></li>
                 <li><FooterLink to="/branches" label="Regional Nodes" isDark={isDark} /></li>
@@ -84,7 +84,7 @@ const Footer = () => {
 
             {/* Strategic Access */}
             <div className="col-span-2 md:col-span-1 space-y-8">
-              <h4 className="text-[10px] font-black mb-10 text-blue-600 uppercase tracking-[0.4em]">Command Port</h4>
+              <h4 className="text-[10px] font-black mb-5 text-blue-600 uppercase tracking-[0.4em]">Command Port</h4>
               <div className={`p-6 rounded-[32px] ${isDark ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-200'} border space-y-6 relative overflow-hidden group/card`}>
                  <div className="absolute top-0 right-0 w-24 h-24 bg-blue-600/10 blur-2xl rounded-full translate-x-1/2 -translate-y-1/2" />
                  <div className="flex gap-4 items-start">
@@ -103,7 +103,7 @@ const Footer = () => {
         </div>
 
         {/* Regional Hub Network */}
-        <div className={`p-10 rounded-[48px] ${isDark ? 'bg-white/2 border-white/5' : 'bg-slate-50 border-slate-200 shadow-sm'} border mb-24 relative overflow-hidden`}>
+        <div className={`p-6 md:p-8 rounded-2xl md:rounded-3xl ${isDark ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-200 shadow-sm'} border mb-10 md:mb-16`}>
            <div className="flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
               <div className="space-y-2 text-center md:text-left">
                  <h5 className={`text-sm font-black uppercase tracking-[0.4em] ${isDark ? 'text-white' : 'text-[#020617]'}`}>Distribution Network</h5>
@@ -124,8 +124,8 @@ const Footer = () => {
         </div>
 
         {/* Institutional Disclosure & Compliance */}
-        <div className="pt-16 border-t border-white/5 space-y-12">
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-relaxed">
+        <div className="pt-8 md:pt-12 border-t border-white/5 space-y-6 md:space-y-8">
+           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-relaxed">
               <div className="flex gap-5 items-start">
                  <MapPin className="w-5 h-5 text-primary-gold shrink-0" />
                  <span>619, Somdutt Chambers II, <br /> Bhikaji Cama, New Delhi – 110066</span>
@@ -140,7 +140,7 @@ const Footer = () => {
               </div>
            </div>
 
-           <div className={`p-10 rounded-[40px] ${isDark ? 'bg-[#020617] border-white/5' : 'bg-slate-100 border-slate-200'} border text-[9px] md:text-[10px] text-slate-500 font-bold text-center space-y-8 italic`}>
+           <div className={`p-6 md:p-8 rounded-2xl md:rounded-3xl ${isDark ? 'bg-[#020617] border-white/5' : 'bg-slate-100 border-slate-200'} border text-[9px] md:text-[10px] text-slate-500 font-bold text-center space-y-5 italic`}>
              <p className="max-w-4xl mx-auto leading-[2] opacity-60 px-4">
                "Swayamfin is a premium digital trademark platform of Green Miles Mobility Pvt. Ltd., operating as a certified Loan Service Provider (LSP). 
                We facilitate high-velocity financial inclusion on behalf of regulated NBFC and HFC partners. 

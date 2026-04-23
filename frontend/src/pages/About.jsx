@@ -12,13 +12,13 @@ const About = () => {
     <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen font-dmsans transition-colors duration-500 overflow-hidden`}>
       
       {/* Institutional Narrative Hero */}
-      <section className="relative pt-40 pb-56 md:pt-60 md:pb-80 overflow-hidden">
+      <section className="relative pt-28 pb-16 md:pt-40 md:pb-24 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className={`absolute top-0 right-0 w-2/3 h-2/3 ${isDark ? 'bg-blue-600/5' : 'bg-blue-500/5'} blur-[140px] rounded-full translate-x-1/2 -translate-y-1/2`} />
           <div className={`absolute bottom-0 left-0 w-1/2 h-1/2 ${isDark ? 'bg-primary-gold/5' : 'bg-primary-gold/3'} blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2`} />
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10 text-center space-y-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 relative z-10 text-center space-y-6">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -30,7 +30,7 @@ const About = () => {
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`text-4xl md:text-9xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-[0.9] tracking-tighter`}
+            className={`text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-[0.9] tracking-tighter`}
           >
             The Execution <br /> <span className="text-blue-600 italic">Philosophy</span>
           </motion.h1>
@@ -47,7 +47,7 @@ const About = () => {
       </section>
 
       {/* Strategic Blueprint */}
-      <section className="max-w-7xl mx-auto px-6 md:px-10 -mt-24 md:-mt-48 pb-32 relative z-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 -mt-8 md:-mt-24 pb-16 md:pb-24 relative z-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24 items-center">
           <motion.div
             initial={{ opacity: 0, x: -40 }}
@@ -55,7 +55,7 @@ const About = () => {
             viewport={{ once: true }}
             className="space-y-10"
           >
-            <h2 className={`text-3xl md:text-5xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-tight tracking-tight`}>
+            <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-tight tracking-tight`}>
                Bridging the <br /> <span className="text-blue-600 italic">Credit Variance.</span>
             </h2>
             <div className="space-y-8">
@@ -103,9 +103,9 @@ const About = () => {
       </section>
 
       {/* Institutional Architecture */}
-      <section className={`${isDark ? 'bg-white/2' : 'bg-[#020617]/5'} py-40 border-y ${isDark ? 'border-white/5' : 'border-slate-100'}`}>
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+      <section className={`${isDark ? 'bg-white/2' : 'bg-[#020617]/5'} py-16 md:py-28 border-y ${isDark ? 'border-white/5' : 'border-slate-100'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -113,8 +113,8 @@ const About = () => {
               viewport={{ once: true }}
               className="relative group order-2 lg:order-1"
             >
-               <div className={`aspect-square rounded-[80px] md:rounded-[120px] overflow-hidden p-4 border ${isDark ? 'bg-[#0B1221] border-white/5' : 'bg-white shadow-22xl shadow-slate-200/50'}`}>
-                  <div className="w-full h-full rounded-[60px] md:rounded-[100px] overflow-hidden relative">
+               <div className={`aspect-square rounded-3xl md:rounded-[60px] overflow-hidden p-3 border ${isDark ? 'bg-[#0B1221] border-white/5' : 'bg-white shadow-xl shadow-slate-200/50'}`}>
+                  <div className="w-full h-full rounded-2xl md:rounded-[50px] overflow-hidden relative">
                     <img 
                       src="https://images.unsplash.com/photo-1497366412874-3415097a27e7?auto=format&fit=crop&q=80&w=1200" 
                       alt="Operations Hub" 
@@ -131,7 +131,7 @@ const About = () => {
                   <Cpu className="w-8 h-8 text-blue-600" />
                   <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">System Architecture</span>
                </div>
-               <h2 className={`text-4xl md:text-8xl font-black ${isDark ? 'text-white' : 'text-slate-900'} font-playfair leading-[0.9] tracking-tighter uppercase`}>
+               <h2 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black ${isDark ? 'text-white' : 'text-slate-900'} font-playfair leading-tight tracking-tight uppercase`}>
                   A Culture of <br /><span className="text-blue-600 italic">Advanced Trust</span>
                </h2>
                <p className={`text-lg md:text-xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic leading-relaxed max-w-xl`}>
@@ -145,7 +145,7 @@ const About = () => {
                    { label: 'Performance', val: 'Delta-Scale', icon: Target },
                    { label: 'Governance', val: 'Core-Pillar', icon: Shield }
                  ].map((item, i) => (
-                   <div key={i} className={`${isDark ? 'bg-[#0B1221] border-white/5 shadow-black' : 'bg-white border-slate-100 shadow-22xl shadow-slate-200/40'} p-8 rounded-[40px] border group/tile hover:bg-blue-600 transition-all duration-700`}>
+                    <div key={i} className={`${isDark ? 'bg-[#0B1221] border-white/5' : 'bg-white border-slate-100 shadow-md'} p-5 md:p-6 rounded-2xl border group/tile hover:bg-blue-600 transition-all duration-500`}>
                       <div className="flex justify-between items-start mb-6">
                          <p className={`text-[10px] font-black text-slate-500 uppercase tracking-widest italic group-hover/tile:text-white/60 transition-colors`}>{item.label}</p>
                          <item.icon className="w-5 h-5 text-blue-600 group-hover/tile:text-white transition-colors" />
@@ -160,13 +160,13 @@ const About = () => {
       </section>
 
       {/* Leadership Showcase */}
-      <section className="py-24 md:py-48">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
+      <section className="py-16 md:py-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
           <div className="flex flex-col items-center text-center space-y-6 mb-24 md:mb-40">
              <div className="w-16 h-16 bg-blue-600/10 text-blue-600 rounded-3xl flex items-center justify-center">
                 <Users className="w-8 h-8" />
              </div>
-             <h2 className={`text-4xl md:text-8xl font-black ${isDark ? 'text-white' : 'text-slate-900'} font-playfair tracking-tighter uppercase leading-none`}>Leadership <span className="text-blue-600 italic">Council</span></h2>
+             <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black ${isDark ? 'text-white' : 'text-slate-900'} font-playfair tracking-tight uppercase leading-none`}>Leadership <span className="text-blue-600 italic">Council</span></h2>
              <p className="text-slate-500 font-black uppercase tracking-[0.4em] text-[10px] italic">Strategic minds behind the Swayamfin deployment</p>
           </div>
           
@@ -225,9 +225,9 @@ const About = () => {
       </section>
 
       {/* Trust Architecture Strip */}
-      <section className={`py-32 ${isDark ? 'bg-[#0F172A]' : 'bg-[#020617]'} relative overflow-hidden`}>
+      <section className={`py-14 md:py-20 ${isDark ? 'bg-[#0F172A]' : 'bg-[#020617]'} relative overflow-hidden`}>
          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.1)_0%,transparent_70%)]" />
-         <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-center md:text-left space-y-4">
                <h3 className="text-white text-3xl md:text-5xl font-black font-playfair tracking-tighter uppercase leading-none">Global Partnership <br /> <span className="text-blue-600">Protocol</span></h3>
                <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em] italic leading-relaxed">Secured with India's Tier-1 Financial Anchors</p>

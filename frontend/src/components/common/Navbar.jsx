@@ -89,14 +89,14 @@ const Navbar = () => {
     <>
       <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-700 font-dmsans ${
         scrolled 
-          ? 'mt-4 mx-4 md:mx-10 rounded-[36px] md:rounded-[48px] border border-white/5 shadow-22xl shadow-black/20 backdrop-blur-[40px] py-3' 
-          : 'py-8'
+          ? 'mt-3 mx-3 md:mx-8 rounded-2xl md:rounded-3xl border border-white/5 shadow-xl shadow-black/20 backdrop-blur-xl py-2.5' 
+          : 'py-4 md:py-6'
       } ${
         isDark 
-          ? (scrolled ? 'bg-[#020617]/80' : 'bg-transparent') 
-          : (scrolled ? 'bg-white/70 border-slate-200' : 'bg-transparent')
+          ? (scrolled ? 'bg-[#020617]/90' : 'bg-transparent') 
+          : (scrolled ? 'bg-white/90 border-slate-200' : 'bg-transparent')
       }`}>
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="flex justify-between items-center">
             
             {/* Playfair Brand Identity */}
@@ -256,9 +256,9 @@ const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className={`fixed inset-0 z-[110] lg:hidden ${isDark ? 'bg-[#020617]' : 'bg-white'} p-10 flex flex-col`}
+              className={`fixed inset-0 z-[110] lg:hidden ${isDark ? 'bg-[#020617]' : 'bg-white'} p-6 sm:p-8 flex flex-col overflow-y-auto`}
             >
-              <div className="flex justify-between items-center mb-16">
+              <div className="flex justify-between items-center mb-8">
                 <Link to="/" className="flex items-center gap-3">
                   <div className="bg-primary-gold p-2.5 rounded-xl">
                     <Zap className="w-6 h-6 text-[#020617]" />
@@ -273,7 +273,7 @@ const Navbar = () => {
                 </button>
               </div>
 
-              <div className="space-y-6 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="space-y-5 flex-1">
                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em] ml-2 mb-6">Operations Hub</p>
                 <div className="grid grid-cols-1 gap-4">
                   <MobileLink to="/" label={t('nav_home')} icon={<Home />} isDark={isDark} />
@@ -281,14 +281,14 @@ const Navbar = () => {
                   <MobileLink to="/process" label="Intelligence" icon={<AreaChart />} isDark={isDark} />
                 </div>
 
-                <div className="pt-12">
+                <div className="pt-6">
                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em] ml-2 mb-6">Credit Solutions</p>
                   <div className="grid grid-cols-2 gap-4">
                     {services.map(s => (
                       <Link 
                         key={s.slug} 
                         to={`/services/${s.slug}`} 
-                        className={`p-6 rounded-[36px] ${isDark ? 'bg-white/2 border-white/5' : 'bg-slate-50 border-slate-100 shadow-sm'} border flex flex-col gap-4 active:scale-95 transition-all`}
+                        className={`p-4 rounded-2xl ${isDark ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-100 shadow-sm'} border flex flex-col gap-3 active:scale-95 transition-all`}
                       >
                         <s.icon className="w-6 h-6 text-blue-600" />
                         <span className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-white' : 'text-[#020617]'} leading-tight`}>{s.name}</span>
@@ -297,7 +297,7 @@ const Navbar = () => {
                   </div>
                 </div>
 
-                <div className="pt-12">
+                <div className="pt-6">
                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em] ml-2 mb-6">Regional Command</p>
                   <div className="flex flex-wrap gap-3">
                     {branches.map(b => (
@@ -313,18 +313,18 @@ const Navbar = () => {
                 </div>
               </div>
 
-              <div className="pt-12 mt-auto border-t border-white/5 flex flex-col gap-6">
+              <div className="pt-6 mt-6 border-t border-white/5 flex flex-col gap-4">
                  <div className="flex gap-4">
                     <button 
                       onClick={toggleTheme}
-                      className={`flex-1 py-5 rounded-[24px] ${isDark ? 'bg-white/5 border-white/5' : 'bg-slate-100 border-slate-200'} border flex items-center justify-center gap-4 font-black text-[10px] uppercase tracking-widest`}
+                      className={`flex-1 py-3.5 rounded-2xl ${isDark ? 'bg-white/5 border-white/10' : 'bg-slate-100 border-slate-200'} border flex items-center justify-center gap-3 font-black text-[10px] uppercase tracking-widest`}
                     >
                       {isDark ? <Sun className="w-5 h-5 text-yellow-500" /> : <Moon className="w-5 h-5" />} 
                       Interface
                     </button>
                     <button 
                       onClick={toggleLanguage}
-                      className={`flex-1 py-5 rounded-[24px] ${isDark ? 'bg-white/5 border-white/5' : 'bg-slate-100 border-slate-200'} border flex items-center justify-center gap-4 font-black text-[10px] uppercase tracking-widest`}
+                      className={`flex-1 py-3.5 rounded-2xl ${isDark ? 'bg-white/5 border-white/10' : 'bg-slate-100 border-slate-200'} border flex items-center justify-center gap-3 font-black text-[10px] uppercase tracking-widest`}
                     >
                       <Globe className="w-5 h-5 text-blue-600" /> 
                       {i18n.language === 'en' ? 'HI' : 'EN'}
@@ -359,12 +359,12 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Sticky Command Bar */}
-      <div className={`lg:hidden fixed bottom-6 left-6 right-6 ${isDark ? 'bg-[#0B1221]/90' : 'bg-white/90'} backdrop-blur-2xl border ${isDark ? 'border-white/10 shadow-black' : 'border-slate-200 shadow-xl shadow-slate-200/50'} p-2 z-[150] flex gap-2 rounded-[36px] transition-all duration-500`}>
-        <a href="https://wa.me/916397003690" className="flex-1 bg-success-green text-white flex items-center justify-center gap-3 py-5 rounded-[28px] font-black text-[10px] uppercase tracking-[0.3em] shadow-lg shadow-green-500/20 active:scale-95 transition-all group">
-          <MessageCircle className="w-6 h-6 fill-current group-hover:rotate-12 transition-transform" /> Sync
+      <div className={`lg:hidden fixed bottom-4 left-4 right-4 ${isDark ? 'bg-[#0B1221]/90' : 'bg-white/90'} backdrop-blur-2xl border ${isDark ? 'border-white/10 shadow-black' : 'border-slate-200 shadow-xl shadow-slate-200/50'} p-1.5 z-[150] flex gap-2 rounded-2xl transition-all duration-500`}>
+        <a href="https://wa.me/916397003690" className="flex-1 bg-success-green text-white flex items-center justify-center gap-2 py-4 rounded-xl font-black text-[10px] uppercase tracking-wider shadow-lg shadow-green-500/20 active:scale-95 transition-all group">
+          <MessageCircle className="w-5 h-5 fill-current" /> WhatsApp
         </a>
-        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex-1 bg-[#020617] text-white flex items-center justify-center gap-3 py-5 rounded-[28px] font-black text-[10px] uppercase tracking-[0.3em] shadow-lg shadow-black/20 active:scale-95 transition-all group">
-          <Sparkles className="w-6 h-6 text-primary-gold group-hover:scale-125 transition-transform" /> Session
+        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex-1 bg-[#020617] text-white flex items-center justify-center gap-2 py-4 rounded-xl font-black text-[10px] uppercase tracking-wider shadow-lg shadow-black/20 active:scale-95 transition-all group">
+          <Sparkles className="w-5 h-5 text-primary-gold" /> Apply Now
         </button>
       </div>
     </>
