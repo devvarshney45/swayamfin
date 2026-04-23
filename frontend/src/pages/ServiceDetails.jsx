@@ -177,7 +177,7 @@ const ServiceDetails = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-16 items-stretch">
             
             <div className="lg:col-span-12 xl:col-span-7 space-y-6">
               <nav className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] opacity-40">
@@ -228,7 +228,7 @@ const ServiceDetails = () => {
                <motion.div 
                  initial={{ opacity: 0, scale: 0.95 }}
                  animate={{ opacity: 1, scale: 1 }}
-                 className={`${isDark ? 'bg-[#0B1221]/90 border-white/5' : 'bg-white border-slate-200 shadow-xl'} p-6 md:p-10 rounded-3xl border relative overflow-hidden group`}
+                 className={`${isDark ? 'bg-[#0B1221]/90 border-white/5' : 'bg-white border-slate-200 shadow-xl'} p-6 md:p-10 rounded-3xl border relative overflow-hidden group h-full`}
                >
                  <div className="absolute top-0 right-0 w-48 h-48 bg-blue-600/5 blur-3xl rounded-full -mr-24 -mt-24 group-hover:scale-150 transition-transform duration-1000" />
                  

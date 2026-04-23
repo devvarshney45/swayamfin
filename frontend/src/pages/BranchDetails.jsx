@@ -86,7 +86,7 @@ const BranchDetails = () => {
             <span className="text-blue-600">{branch.city} Hub</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-stretch">
           
           {/* Narrative Pillar */}
           <div className="lg:col-span-7 space-y-8">
@@ -141,6 +141,22 @@ const BranchDetails = () => {
                 title={`${branch.city} Map`}
               ></iframe>
             </motion.div>
+
+            {/* Balancing Stats (Matches ServiceDetails) */}
+            <div className="pt-8 grid grid-cols-2 gap-4 lg:gap-6">
+                 <div className={`p-6 md:p-8 rounded-[32px] ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-100 shadow-xl'} border relative overflow-hidden group/chart cursor-default transition-transform hover:-translate-y-1`}>
+                    <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-blue-600/10 rounded-full blur-2xl group-hover/chart:bg-blue-600/20 transition-all duration-700" />
+                    <TrendingUp className="w-8 h-8 text-blue-500 mb-6" />
+                    <h4 className={`text-4xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-2 tracking-tighter`}>85%</h4>
+                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] leading-relaxed">Systematic<br />Approval Rate</p>
+                 </div>
+                 <div className={`p-6 md:p-8 rounded-[32px] ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-100 shadow-xl'} border relative overflow-hidden group/chart cursor-default transition-transform hover:-translate-y-1`}>
+                    <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-primary-gold/10 rounded-full blur-2xl group-hover/chart:bg-primary-gold/20 transition-all duration-700" />
+                    <Clock className="w-8 h-8 text-primary-gold mb-6" />
+                    <h4 className={`text-4xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-2 tracking-tighter`}>48H</h4>
+                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] leading-relaxed">Processing<br />Velocity</p>
+                 </div>
+            </div>
           </div>
 
           {/* Regional Onboarding Cockpit */}
@@ -148,7 +164,7 @@ const BranchDetails = () => {
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className={`${isDark ? 'bg-[#0B1221]/90 border-white/5 shadow-black' : 'bg-white border-slate-100 shadow-22xl shadow-slate-200/50'} p-10 md:p-14 rounded-[50px] md:rounded-[80px] border backdrop-blur-3xl relative overflow-hidden group`}
+              className={`${isDark ? 'bg-[#0B1221]/90 border-white/5 shadow-black' : 'bg-white border-slate-100 shadow-22xl shadow-slate-200/50'} p-10 md:p-14 rounded-[50px] md:rounded-[80px] border backdrop-blur-3xl relative overflow-hidden group h-full`}
             >
                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[100px] rounded-full -mr-32 -mt-32 transition-transform duration-1000 group-hover:scale-150" />
                

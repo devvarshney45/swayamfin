@@ -43,7 +43,7 @@ const Login = () => {
   };
 
   return (
-    <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen flex items-center justify-center p-6 relative overflow-hidden transition-colors duration-300 font-inter`}>
+    <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen flex items-center justify-center p-6 pt-32 relative overflow-hidden transition-colors duration-300 font-inter`}>
       {/* Dynamic Background Elements */}
       <div className={`absolute top-0 right-0 w-[500px] h-[500px] ${isDark ? 'bg-blue-600/5' : 'bg-blue-500/5'} blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2 animate-pulse`} />
       <div className={`absolute bottom-0 left-0 w-[500px] h-[500px] ${isDark ? 'bg-indigo-600/5' : 'bg-indigo-500/5'} blur-[100px] rounded-full -translate-x-1/2 translate-y-1/2`} />

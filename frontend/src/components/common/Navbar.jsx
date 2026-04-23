@@ -423,7 +423,7 @@ const renderAuthSection = (user, logout, navigate, isDark, isMobile) => {
   }
   return (
     <Link to="/agent/login" className={`${isMobile ? 'w-full py-6 rounded-[28px] bg-[#020617] text-white' : 'px-10 py-3.5 bg-[#020617] text-white rounded-[22px] shadow-22xl shadow-black/20'} text-[10px] font-black hover:bg-blue-600 active:scale-95 transition-all uppercase tracking-[0.4em] text-center border border-white/5`}>
-      PARTNER UPLINK
+      LOGIN
     </Link>
   );
 };
