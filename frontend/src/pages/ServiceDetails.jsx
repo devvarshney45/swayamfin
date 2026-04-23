@@ -232,18 +232,18 @@ const ServiceDetails = () => {
               viewport={{ once: true }}
               className={`${isDark ? 'bg-[#0B1221] border-white/5' : 'bg-white border-slate-100'} p-10 md:p-16 rounded-[60px] border shadow-3xl relative overflow-hidden group`}
             >
-               <div className="flex flex-col lg:flex-row gap-16 lg:gap-20 relative z-10">
+               <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-12 relative z-10">
                   <div className="lg:col-span-5 space-y-10 text-center lg:text-left">
                      <div className="flex justify-center lg:justify-start">
-                        <div className={`w-24 h-24 ${isDark ? 'bg-white/5 text-blue-500 shadow-3xl shadow-black/80' : 'bg-blue-600 text-white shadow-3xl shadow-blue-600/30'} rounded-[36px] flex items-center justify-center group-hover:rotate-[15deg] transition-all`}>
-                           {data.icon ? <data.icon className="w-12 h-12" /> : <FileText className="w-12 h-12" />}
+                        <div className={`w-20 h-20 ${isDark ? 'bg-white/5 text-blue-500 shadow-3xl shadow-black/80' : 'bg-blue-600 text-white shadow-3xl shadow-blue-600/30'} rounded-[32px] flex items-center justify-center group-hover:rotate-[15deg] transition-all`}>
+                           {data.icon ? <data.icon className="w-10 h-10" /> : <FileText className="w-10 h-10" />}
                         </div>
                      </div>
                      <h2 className={`text-4xl md:text-5xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-none tracking-tighter uppercase mb-6`}>Operational <br /> <span className="text-blue-600 italic">Scope.</span></h2>
-                     <p className={`text-lg md:text-xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic leading-relaxed`}>{data.description}</p>
+                     <p className={`text-base md:text-lg ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic leading-relaxed`}>{data.description}</p>
                   </div>
 
-                  <div className="lg:flex-1 grid grid-cols-1 sm:grid-cols-2 gap-8">
+                  <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                      {data.features.map((f, i) => (
                        <FeatureCard key={i} text={f} index={i} isDark={isDark} />
                      ))}
@@ -398,13 +398,13 @@ const MetricNode = ({ label, value, color, isDark }) => (
 
 const FeatureCard = ({ text, index, isDark }) => (
   <motion.div 
-    whileHover={{ scale: 1.05 }}
-    className={`p-10 ${isDark ? 'bg-white/2 border-white/5' : 'bg-slate-50 border-slate-100 shadow-xl'} rounded-[48px] border group transition-all duration-500 hover:bg-blue-600 h-full flex flex-col justify-between`}
+    whileHover={{ y: -5 }}
+    className={`p-6 md:p-8 ${isDark ? 'bg-white/2 border-white/5' : 'bg-slate-50 border-slate-100 shadow-xl'} rounded-[32px] md:rounded-[40px] border group transition-all duration-500 hover:bg-blue-600 h-full flex flex-col items-start`}
   >
-     <div className={`w-14 h-14 rounded-[20px] ${isDark ? 'bg-white/5' : 'bg-white shadow-sm'} flex items-center justify-center mb-8 border border-white/5 group-hover:bg-white`}>
-        <CheckCircle2 className="w-7 h-7 text-blue-600" />
+     <div className={`w-10 h-10 md:w-12 md:h-12 rounded-[14px] md:rounded-[18px] ${isDark ? 'bg-white/5' : 'bg-white shadow-sm'} flex items-center justify-center mb-4 md:mb-6 border border-white/5 group-hover:bg-white`}>
+        <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
      </div>
-     <span className={`text-sm md:text-base font-black uppercase tracking-widest ${isDark ? 'text-slate-300' : 'text-slate-700'} group-hover:text-white leading-relaxed`}>{text}</span>
+     <span className={`text-[11px] md:text-sm font-black uppercase tracking-widest ${isDark ? 'text-slate-300' : 'text-slate-700'} group-hover:text-white leading-tight md:leading-relaxed`}>{text}</span>
   </motion.div>
 );
 
