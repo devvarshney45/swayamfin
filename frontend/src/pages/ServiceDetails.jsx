@@ -168,10 +168,7 @@ const ServiceDetails = () => {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  return (
+    return (
     <div className={`${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-900'} min-h-screen pt-32 pb-40 font-inter transition-colors duration-500 overflow-x-hidden relative`}>
       
       {/* Kinetic Component Architecture */}
@@ -192,7 +189,7 @@ const ServiceDetails = () => {
             <span className="text-blue-600">{data.title} Asset</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
           
           {/* Strategic Narrative Pillar */}
           <div className="lg:col-span-7 space-y-12">
@@ -225,41 +222,9 @@ const ServiceDetails = () => {
               </div>
             </motion.div>
           </div>
-        </div>
-
-        {/* Operational Scope - Full Width High-End Matrix */}
-        <motion.section 
-          initial={{ opacity: 0, y: 60 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className={`${isDark ? 'bg-[#0B1221] border-white/5' : 'bg-white border-slate-100'} p-10 md:p-20 rounded-[80px] border shadow-3xl relative overflow-hidden group mt-24 md:mt-32`}
-        >
-           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 relative z-10">
-              <div className="lg:col-span-4 space-y-10 text-center lg:text-left">
-                 <div className="flex justify-center lg:justify-start">
-                    <div className={`w-24 h-24 ${isDark ? 'bg-white/5 text-blue-500 shadow-3xl shadow-black/80' : 'bg-blue-600 text-white shadow-3xl shadow-blue-600/30'} rounded-[36px] flex items-center justify-center group-hover:rotate-[15deg] transition-all duration-700`}>
-                       {data.icon ? <data.icon className="w-12 h-12" /> : <FileText className="w-12 h-12" />}
-                    </div>
-                 </div>
-                 <h2 className={`text-4xl md:text-6xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-none tracking-tighter uppercase mb-6`}>Operational <br /> <span className="text-blue-600 italic">Scope.</span></h2>
-                 <p className={`text-lg md:text-xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic leading-relaxed`}>{data.description}</p>
-              </div>
-
-              <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                 {data.features.map((f, i) => (
-                   <FeatureCard key={i} text={f} index={i} isDark={isDark} />
-                 ))}
-              </div>
-           </div>
-        </motion.section>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-stretch">
-          <div className="lg:col-span-7">
-               {/* Reserved for Future Expansion */}
-          </div>
 
           {/* Institutional Onboarding Cockpit */}
-          <div className="lg:col-span-5 relative mt-16 xl:mt-0">
+          <div className="lg:col-span-5 relative mt-16 lg:mt-0">
              <motion.div 
                initial={{ opacity: 0, scale: 0.95 }}
                animate={{ opacity: 1, scale: 1 }}
@@ -315,7 +280,7 @@ const ServiceDetails = () => {
                        <div className={`${isDark ? 'bg-blue-500/5 border-blue-500/10' : 'bg-blue-50/50 border-blue-100'} p-8 rounded-[48px] border flex gap-6 items-start shadow-3xl shadow-blue-600/5`}>
                            <Shield className="w-6 h-6 text-blue-500 shrink-0 mt-0.5" />
                            <p className={`text-[10px] md:text-[11px] ${isDark ? 'text-slate-500' : 'text-slate-600'} font-black italic leading-relaxed uppercase tracking-[0.2em]`}>
-                              Institutional encryption active. All data packets are <span className="text-blue-600">FIPS 140-2</span> compliant.
+                               Institutional encryption active. All data packets are <span className="text-blue-600">FIPS 140-2</span> compliant.
                            </p>
                        </div>
                      </form>
@@ -324,8 +289,33 @@ const ServiceDetails = () => {
                </div>
              </motion.div>
           </div>
-
         </div>
+
+        {/* Operational Scope - Full Width High-End Matrix */}
+        <motion.section 
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className={`${isDark ? 'bg-[#0B1221] border-white/5' : 'bg-white border-slate-100'} p-10 md:p-20 rounded-[80px] border shadow-3xl relative overflow-hidden group mt-24 md:mt-32`}
+        >
+           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 relative z-10">
+              <div className="lg:col-span-4 space-y-10 text-center lg:text-left">
+                 <div className="flex justify-center lg:justify-start">
+                    <div className={`w-24 h-24 ${isDark ? 'bg-white/5 text-blue-500 shadow-3xl shadow-black/80' : 'bg-blue-600 text-white shadow-3xl shadow-blue-600/30'} rounded-[36px] flex items-center justify-center group-hover:rotate-[15deg] transition-all duration-700`}>
+                       {data.icon ? <data.icon className="w-12 h-12" /> : <FileText className="w-12 h-12" />}
+                    </div>
+                 </div>
+                 <h2 className={`text-4xl md:text-6xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-none tracking-tighter uppercase mb-6`}>Operational <br /> <span className="text-blue-600 italic">Scope.</span></h2>
+                 <p className={`text-lg md:text-xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic leading-relaxed`}>{data.description}</p>
+              </div>
+
+              <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                 {data.features.map((f, i) => (
+                   <FeatureCard key={i} text={f} index={i} isDark={isDark} />
+                 ))}
+              </div>
+           </div>
+        </motion.section>
 
         {/* Tactical Information Layers */}
         <div className="mt-32 md:mt-48 space-y-32">
