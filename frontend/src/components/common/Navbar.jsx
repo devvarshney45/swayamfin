@@ -211,6 +211,18 @@ const Navbar = () => {
 
             <div className="flex items-center gap-3 xl:gap-8">
               <div className="hidden lg:flex items-center gap-3 xl:gap-5">
+                {/* Language Interface Toggle */}
+                <button 
+                  onClick={toggleLanguage}
+                  className={`hidden md:flex w-12 h-12 rounded-2xl items-center justify-center transition-all duration-500 border ${
+                    isDark ? 'bg-white/5 text-blue-400 border-white/10 hover:bg-white/10' : 'bg-slate-100 text-blue-600 border-slate-200 hover:bg-slate-200'
+                  }`}
+                  title={i18n.language === 'en' ? 'Switch to Hindi' : 'Switch to English'}
+                >
+                  <Globe className="w-5 h-5" />
+                  <span className="sr-only">{i18n.language === 'en' ? 'Hindi' : 'English'}</span>
+                </button>
+
                 {/* Theme Interface */}
                 <button 
                   onClick={toggleTheme}
