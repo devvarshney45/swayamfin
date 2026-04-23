@@ -79,7 +79,7 @@ const AdminDashboard = () => {
            <div className="w-full text-center md:text-left">
               <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
                  <div className="p-2.5 bg-blue-500/10 rounded-xl border border-blue-500/20">
-                    <ShieldCheck className="w-4.5 h-4.5 text-blue-500" />
+                    <ShieldCheck className="w-5 h-5 text-blue-500" />
                  </div>
                  <span className={`${isDark ? 'text-slate-500' : 'text-slate-500'} text-[9px] md:text-[10px] font-black uppercase tracking-[0.25em]`}>Swayamfin Intelligence Hub</span>
               </div>
@@ -159,7 +159,7 @@ const KPICard = ({ title, value, trend, icon, color, isDark }) => (
     <div className={`absolute top-0 right-0 w-24 md:w-32 h-24 md:h-32 ${isDark ? `bg-${color}-500/10` : `bg-${color}-50`} blur-2xl md:blur-3xl rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-all duration-700`} />
     <div className="flex justify-between items-start mb-3 md:mb-6 relative z-10">
       <div className={`p-2.5 md:p-4 ${isDark ? `bg-${color}-500/10 border-${color}-500/30 text-${color}-400` : `bg-${color}-50 border-${color}-100 text-${color}-600'} rounded-xl md:rounded-2xl border shadow-sm`}>
-        {React.cloneElement(icon, { className: "w-4.5 h-4.5 md:w-6 md:h-6" })}
+        {React.cloneElement(icon, { className: "w-5 h-5 md:w-6 md:h-6" })}
       </div>
       <div className={`hidden md:flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest ${color === 'rose' ? 'text-rose-500' : 'text-emerald-500'}`}>
          {trend} <ArrowUpRight className="w-3 h-3" />

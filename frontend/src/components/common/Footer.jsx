@@ -71,12 +71,12 @@ const Footer = () => {
           {/* Contact Interface */}
           <div className="space-y-6 md:space-y-8 text-center sm:text-left">
             <h4 className="text-[10px] font-black mb-6 md:mb-8 text-primary-gold uppercase tracking-[0.3em]">{t('footer_contact')}</h4>
-            <div className={`flex flex-col sm:flex-row gap-3 items-center sm:items-start text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'} font-bold`}>
-              <MapPin className="w-4 h-4 text-primary-gold shrink-0 sm:mt-1" />
+            <div className={`flex flex-col sm:flex-row gap-3 items-start text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'} font-bold`}>
+              <MapPin className="w-4 h-4 text-primary-gold shrink-0 sm:mt-1 mx-auto sm:mx-0" />
               <span className="leading-relaxed">619, Somdutt Chambers II, Bhikaji Cama, New Delhi – 110066</span>
             </div>
-            <div className={`flex flex-col sm:flex-row gap-3 items-center sm:items-start text-sm ${isDark ? 'text-slate-200' : 'text-slate-900'} font-black`}>
-              <Phone className="w-4 h-4 text-primary-gold shrink-0 sm:mt-1" />
+            <div className={`flex flex-col sm:flex-row gap-3 items-start text-sm ${isDark ? 'text-slate-200' : 'text-slate-900'} font-black`}>
+              <Phone className="w-4 h-4 text-primary-gold shrink-0 sm:mt-1 mx-auto sm:mx-0" />
               <span>+91 87009 65592 / 011-44728117</span>
             </div>
           </div>

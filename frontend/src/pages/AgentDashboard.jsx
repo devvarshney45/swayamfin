@@ -150,7 +150,7 @@ const AgentDashboard = () => {
                 <div className="flex justify-between items-center mb-5 md:mb-6">
                   <div className="flex items-center gap-3">
                     <div className="p-2.5 bg-blue-500/10 rounded-xl border border-blue-500/20 shrink-0">
-                      <Target className="w-4.5 h-4.5 text-blue-500" />
+                      <Target className="w-5 h-5 text-blue-500" />
                     </div>
                     <span className={`text-[9px] md:text-[10px] font-black ${isDark ? 'text-slate-400' : 'text-slate-600'} uppercase tracking-widest`}>Monthly Goal</span>
                   </div>
@@ -173,7 +173,7 @@ const AgentDashboard = () => {
            {/* Mobile-Friendly Search & Action */}
            <div className="lg:col-span-2 flex flex-col sm:flex-row gap-4 items-center">
               <div className="relative flex-1 group w-full">
-                <Search className={`absolute left-5 top-1/2 -translate-y-1/2 ${isDark ? 'text-slate-500 group-focus-within:text-blue-500' : 'text-slate-400 group-focus-within:text-blue-600'} w-4.5 h-4.5 transition-colors`} />
+                <Search className={`absolute left-5 top-1/2 -translate-y-1/2 ${isDark ? 'text-slate-500 group-focus-within:text-blue-500' : 'text-slate-400 group-focus-within:text-blue-600'} w-5 h-5 transition-colors`} />
                 <input 
                   type="text" 
                   placeholder="Case search..."
@@ -293,7 +293,7 @@ const StatCard = ({ title, value, icon, color, delay, isDark }) => (
     <div className={`absolute top-0 right-0 w-24 md:w-32 h-24 md:h-32 ${isDark ? `bg-${color}-500/10` : `bg-${color}-50`} blur-2xl md:blur-3xl rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700`} />
     <div className="flex justify-between items-start mb-3 md:mb-6 relative z-10">
       <div className={`p-2.5 md:p-4 ${isDark ? `bg-${color}-500/10 border-${color}-500/20 text-${color}-400` : `bg-${color}-50 border-${color}-100 text-${color}-600`} rounded-xl md:rounded-2xl border shadow-sm`}>
-        {React.cloneElement(icon, { className: "w-4.5 h-4.5 md:w-6 md:h-6" })}
+        {React.cloneElement(icon, { className: "w-5 h-5 md:w-6 md:h-6" })}
       </div>
     </div>
     <div className="relative z-10 text-center md:text-left">

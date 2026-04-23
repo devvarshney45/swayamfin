@@ -206,7 +206,7 @@ const Navbar = () => {
                 onClick={toggleTheme}
                 className={`p-2.5 rounded-xl ${isDark ? 'bg-white/5 text-slate-300' : 'bg-slate-100 text-slate-600'} border border-transparent active:scale-95 transition-all`}
               >
-                {isDark ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
+                {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
               
               <button
@@ -278,10 +278,10 @@ const Navbar = () => {
       {/* Mobile Sticky Bar - Brief 2.4 */}
       <div className={`lg:hidden fixed bottom-6 left-6 right-6 ${isDark ? 'bg-white/10' : 'bg-white/90'} backdrop-blur-2xl border ${isDark ? 'border-white/10' : 'border-slate-200'} p-2 z-[150] flex gap-2 rounded-3xl shadow-2xl transition-all duration-300`}>
         <a href="https://wa.me/916397003690" className="flex-1 bg-success-green text-white flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest">
-          <MessageCircle className="w-4.5 h-4.5 fill-current" /> WhatsApp
+          <MessageCircle className="w-5 h-5 fill-current" /> WhatsApp
         </a>
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex-1 bg-primary-gold text-[#020617] flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl shadow-primary-gold/20">
-          <Sparkles className="w-4.5 h-4.5" /> Apply Now
+          <Sparkles className="w-5 h-5" /> Apply Now
         </button>
       </div>
     </>
@@ -332,7 +332,7 @@ const renderAuthSection = (user, logout, navigate, isDark, isMobile) => {
           onClick={() => { logout(); navigate('/agent/login'); }}
           className={`${isMobile ? 'w-full py-5 bg-rose-500/10 text-rose-500' : 'p-2.5 bg-white/5 text-slate-400 hover:bg-rose-500/20 hover:text-rose-400'} rounded-2xl transition-all group flex items-center justify-center gap-2 font-black uppercase tracking-widest text-[10px]`}
         >
-          <LogOut className="w-4.5 h-4.5" /> {isMobile && 'Logout Account'}
+          <LogOut className="w-5 h-5" /> {isMobile && 'Logout Account'}
         </button>
       </div>
     );
