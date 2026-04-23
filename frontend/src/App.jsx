@@ -23,7 +23,6 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminLeads from './pages/admin/AdminLeads';
 import AdminAgents from './pages/admin/AdminAgents';
 import BsmDashboard from './pages/bsm/BsmDashboard';
-import HrDashboard from './pages/hr/HrDashboard';
 import AdLandingPage from './pages/AdLandingPage';
 import BranchDetails from './pages/BranchDetails';
 import ServiceDetails from './pages/ServiceDetails';
@@ -105,15 +104,7 @@ const AppContent = () => {
             } 
           />
 
-          {/* HR PORTAL */}
-          <Route 
-            path="/hr/dashboard" 
-            element={
-              <ProtectedRoute allowedRoles={['hr']}>
-                <HrDashboard />
-              </ProtectedRoute>
-            } 
-          />
+
 
           {/* ADMIN PORTAL */}
           <Route 

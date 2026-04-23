@@ -188,7 +188,7 @@ const Navbar = () => {
                     </div>
                   )}
                   <Link 
-                    to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'bsm' ? '/bsm/dashboard' : user.role === 'hr' ? '/hr/dashboard' : '/agent/dashboard'} 
+                    to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'bsm' ? '/bsm/dashboard' : '/agent/dashboard'} 
                     className="px-6 py-2.5 rounded-full bg-primary-gold text-[#020617] text-[13px] font-black hover:bg-yellow-500 transition shadow-lg shadow-primary-gold/10 uppercase tracking-widest"
                   >
                     Dashboard
@@ -213,7 +213,7 @@ const Navbar = () => {
                <a href="tel:+916397003690" className="p-2.5 bg-green-500/10 rounded-xl text-success-green">
                   <PhoneCall className="w-5 h-5" />
                </a>
-              <Link to={user ? (user.role === 'admin' ? '/admin/dashboard' : user.role === 'bsm' ? '/bsm/dashboard' : user.role === 'hr' ? '/hr/dashboard' : '/agent/dashboard') : '/agent/login'} className={`p-2.5 ${isDark ? 'bg-white/5 text-slate-300' : 'bg-slate-100 text-slate-600'} rounded-xl`}>
+              <Link to={user ? (user.role === 'admin' ? '/admin/dashboard' : user.role === 'bsm' ? '/bsm/dashboard' : '/agent/dashboard') : '/agent/login'} className={`p-2.5 ${isDark ? 'bg-white/5 text-slate-300' : 'bg-slate-100 text-slate-600'} rounded-xl`}>
                  <User className="w-5 h-5" />
               </Link>
             </div>
