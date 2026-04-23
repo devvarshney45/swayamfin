@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calculator, ArrowRight, ShieldCheck, TrendingUp, Sparkles, PieChart, Target, Zap, Activity, Cpu, Layers, ChevronRight } from 'lucide-react';
+import { Calculator, ArrowRight, ShieldCheck, TrendingUp, Sparkles, PieChart, Target, Zap, Activity, Cpu, Layers, ChevronRight, Shield } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
