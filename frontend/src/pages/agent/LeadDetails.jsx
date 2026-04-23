@@ -7,6 +7,8 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
@@ -14,6 +16,8 @@ const LeadDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { isDark } = useTheme();
+  const { t } = useTranslation();
   
   const [activeTab, setActiveTab] = useState('Personal Details');
   const [lead, setLead] = useState(null);
@@ -135,32 +139,36 @@ const LeadDetails = () => {
     }
   };
 
-  if (loading) return <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center text-white"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div></div>;
+  if (loading) return (
+    <div className={`min-h-screen ${isDark ? 'bg-[#0B0F19]' : 'bg-slate-50'} flex items-center justify-center`}>
+      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
+    </div>
+  );
 
   const tabs = ['Personal Details', 'Documents', 'Remarks & Activity Log', 'Status'];
 
   return (
-    <div className="bg-[#0B0F19] min-h-screen pb-20 font-inter text-slate-200">
+    <div className={`${isDark ? 'bg-[#0B0F19] text-slate-200' : 'bg-slate-50 text-slate-900'} min-h-screen pb-20 font-inter transition-colors duration-300`}>
       
       {/* Header Profile */}
-      <div className="bg-white/5 backdrop-blur-xl border-b border-white/10 pt-8 pb-4">
+      <div className={`${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200 shadow-sm'} backdrop-blur-xl border-b pt-8 pb-4 transition-all`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-400 font-medium mb-4 hover:text-white transition text-sm">
-            <ArrowLeft className="w-4 h-4" /> Back to Leads
+          <button onClick={() => navigate(-1)} className={`${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-900'} flex items-center gap-2 font-medium mb-4 transition text-sm`}>
+            <ArrowLeft className="w-4 h-4" /> {t('portal_back_dashboard')}
           </button>
           
           <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-4">
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-white">{lead.applicant_name}</h1>
-                <span className="bg-blue-500/20 text-blue-400 font-mono text-xs px-2 py-1 rounded border border-blue-500/30">
+                <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{lead.applicant_name}</h1>
+                <span className={`${isDark ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' : 'bg-blue-50 text-blue-600 border-blue-100'} font-mono text-xs px-2 py-1 rounded border`}>
                   {lead.lead_number}
                 </span>
-                <span className="bg-indigo-500/20 text-indigo-400 font-medium text-xs px-2 py-1 rounded border border-indigo-500/30">
+                <span className={`${isDark ? 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30' : 'bg-indigo-50 text-indigo-600 border-indigo-100'} font-medium text-xs px-2 py-1 rounded border`}>
                   {lead.status}
                 </span>
               </div>
-              <div className="flex flex-wrap gap-4 mt-2 text-sm text-slate-400">
+              <div className="flex flex-wrap gap-4 mt-2 text-sm text-slate-500 font-medium">
                 <span className="flex items-center gap-1"><Phone className="w-4 h-4"/> {lead.mobile}</span>
                 <span className="flex items-center gap-1"><MapPin className="w-4 h-4"/> {lead.location_city}</span>
                 <span className="flex items-center gap-1"><Wallet className="w-4 h-4"/> ₹{(lead.loan_amount_required/100000).toFixed(2)}L • {lead.loan_type?.replace('_', ' ')}</span>
@@ -169,15 +177,15 @@ const LeadDetails = () => {
           </div>
           
           {/* Tab Navigation */}
-          <div className="flex gap-1 overflow-x-auto no-scrollbar mt-6 border-b border-white/10">
+          <div className={`flex gap-1 overflow-x-auto no-scrollbar mt-6 border-b ${isDark ? 'border-white/10' : 'border-slate-100'}`}>
             {tabs.map(tab => (
               <button 
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`whitespace-nowrap px-4 py-3 text-sm font-semibold transition-all border-b-2 ${
                   activeTab === tab 
-                    ? 'text-blue-400 border-blue-400 bg-blue-500/10' 
-                    : 'text-slate-400 border-transparent hover:text-slate-200 hover:bg-white/5'
+                    ? 'text-blue-500 border-blue-500 bg-blue-500/10' 
+                    : `${isDark ? 'text-slate-400 border-transparent hover:text-slate-200 hover:bg-white/5' : 'text-slate-500 border-transparent hover:text-slate-800 hover:bg-slate-50'}`
                 }`}
               >
                 {tab}
@@ -193,48 +201,48 @@ const LeadDetails = () => {
         {/* Tab 1: Personal Details */}
         {activeTab === 'Personal Details' && (
           <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} className="space-y-6">
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-              <h3 className="text-lg font-bold text-white mb-4">Basic Information</h3>
+            <div className={`${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200 shadow-sm'} border rounded-2xl p-6`}>
+              <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-slate-900'} mb-4`}>Basic Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                <div><label className="text-xs text-slate-400 mb-1 block">Father's/Spouse Name</label>
-                  <input type="text" value={personalDetails.father_or_spouse_name} onChange={e => setPersonalDetails({...personalDetails, father_or_spouse_name: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-white"/>
+                <div><label className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1 block">Father's/Spouse Name</label>
+                  <input type="text" value={personalDetails.father_or_spouse_name} onChange={e => setPersonalDetails({...personalDetails, father_or_spouse_name: e.target.value})} className={`w-full ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500`}/>
                 </div>
-                <div><label className="text-xs text-slate-400 mb-1 block">Date of Birth</label>
-                  <input type="date" value={personalDetails.date_of_birth} onChange={e => setPersonalDetails({...personalDetails, date_of_birth: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-white [color-scheme:dark]"/>
+                <div><label className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1 block">Date of Birth</label>
+                  <input type="date" value={personalDetails.date_of_birth} onChange={e => setPersonalDetails({...personalDetails, date_of_birth: e.target.value})} className={`w-full ${isDark ? 'bg-white/5 border-white/10 text-white [color-scheme:dark]' : 'bg-slate-50 border-slate-200 text-slate-900'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500`}/>
                 </div>
-                <div><label className="text-xs text-slate-400 mb-1 block">Gender</label>
-                  <select value={personalDetails.gender} onChange={e => setPersonalDetails({...personalDetails, gender: e.target.value})} className="w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-white appearance-none">
+                <div><label className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1 block">Gender</label>
+                  <select value={personalDetails.gender} onChange={e => setPersonalDetails({...personalDetails, gender: e.target.value})} className={`w-full ${isDark ? 'bg-[#111827] border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 appearance-none`}>
                     <option>Male</option><option>Female</option><option>Other</option>
                   </select>
                 </div>
-                <div><label className="text-xs text-slate-400 mb-1 block">Marital Status</label>
-                  <select value={personalDetails.marital_status} onChange={e => setPersonalDetails({...personalDetails, marital_status: e.target.value})} className="w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-white appearance-none">
+                <div><label className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1 block">Marital Status</label>
+                  <select value={personalDetails.marital_status} onChange={e => setPersonalDetails({...personalDetails, marital_status: e.target.value})} className={`w-full ${isDark ? 'bg-[#111827] border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 appearance-none`}>
                     <option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option>
                   </select>
                 </div>
-                <div><label className="text-xs text-slate-400 mb-1 block">Occupation Type</label>
-                  <select value={personalDetails.occupation_type} onChange={e => setPersonalDetails({...personalDetails, occupation_type: e.target.value})} className="w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-white appearance-none">
+                <div><label className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1 block">Occupation Type</label>
+                  <select value={personalDetails.occupation_type} onChange={e => setPersonalDetails({...personalDetails, occupation_type: e.target.value})} className={`w-full ${isDark ? 'bg-[#111827] border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 appearance-none`}>
                     <option>Salaried</option><option>Self-Employed</option><option>Business Owner</option><option>Farmer</option><option>Other</option>
                   </select>
                 </div>
                 {['Salaried'].includes(personalDetails.occupation_type) && (
-                  <div><label className="text-xs text-slate-400 mb-1 block">Monthly Income</label>
-                    <input type="number" value={personalDetails.monthly_income} onChange={e => setPersonalDetails({...personalDetails, monthly_income: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-white"/>
+                  <div><label className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1 block">Monthly Income</label>
+                    <input type="number" value={personalDetails.monthly_income} onChange={e => setPersonalDetails({...personalDetails, monthly_income: e.target.value})} className={`w-full ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500`}/>
                   </div>
                 )}
                 {['Business Owner', 'Self-Employed'].includes(personalDetails.occupation_type) && (
                   <>
-                    <div><label className="text-xs text-slate-400 mb-1 block">Business Name</label>
-                      <input type="text" value={personalDetails.business_name} onChange={e => setPersonalDetails({...personalDetails, business_name: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-white"/>
+                    <div><label className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1 block">Business Name</label>
+                      <input type="text" value={personalDetails.business_name} onChange={e => setPersonalDetails({...personalDetails, business_name: e.target.value})} className={`w-full ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500`}/>
                     </div>
-                    <div><label className="text-xs text-slate-400 mb-1 block">Annual Turnover</label>
-                      <input type="number" value={personalDetails.annual_turnover} onChange={e => setPersonalDetails({...personalDetails, annual_turnover: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-white"/>
+                    <div><label className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1 block">Annual Turnover</label>
+                      <input type="number" value={personalDetails.annual_turnover} onChange={e => setPersonalDetails({...personalDetails, annual_turnover: e.target.value})} className={`w-full ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500`}/>
                     </div>
                   </>
                 )}
               </div>
               <div className="mt-4 flex justify-end">
-                <button onClick={handleSavePersonalDetails} className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                <button onClick={handleSavePersonalDetails} className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all">
                   <Save className="w-4 h-4"/> Save Draft
                 </button>
               </div>
@@ -253,25 +261,25 @@ const LeadDetails = () => {
             ].map(docConfig => {
               const uploadedDoc = documents.find(d => d.doc_type === docConfig.id);
               return (
-                <div key={docConfig.id} className="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div key={docConfig.id} className={`${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200 shadow-sm'} border rounded-2xl p-5 flex flex-col md:flex-row justify-between items-center gap-4`}>
                   <div>
-                    <h4 className="font-bold text-white flex items-center gap-2">
+                    <h4 className={`font-bold ${isDark ? 'text-white' : 'text-slate-900'} flex items-center gap-2`}>
                       {docConfig.label} 
-                      {docConfig.required && <span className="bg-rose-500/20 text-rose-400 text-[10px] px-2 py-0.5 rounded">Required</span>}
+                      {docConfig.required && <span className={`${isDark ? 'bg-rose-500/20 text-rose-400' : 'bg-rose-50 text-rose-600'} text-[10px] px-2 py-0.5 rounded border ${isDark ? 'border-rose-500/30' : 'border-rose-200'}`}>Required</span>}
                     </h4>
                     {uploadedDoc ? (
-                      <p className="text-emerald-400 text-xs mt-1 flex items-center gap-1"><CheckCircle className="w-3 h-3"/> Uploaded • {uploadedDoc.file_name}</p>
+                      <p className="text-emerald-500 text-xs mt-1 flex items-center gap-1 font-bold"><CheckCircle className="w-3 h-3"/> Uploaded • {uploadedDoc.file_name}</p>
                     ) : (
-                      <p className="text-slate-500 text-xs mt-1">Pending verification</p>
+                      <p className="text-slate-500 text-xs mt-1 font-medium italic">Pending verification</p>
                     )}
                   </div>
                   <div className="w-full md:w-auto">
                     {uploadedDoc ? (
-                      <a href={`${API_URL}${uploadedDoc.file_url}`} target="_blank" className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition">
+                      <a href={`${API_URL}${uploadedDoc.file_url}`} target="_blank" rel="noreferrer" className={`${isDark ? 'bg-white/10 hover:bg-white/20' : 'bg-slate-100 hover:bg-slate-200'} text-slate-800 px-4 py-2 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition`}>
                         <Download className="w-4 h-4"/> View File
                       </a>
                     ) : (
-                      <label className="cursor-pointer bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition w-full">
+                      <label className="cursor-pointer bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition w-full shadow-lg shadow-blue-500/20">
                         <UploadCloud className="w-4 h-4"/> Upload
                         <input type="file" className="hidden" onChange={(e) => handleDocUpload(e, docConfig.id)} />
                       </label>
@@ -286,60 +294,60 @@ const LeadDetails = () => {
         {/* Tab 3: Remarks & Log */}
         {activeTab === 'Remarks & Activity Log' && (
           <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 h-fit">
-              <h3 className="font-bold text-white mb-4">Add Remark / Log</h3>
+            <div className={`${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200 shadow-sm'} border rounded-2xl p-6 h-fit`}>
+              <h3 className={`font-bold ${isDark ? 'text-white' : 'text-slate-900'} mb-4 uppercase tracking-[0.1em] text-sm`}>Add Remark / Log</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs text-slate-400 mb-1 block">Remark Type</label>
-                  <select value={newRemarkType} onChange={e=>setNewRemarkType(e.target.value)} className="w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-white appearance-none">
+                  <label className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1 block">Remark Type</label>
+                  <select value={newRemarkType} onChange={e=>setNewRemarkType(e.target.value)} className={`w-full ${isDark ? 'bg-[#111827] border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 appearance-none`}>
                     <option value="call_log">Call Log</option>
                     <option value="follow_up">Follow Up Set</option>
                     <option value="note">Internal Note</option>
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 mb-1 block">Remark Text</label>
-                  <textarea rows="4" value={newRemarkText} onChange={e=>setNewRemarkText(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-white resize-none" placeholder="Enter notes..."></textarea>
+                  <label className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1 block">Remark Text</label>
+                  <textarea rows="4" value={newRemarkText} onChange={e=>setNewRemarkText(e.target.value)} className={`w-full ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 resize-none`} placeholder="Enter notes..."></textarea>
                 </div>
                 {newRemarkType === 'follow_up' && (
                   <div>
-                    <label className="text-xs text-slate-400 mb-1 block">Follow Up Date</label>
-                    <input type="date" value={newRemarkDate} onChange={e=>setNewRemarkDate(e.target.value)} className="w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 text-white [color-scheme:dark]"/>
+                    <label className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1 block">Follow Up Date</label>
+                    <input type="date" value={newRemarkDate} onChange={e=>setNewRemarkDate(e.target.value)} className={`w-full ${isDark ? 'bg-[#111827] border-white/10 text-white [color-scheme:dark]' : 'bg-slate-50 border-slate-200 text-slate-900'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500`}/>
                   </div>
                 )}
-                <button onClick={handleAddRemark} className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2 rounded-xl text-sm font-bold mt-2">Submit Remark</button>
+                <button onClick={handleAddRemark} className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl text-sm font-bold mt-2 shadow-lg shadow-blue-500/20 transition-all uppercase tracking-widest">Submit Remark</button>
               </div>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-              <h3 className="font-bold text-white mb-4">Activity Log</h3>
+            <div className={`${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200 shadow-sm'} border rounded-2xl p-6`}>
+              <h3 className={`font-bold ${isDark ? 'text-white' : 'text-slate-900'} mb-4 uppercase tracking-[0.1em] text-sm`}>Activity Log</h3>
               <div className="space-y-4 max-h-[500px] overflow-y-auto no-scrollbar pr-2">
                 {remarks.map((rm, i) => (
-                  <div key={i} className="border-l-2 border-slate-800 pl-4 py-3 relative group hover:bg-white/5 transition-colors rounded-r-lg">
-                    <div className={`absolute w-3 h-3 rounded-full -left-[7px] top-4 border-2 border-[#0B0F19] ${
-                      rm.remark_type === 'system' ? 'bg-indigo-500' : 
+                  <div key={i} className={`border-l-2 ${isDark ? 'border-slate-800' : 'border-slate-200'} pl-4 py-3 relative group hover:bg-white/5 transition-colors rounded-r-lg`}>
+                    <div className={`absolute w-3 h-3 rounded-full -left-[7px] top-4 border-2 ${isDark ? 'border-[#0B0F19]' : 'border-white'} ${
+                      rm.remark_type === 'system' ? 'bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)]' : 
                       rm.remark_type === 'follow_up' ? 'bg-amber-500' :
                       rm.remark_type === 'call_log' ? 'bg-emerald-500' : 'bg-blue-500'
                     }`}></div>
                     <div className="flex justify-between items-start mb-1">
                       <p className={`text-[10px] font-black uppercase tracking-widest ${
-                        rm.remark_type === 'system' ? 'text-indigo-400' : 'text-blue-400'
+                        rm.remark_type === 'system' ? 'text-indigo-400' : 'text-blue-500'
                       }`}>
                         {rm.remark_type?.replace('_', ' ')}
                       </p>
-                      <p className="text-[10px] text-slate-500 font-medium">
+                      <p className="text-[10px] text-slate-500 font-bold">
                         {new Date(rm.createdAt).toLocaleString()}
                       </p>
                     </div>
-                    <p className="text-sm text-slate-200 leading-relaxed">{rm.remark_text}</p>
+                    <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'} leading-relaxed font-medium`}>{rm.remark_text}</p>
                     {rm.remark_type !== 'system' && (
-                      <p className="text-[10px] text-slate-500 mt-2 font-bold uppercase tracking-tighter opacity-60">
+                      <p className="text-[10px] text-slate-500 mt-2 font-black uppercase tracking-widest opacity-60 italic">
                         Logged by {rm.user_id?.full_name}
                       </p>
                     )}
                   </div>
                 ))}
-                {remarks.length === 0 && <p className="text-slate-500 text-sm italic">No remarks found.</p>}
+                {remarks.length === 0 && <p className="text-slate-500 text-sm italic font-medium">No remarks found.</p>}
               </div>
             </div>
           </motion.div>
@@ -348,20 +356,20 @@ const LeadDetails = () => {
         {/* Tab 4: Status */}
         {activeTab === 'Status' && (
           <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}}>
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 max-w-xl">
-              <h3 className="text-lg font-bold text-white mb-6">Manage Lead Stage</h3>
+            <div className={`${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200 shadow-xl'} border rounded-2xl p-8 max-w-xl`}>
+              <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-slate-900'} mb-6 uppercase tracking-widest`}>Manage Lead Stage</h3>
               
               <div className="space-y-5">
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block font-semibold">Current Pipeline Stage</label>
-                  <select disabled className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-500 text-white appearance-none opacity-60">
+                  <label className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-2 block">Current Pipeline Stage</label>
+                  <select disabled className={`${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-600'} w-full rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-500 appearance-none opacity-60 font-black`}>
                     <option>{lead.stage}</option>
                   </select>
                 </div>
                 
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block font-semibold">Update Status To</label>
-                  <select value={leadStatus} onChange={e=>setLeadStatus(e.target.value)} className="w-full bg-[#111827] border border-blue-500/50 rounded-lg px-4 py-3 text-base focus:outline-none focus:border-blue-500 text-white appearance-none mb-4">
+                  <label className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-2 block">Update Status To</label>
+                  <select value={leadStatus} onChange={e=>setLeadStatus(e.target.value)} className={`w-full ${isDark ? 'bg-[#111827] border-blue-500/30 text-white' : 'bg-slate-50 border-blue-200 text-slate-900'} rounded-lg px-4 py-3 text-base focus:outline-none focus:border-blue-500 appearance-none mb-4 font-bold border-2`}>
                     <option value="New">New</option>
                     <option value="Contacted">Contacted</option>
                     <option value="In Progress">In Progress</option>
@@ -379,10 +387,10 @@ const LeadDetails = () => {
 
                   {leadStatus === 'Dead Lead' && (
                     <motion.div initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}} className="mb-4">
-                      <label className="text-xs text-rose-400 mb-1 block font-bold uppercase tracking-widest">Reason for Death</label>
+                      <label className="text-[10px] text-rose-500 font-black uppercase tracking-widest mb-1 block">Reason for Death</label>
                       <textarea 
                         rows="3" 
-                        className="w-full bg-rose-500/5 border border-rose-500/20 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-rose-500 text-white resize-none" 
+                        className={`w-full ${isDark ? 'bg-rose-500/10 border-rose-500/20 text-white' : 'bg-rose-50 border-rose-200 text-rose-900'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-rose-500 resize-none font-medium`} 
                         placeholder="Why is this lead no longer viable?"
                         value={lead.dead_reason || ''}
                         onChange={e => setLead({...lead, dead_reason: e.target.value})}
@@ -391,7 +399,7 @@ const LeadDetails = () => {
                   )}
                 </div>
 
-                <button onClick={handleUpdateStatus} className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl text-sm font-bold uppercase tracking-wider mt-4 shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98]">
+                <button onClick={handleUpdateStatus} className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-xl text-sm font-black uppercase tracking-[0.2em] mt-4 shadow-xl shadow-blue-500/30 transition-all active:scale-[0.98]">
                   Confirm Status Update
                 </button>
               </div>

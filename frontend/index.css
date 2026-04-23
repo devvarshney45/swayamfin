@@ -50,13 +50,24 @@ html.light-site .site-hero {
 /* Global Light Mode Adjustments for Dark Components */
 html.light-site .text-white:not(.keep-white),
 html.light-site .text-slate-100,
-html.light-site .text-slate-200 {
+html.light-site .text-slate-200,
+html.light-site .text-slate-300 {
   color: #0f172a !important;
 }
 
-html.light-site .text-slate-300,
 html.light-site .text-slate-400 {
   color: #475569 !important;
+}
+
+html.light-site .bg-[#0B0F19],
+html.light-site .bg-[#020617],
+html.light-site .bg-slate-900,
+html.light-site .bg-slate-800,
+html.light-site .bg-primary-darkBlue,
+html.light-site .bg-primary-navy,
+html.light-site .bg-primary-secondaryNavy {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
 }
 
 html.light-site .bg-white\/5,
@@ -67,6 +78,43 @@ html.light-site .bg-white\/10 {
 html.light-site .border-white\/5,
 html.light-site .border-white\/10 {
   border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+html.light-site .bg-primary-darkBlue .text-white,
+html.light-site .bg-primary-navy .text-white,
+html.light-site .bg-primary-secondaryNavy .text-white {
+  color: #0f172a !important;
+}
+
+html.light-site select.bg-[#111827],
+html.light-site input.bg-[#111827] {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light-site [color-scheme:dark] {
+  color-scheme: light !important;
+}
+
+/* Hide Google Translate Banner and Widget UI */
+iframe.skiptranslate, 
+.goog-te-banner-frame,
+#goog-gt-tt, 
+.goog-te-balloon-frame {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+.goog-te-combo {
+  display: none !important;
+}
+
+#google_translate_element {
+  display: none !important;
 }
 
 /* Transition for smooth theme switching */

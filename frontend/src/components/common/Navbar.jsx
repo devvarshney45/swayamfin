@@ -33,12 +33,18 @@ const Navbar = () => {
     const newLang = i18n.language === 'en' ? 'hi' : 'en';
     i18n.changeLanguage(newLang);
     
-    // Trigger Google Translate for whole-page conversion
-    const select = document.querySelector('.goog-te-combo');
-    if (select) {
-      select.value = newLang === 'en' ? 'en' : 'hi';
-      select.dispatchEvent(new Event('change'));
-    }
+    // Improved Trigger for Google Translate whole-page conversion
+    const attemptTranslate = (attempts = 0) => {
+      const select = document.querySelector('.goog-te-combo');
+      if (select) {
+        select.value = newLang;
+        select.dispatchEvent(new Event('change'));
+      } else if (attempts < 10) {
+        // Retry if the widget hasn't loaded yet
+        setTimeout(() => attemptTranslate(attempts + 1), 500);
+      }
+    };
+    attemptTranslate();
   };
 
   const services = [

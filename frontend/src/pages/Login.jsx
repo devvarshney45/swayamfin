@@ -1,149 +1,130 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Lock, Eye, EyeOff, AlertCircle, ChevronRight, Briefcase } from 'lucide-react';
+import { Lock, Mail, ArrowRight, ShieldCheck, Sparkles, AlertCircle } from 'lucide-react';
+import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const { login, error } = useAuth();
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-  
-  const from = location.state?.from?.pathname || "/agent/dashboard";
+  const { login } = useAuth();
+  const { isDark } = useTheme();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setLoading(true);
+    setError('');
     try {
-      const user = await login(email, password);
-      // Fixed: Backend uses lowercase roles (admin, bsm, sales_person)
-      if (user.role === 'admin') {
-        navigate('/admin/dashboard');
-      } else if (user.role === 'bsm') {
-        navigate('/bsm/dashboard');
-      } else {
-        navigate('/agent/dashboard');
-      }
+      const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/auth/login`, {
+        email,
+        password
+      });
+      
+      login(response.data.user, response.data.token);
+      
+      // Redirect based on role
+      const role = response.data.user.role;
+      if (role === 'admin') navigate('/admin/dashboard');
+      else if (role === 'bsm') navigate('/bsm/dashboard');
+      else if (role === 'hr') navigate('/hr/dashboard');
+      else navigate('/agent/dashboard');
+      
     } catch (err) {
-      console.error(err);
+      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-[#f8fafc] px-4">
-      {/* Background blobs for premium feel */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary-blue/5 rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary-darkBlue/5 rounded-full blur-3xl -z-10" />
+    <div className={`min-h-screen ${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-800'} flex items-center justify-center font-inter p-4 transition-colors duration-300`}>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className={`absolute top-0 right-0 w-[500px] h-[500px] ${isDark ? 'bg-blue-600/10' : 'bg-blue-600/5'} blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2`} />
+        <div className={`absolute bottom-0 left-0 w-[500px] h-[500px] ${isDark ? 'bg-indigo-600/10' : 'bg-indigo-600/5'} blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2`} />
+      </div>
 
-      <motion.div
+      <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-lg"
+        className={`${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-200 shadow-2xl'} w-full max-w-xl rounded-[48px] border p-8 md:p-12 relative backdrop-blur-xl transition-all shadow-xl`}
       >
-        <div className="text-center mb-8">
-          <motion.div 
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            className="flex justify-center mb-6"
-          >
-            <div className="bg-primary-blue text-white p-4 rounded-2xl shadow-lg ring-4 ring-primary-blue/10">
-              <Briefcase className="w-8 h-8" />
-            </div>
-          </motion.div>
-          <h1 className="text-3xl font-extrabold text-slate-900 mb-2 lowercase">swayamfin.com portal</h1>
-          <p className="text-slate-500 font-medium">Access your leads and business dashboard</p>
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] border border-blue-500/20 mb-4">
+             <ShieldCheck className="w-3 h-3" /> Secure Access
+          </div>
+          <h1 className={`text-4xl font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tight`}>Portal <span className="text-blue-600">Login</span></h1>
+          <p className={`${isDark ? 'text-slate-400' : 'text-slate-500'} text-xs font-bold uppercase tracking-widest mt-2`}>Enter your professional credentials</p>
         </div>
 
-        <div className="bg-white rounded-[24px] shadow-fintech border border-slate-100 p-8 md:p-10">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            
-            <AnimatePresence mode="wait">
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="bg-red-50 border border-red-100 rounded-xl p-4 flex items-start gap-3 text-red-600 mb-6 overflow-hidden"
-                >
-                  <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                  <p className="text-sm font-medium">{error}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary-blue transition-colors">
-                  <User className="w-5 h-5" />
-                </div>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-transparent focus:border-primary-blue focus:bg-white rounded-2xl transition-all duration-200 text-slate-900 font-medium outline-none placeholder:text-slate-400"
-                  placeholder="name@swayamfin.com"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 ml-1 flex justify-between">
-                <span>Password</span>
-                <span className="text-primary-blue hover:text-primary-darkBlue cursor-pointer transition-colors">Forgot?</span>
-              </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary-blue transition-colors">
-                  <Lock className="w-5 h-5" />
-                </div>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-12 pr-12 py-4 bg-slate-50 border-2 border-transparent focus:border-primary-blue focus:bg-white rounded-2xl transition-all duration-200 text-slate-900 font-medium outline-none placeholder:text-slate-400"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-primary-blue hover:bg-primary-darkBlue disabled:bg-slate-300 text-white font-extrabold py-4 rounded-2xl shadow-lg ring-4 ring-primary-blue/10 hover:ring-primary-blue/20 transition-all duration-300 flex items-center justify-center gap-2 group"
+        <AnimatePresence>
+          {error && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="bg-rose-500/10 border border-rose-500/20 text-rose-500 p-4 rounded-2xl mb-6 flex items-center gap-3 text-xs font-bold uppercase tracking-widest"
             >
-              {isSubmitting ? (
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-              ) : (
-                <>
-                  Enter Dashboard
-                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </>
-              )}
-            </button>
-          </form>
-        </div>
+              <AlertCircle className="w-4 h-4" /> {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        <p className="text-center mt-8 text-slate-500 text-sm font-medium">
-          Access restricted to Green Miles Mobility Pvt. Ltd. authorized personnel only. 
-          <br />
-          Technical support: <span className="text-primary-blue">it@swayamfin.com</span>
-        </p>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Work Email</label>
+            <div className="relative group">
+              <Mail className={`absolute left-4 top-4 w-5 h-5 ${isDark ? 'text-slate-500 group-focus-within:text-blue-500' : 'text-slate-400 group-focus-within:text-blue-600'} transition-colors`} />
+              <input 
+                type="email" 
+                required
+                placeholder="name@swayamfin.com"
+                className={`w-full ${isDark ? 'bg-white/5 border-white/10 text-white placeholder:text-slate-600' : 'bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400'} pl-12 pr-6 py-4 rounded-2xl outline-none border focus:border-blue-500 transition-all font-bold text-sm`}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Password</label>
+            <div className="relative group">
+              <Lock className={`absolute left-4 top-4 w-5 h-5 ${isDark ? 'text-slate-500 group-focus-within:text-blue-500' : 'text-slate-400 group-focus-within:text-blue-600'} transition-colors`} />
+              <input 
+                type="password" 
+                required
+                placeholder="••••••••"
+                className={`w-full ${isDark ? 'bg-white/5 border-white/10 text-white placeholder:text-slate-600' : 'bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400'} pl-12 pr-6 py-4 rounded-2xl outline-none border focus:border-blue-500 transition-all font-bold text-sm`}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] shadow-2xl shadow-blue-500/30 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <>Sign In to Dashboard <ArrowRight className="w-4 h-4" /></>
+            )}
+          </button>
+        </form>
+
+        <div className="mt-10 text-center">
+           <p className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'} font-black uppercase tracking-widest mb-6`}>Secure Infrastructure Provided By</p>
+           <div className="flex justify-center items-center gap-6 opacity-30 grayscale hover:grayscale-0 transition-all cursor-default">
+              <span className="font-playfair font-black text-lg">Swayamfin</span>
+              <span className="font-black text-sm uppercase">Enterprises</span>
+           </div>
+        </div>
       </motion.div>
     </div>
   );

@@ -1,122 +1,127 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FileText, Search, ShieldCheck, CreditCard, CheckCircle2, Headphones } from 'lucide-react';
+import { 
+  ClipboardCheck, 
+  FileSearch, 
+  ShieldCheck, 
+  HandCoins, 
+  ArrowRight,
+  Sparkles,
+  Zap,
+  Target
+} from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 
 const Process = () => {
+  const { isDark } = useTheme();
+  const { t } = useTranslation();
+
   const steps = [
     {
-      title: "Enquiry & Callback",
-      desc: "Fill the online form or call us. Our expert relationship manager calls you back within 30 minutes.",
-      time: "Same Day",
-      icon: Search,
+      title: "Step 1: Consultation",
+      desc: "Connect with our experts to discuss your financial needs and eligibility.",
+      icon: <ClipboardCheck className="w-8 h-8" />,
       color: "blue"
     },
     {
-      title: "Profile Assessment",
-      desc: "We assess your requirement, business longevity, and cash flow to find the best lending match.",
-      time: "24 Hours",
-      icon: ShieldCheck,
-      color: "green"
+      title: "Step 2: Analysis",
+      desc: "Our AI-powered system analyzes your profile to find the best lending partners.",
+      icon: <FileSearch className="w-8 h-8" />,
+      color: "indigo"
     },
     {
-      title: "Document Collection",
-      desc: "Minimal KYC and financial documents collected digitally or at your doorstep for convenience.",
-      time: "Next Day",
-      icon: FileText,
-      color: "gold"
+      title: "Step 3: Verification",
+      desc: "Submit minimal documentation digitally for a lightning-fast verification process.",
+      icon: <ShieldCheck className="w-8 h-8" />,
+      color: "emerald"
     },
     {
-      title: "Sanction & Terms",
-      desc: "Our partner NBFC/HFC sanctions the loan. All terms, rates, and fees are discussed transparently.",
-      time: "2-3 Days",
-      icon: CreditCard,
-      color: "blue"
-    },
-    {
-      title: "Disbursement",
-      desc: "Funds are directly disbursed into your bank account. Growth starts immediately.",
-      time: "Instant",
-      icon: CheckCircle2,
-      color: "green"
-    },
-    {
-      title: "Active Support",
-      desc: "Dedicated RM assigned for all post-loan queries, statements, and future top-ups.",
-      time: "Forever",
-      icon: Headphones,
-      color: "purple"
+      title: "Step 4: Disbursal",
+      desc: "Upon approval, the loan amount is disbursed directly to your account.",
+      icon: <HandCoins className="w-8 h-8" />,
+      color: "amber"
     }
   ];
 
   return (
-    <div className="bg-[#020617] min-h-screen pt-24 pb-20 font-dmsans">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-20">
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-playfair font-black text-white mb-6"
-          >
-            Our Simple <span className="text-primary-gold italic">6-Step Workflow</span>
+    <div className={`${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-900'} min-h-screen pt-24 pb-20 font-inter transition-colors duration-300`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        
+        {/* Hero Section */}
+        <div className="text-center mb-24 relative">
+          <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 ${isDark ? 'bg-blue-600/10' : 'bg-blue-600/5'} blur-[100px] rounded-full -z-10`} />
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 text-blue-500 text-xs font-black uppercase tracking-widest border border-blue-500/20 mb-6">
+            <Sparkles className="w-3 h-3" /> The Swayamfin Way
+          </motion.div>
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tighter">
+            Seamless Process <span className="text-blue-600 italic">For Faster Growth</span>
           </motion.h1>
-          <p className="text-sm font-bold uppercase tracking-widest text-slate-400 max-w-2xl mx-auto italic">
-            We've eliminated the red tape. Experience a lending process designed for speed and clarity.
-          </p>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className={`${isDark ? 'text-slate-400' : 'text-slate-500'} text-lg max-w-2xl mx-auto font-medium`}>
+            We've revolutionized the borrowing experience. No more mountain of paperwork or endless waiting. Just speed and transparency.
+          </motion.p>
         </div>
 
-        <div className="relative">
-          {/* Vertical line for desktop */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/10 hidden md:block" />
-
-          <div className="space-y-20">
-            {steps.map((step, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className={`flex flex-col md:flex-row items-center gap-8 ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}
-              >
-                {/* Content */}
-                <div className="flex-1 text-center md:text-left">
-                  <div className={`inline-block px-4 py-1.5 rounded-full text-[10px] font-black mb-4 uppercase tracking-[0.2em] border shadow-sm
-                    ${step.color === 'blue' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 
-                      step.color === 'green' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
-                      step.color === 'purple' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' : 
-                      'bg-primary-gold/10 text-primary-gold border-primary-gold/20'}`}
-                  >
-                    Step {index + 1} • {step.time}
-                  </div>
-                  <h3 className="text-2xl font-playfair font-black text-white mb-4">{step.title}</h3>
-                  <p className="text-slate-400 leading-relaxed text-sm font-bold uppercase tracking-widest pr-4">"{step.desc}"</p>
+        {/* Steps Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+           {/* Connecting Line (Desktop) */}
+           <div className={`hidden lg:block absolute top-[100px] left-0 right-0 h-0.5 ${isDark ? 'bg-white/5' : 'bg-slate-200'} -z-10`} />
+           
+           {steps.map((step, idx) => (
+             <motion.div 
+               key={idx}
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               transition={{ delay: idx * 0.1 }}
+               className="relative group"
+             >
+                <div className={`${isDark ? 'bg-[#0B0F19] border-white/5' : 'bg-white border-slate-200 shadow-xl'} border p-8 rounded-[40px] h-full transition-all group-hover:scale-[1.02] group-hover:border-blue-500/30`}>
+                   <div className={`w-20 h-20 ${isDark ? `bg-${step.color}-500/10` : `bg-${step.color}-50`} rounded-3xl flex items-center justify-center mb-8 border ${isDark ? `border-${step.color}-500/20` : `border-${step.color}-100`} shadow-inner`}>
+                      <div className={`text-${step.color}-500`}>{step.icon}</div>
+                   </div>
+                   <h3 className={`text-xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-4 uppercase tracking-tight`}>{step.title}</h3>
+                   <p className={`${isDark ? 'text-slate-400' : 'text-slate-500'} text-sm leading-relaxed font-medium`}>
+                      {step.desc}
+                   </p>
+                   <div className="mt-8 flex items-center gap-2 text-blue-500 font-black text-xs uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-opacity">
+                      Learn More <ArrowRight className="w-4 h-4" />
+                   </div>
                 </div>
-
-                {/* Icon Hub */}
-                <div className="relative z-10">
-                  <div className={`w-20 h-20 rounded-[28px] flex items-center justify-center shadow-2xl ring-4 ring-[#020617] border border-white/10 backdrop-blur-md
-                    ${step.color === 'blue' ? 'bg-blue-500/20 text-blue-400' : 
-                      step.color === 'green' ? 'bg-emerald-500/20 text-emerald-400' : 
-                      step.color === 'purple' ? 'bg-purple-500/20 text-purple-400' : 'bg-primary-gold/20 text-primary-gold'}`}
-                  >
-                    <step.icon className="w-10 h-10" />
-                  </div>
+                {/* Step Number Overlay */}
+                <div className="absolute top-10 right-10 text-6xl font-black text-blue-600/5 select-none pointer-events-none uppercase">
+                   0{idx+1}
                 </div>
+             </motion.div>
+           ))}
+        </div>
 
-                {/* Spacer for alignment */}
-                <div className="flex-1 hidden md:block" />
-              </motion.div>
-            ))}
+        {/* Bottom CTA */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="mt-32 text-center bg-blue-600 rounded-[48px] p-12 md:p-20 relative overflow-hidden group shadow-2xl shadow-blue-500/30"
+        >
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-700" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2 group-hover:scale-110 transition-transform duration-700" />
+          
+          <div className="relative z-10">
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-6 uppercase tracking-tight">Ready to start your journey?</h2>
+            <p className="text-blue-100 text-lg mb-12 max-w-xl mx-auto font-medium">
+              Join over 10,000+ businesses who have accelerated their growth with Swayamfin's seamless borrowing process.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button className="bg-white text-blue-600 px-10 py-5 rounded-full font-black uppercase tracking-[0.2em] text-xs hover:bg-blue-50 transition-all flex items-center justify-center gap-2">
+                Get Started <Zap className="w-4 h-4" />
+              </button>
+              <button className="bg-white/10 text-white px-10 py-5 rounded-full font-black uppercase tracking-[0.2em] text-xs hover:bg-white/20 transition-all border border-white/20 backdrop-blur-md">
+                Talk To Expert
+              </button>
+            </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="mt-32 text-center bg-[#0B0F19] rounded-[48px] p-12 md:p-20 border border-white/5 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary-gold/10 blur-[80px] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-primary-gold/20 transition-all duration-700" />
-          <h2 className="text-3xl font-playfair font-black text-white mb-6 relative z-10">Ready to experience the Swayamfin speed?</h2>
-          <p className="text-slate-400 mb-10 text-sm font-bold uppercase tracking-widest relative z-10">Your application takes less than 5 minutes to complete.</p>
-          <a href="/" className="inline-block bg-primary-gold text-[#020617] font-black px-12 py-5 rounded-full shadow-xl hover:bg-white hover:scale-105 transition-all duration-300 text-xs uppercase tracking-widest relative z-10">
-            Start Your Journey Now
-          </a>
-        </div>
       </div>
     </div>
   );

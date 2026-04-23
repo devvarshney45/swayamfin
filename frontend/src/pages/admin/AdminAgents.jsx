@@ -16,11 +16,15 @@ import {
   Phone,
   Hash
 } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import AdminTabs from '../../components/admin/AdminTabs';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 const AdminAgents = () => {
+  const { isDark } = useTheme();
+  const { t } = useTranslation();
   const [users, setUsers] = useState([]);
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -65,7 +69,7 @@ const AdminAgents = () => {
     setFormData({
       full_name: user.full_name,
       email: user.email,
-      password_hash: '', // Leave blank for security if not changing
+      password_hash: '',
       phone: user.phone || '',
       employee_code: user.employee_code || '',
       branch_id: user.branch_id?._id || '',
@@ -80,7 +84,6 @@ const AdminAgents = () => {
       const token = localStorage.getItem('swayamfin_token');
       const headers = { Authorization: `Bearer ${token}` };
       
-      // If editing and password is empty, remove it from payload
       const payload = { ...formData };
       if (editMode && !payload.password_hash) {
         delete payload.password_hash;
@@ -127,25 +130,25 @@ const AdminAgents = () => {
   };
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
+    <div className={`min-h-screen ${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} flex items-center justify-center`}>
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 p-4 md:p-8 font-inter">
+    <div className={`min-h-screen ${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-800'} p-4 md:p-8 font-inter transition-colors duration-300`}>
       <div className="max-w-7xl mx-auto">
         <AdminTabs />
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
           <div className="flex items-center gap-4">
-             <div className="bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-xl p-3">
-                <Users className="text-white w-6 h-6" />
+             <div className={`${isDark ? 'bg-blue-500/20' : 'bg-gradient-to-tr from-blue-600 to-indigo-500'} rounded-2xl p-4 shadow-xl border ${isDark ? 'border-blue-500/30' : 'border-blue-700/10'}`}>
+                <Users className={`w-7 h-7 ${isDark ? 'text-blue-400' : 'text-white'}`} />
              </div>
              <div>
-                <h1 className="text-3xl font-bold text-white">User Management</h1>
-                <p className="text-slate-400 text-sm">Manage Sales Persons, BSMs, and Administrators</p>
+                <h1 className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tight`}>User Management</h1>
+                <p className={`${isDark ? 'text-slate-500' : 'text-slate-500'} text-xs font-bold uppercase tracking-widest mt-1`}>Manage Sales, BSM, HR & Admins</p>
              </div>
           </div>
           <button 
@@ -162,9 +165,9 @@ const AdminAgents = () => {
               });
               setShowModal(true);
             }}
-            className="bg-blue-600 text-white px-8 py-3.5 rounded-2xl font-black flex items-center gap-2 shadow-[0_4px_14px_rgba(37,99,235,0.39)] hover:bg-blue-700 hover:scale-105 transition-all uppercase tracking-widest text-xs"
+            className="group bg-blue-600 text-white px-10 py-4 rounded-[24px] font-black flex items-center gap-3 shadow-2xl shadow-blue-500/20 hover:bg-blue-500 hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-[0.2em] text-[10px]"
           >
-            <Plus className="w-5 h-5" /> Create User
+            <Plus className="w-5 h-5" /> Create New User
           </button>
         </div>
 
@@ -175,11 +178,11 @@ const AdminAgents = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className={`mb-8 p-4 rounded-xl flex items-center gap-3 font-bold text-sm ${notification.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}`}
+              className={`mb-8 p-5 rounded-3xl flex items-center gap-4 font-black uppercase tracking-widest text-[10px] border shadow-xl ${notification.type === 'success' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-rose-500/10 text-rose-500 border-rose-500/20'}`}
             >
-              {notification.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+              {notification.type === 'success' ? <CheckCircle2 className="w-5 h-5 shadow-[0_0_10px_rgba(16,185,129,0.5)]" /> : <AlertCircle className="w-5 h-5 shadow-[0_0_10px_rgba(244,63,94,0.5)]" />}
               {notification.message}
-              <button className="ml-auto" onClick={() => setNotification(null)}><X className="w-4 h-4" /></button>
+              <button className="ml-auto opacity-50 hover:opacity-100" onClick={() => setNotification(null)}><X className="w-4 h-4" /></button>
             </motion.div>
           )}
         </AnimatePresence>
@@ -192,55 +195,58 @@ const AdminAgents = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="bg-white rounded-[32px] p-8 border border-slate-200 group relative hover:shadow-lg transition-all shadow-sm"
+              className={`${isDark ? 'bg-white/5 border-white/5 shadow-2xl' : 'bg-white border-slate-200 shadow-sm'} rounded-[40px] p-8 border group relative hover:shadow-2xl transition-all h-full flex flex-col`}
             >
-              <div className="absolute top-6 right-6 flex items-center gap-2">
+              <div className="absolute top-8 right-8 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button 
                   onClick={() => handleEdit(u)}
-                  className="p-2 text-slate-500 hover:text-blue-400 transition-colors"
+                  className={`${isDark ? 'bg-white/5 hover:bg-blue-500/20' : 'bg-slate-50 hover:bg-blue-50'} p-3 rounded-2xl text-slate-500 hover:text-blue-500 transition-all border ${isDark ? 'border-white/5' : 'border-slate-100'}`}
                 >
                   <Pencil className="w-4 h-4" />
                 </button>
                 <button 
                   onClick={() => handleDelete(u._id)}
-                  className="p-2 text-slate-500 hover:text-rose-400 transition-colors"
+                  className={`${isDark ? 'bg-white/5 hover:bg-rose-500/20' : 'bg-slate-50 hover:bg-rose-50'} p-3 rounded-2xl text-slate-500 hover:text-rose-500 transition-all border ${isDark ? 'border-white/5' : 'border-slate-100'}`}
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
               
-              <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-inner">
+              <div className={`${isDark ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-slate-50 text-slate-400 border-slate-100'} w-16 h-16 rounded-[24px] flex items-center justify-center mb-6 group-hover:scale-110 transition-all border`}>
                 <Shield className="w-8 h-8" />
               </div>
               
-              <h3 className="text-xl font-bold text-slate-900 mb-1">{u.full_name}</h3>
-              <div className="flex items-center gap-2 text-slate-500 text-sm font-medium mb-4 italic">
-                <Building2 className="w-4 h-4" />
+              <h3 className={`text-xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-2`}>{u.full_name}</h3>
+              <div className="flex items-center gap-2 text-slate-500 text-[10px] font-black uppercase tracking-widest mb-6">
+                <Building2 className="w-4 h-4 text-blue-500" />
                 {u.branch_id?.name || 'Global Access'}
               </div>
 
-              <div className="space-y-3 pt-6 border-t border-slate-100">
-                <div className="flex items-center gap-3 text-slate-500 font-medium">
-                  <Mail className="w-4 h-4 text-slate-500" />
-                  <span className="text-xs truncate">{u.email}</span>
+              <div className={`space-y-4 pt-6 border-t ${isDark ? 'border-white/5' : 'border-slate-100'} mt-auto`}>
+                <div className="flex items-center gap-3 text-slate-500 font-bold">
+                  <Mail className="w-4 h-4 text-slate-400" />
+                  <span className="text-[11px] truncate uppercase tracking-tight">{u.email}</span>
                 </div>
-                <div className="flex items-center gap-3 text-slate-400 font-medium">
-                  <Phone className="w-4 h-4 text-slate-500" />
-                  <span className="text-xs">{u.phone}</span>
+                <div className="flex items-center gap-3 text-slate-500 font-bold">
+                  <Phone className="w-4 h-4 text-slate-400" />
+                  <span className="text-[11px] uppercase tracking-tight">{u.phone}</span>
                 </div>
-                <div className="flex items-center gap-3 text-slate-500 font-medium">
-                  <Hash className="w-4 h-4 text-slate-500" />
-                  <span className="text-xs">{u.employee_code}</span>
+                <div className="flex items-center gap-3 text-slate-500 font-bold">
+                  <Hash className="w-4 h-4 text-slate-400" />
+                  <span className="text-[11px] uppercase tracking-tight">{u.employee_code}</span>
                 </div>
-                <div className="mt-4">
-                  <span className={`text-[10px] font-black uppercase tracking-[0.1em] px-3 py-1 rounded-full border ${
-                    u.role === 'admin' ? 'bg-purple-50 text-purple-700 border-purple-200' : 
-                    u.role === 'bsm' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 
-                    u.role === 'hr' ? 'bg-pink-50 text-pink-700 border-pink-200' :
-                    'bg-blue-50 text-blue-700 border-blue-200'
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <span className={`text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full border shadow-sm ${
+                    u.role === 'admin' ? (isDark ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' : 'bg-purple-50 text-purple-700 border-purple-200') : 
+                    u.role === 'bsm' ? (isDark ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' : 'bg-indigo-50 text-indigo-700 border-indigo-200') : 
+                    u.role === 'hr' ? (isDark ? 'bg-pink-500/20 text-pink-400 border-pink-500/20' : 'bg-pink-50 text-pink-700 border-pink-200') :
+                    (isDark ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-blue-50 text-blue-700 border-blue-200')
                   }`}>
                     {u.role.replace('_', ' ')}
                   </span>
+                  {u.is_active && (
+                    <span className="text-[10px] font-black bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-4 py-1.5 rounded-full uppercase tracking-widest shadow-sm">Active</span>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -255,38 +261,38 @@ const AdminAgents = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100]"
+                className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100]"
                 onClick={() => setShowModal(false)}
               />
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white border border-slate-200 rounded-[40px] shadow-2xl z-[101] p-10 overflow-hidden"
+                className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg ${isDark ? 'bg-[#0B0F19] border-white/10' : 'bg-white border-slate-200 shadow-2xl'} border rounded-[48px] z-[101] p-10 overflow-hidden shadow-2xl transition-all`}
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/5 rounded-full translate-x-1/2 -translate-y-1/2" />
+                <div className={`absolute top-0 right-0 w-48 h-48 ${isDark ? 'bg-blue-600/10' : 'bg-blue-600/5'} rounded-full translate-x-1/2 -translate-y-1/2 blur-2xl`} />
                 
-                <h2 className="text-2xl font-bold text-slate-900 mb-8">
-                  {editMode ? 'Edit User' : 'Create New User'}
+                <h2 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-10 uppercase tracking-tight`}>
+                  {editMode ? 'Update Credentials' : 'Create New Personnel'}
                 </h2>
                 
-                <form onSubmit={handleSubmit} className="space-y-5 relative">
+                <form onSubmit={handleSubmit} className="space-y-6 relative">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Full Name</label>
                       <input 
                         required
-                        className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 rounded-2xl transition-all outline-none font-bold text-slate-900 text-sm"
+                        className={`w-full px-5 py-4 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 rounded-2xl transition-all outline-none font-bold text-sm`}
                         value={formData.full_name}
                         onChange={e => setFormData({...formData, full_name: e.target.value})}
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Email</label>
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Email Address</label>
                       <input 
                         required
                         type="email"
-                        className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 rounded-2xl transition-all outline-none font-bold text-slate-900 text-sm"
+                        className={`w-full px-5 py-4 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 rounded-2xl transition-all outline-none font-bold text-sm`}
                         value={formData.email}
                         onChange={e => setFormData({...formData, email: e.target.value})}
                       />
@@ -295,19 +301,19 @@ const AdminAgents = () => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Phone</label>
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Mobile Phone</label>
                       <input 
                         required
-                        className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 rounded-2xl transition-all outline-none font-bold text-slate-900 text-sm"
+                        className={`w-full px-5 py-4 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 rounded-2xl transition-all outline-none font-bold text-sm`}
                         value={formData.phone}
                         onChange={e => setFormData({...formData, phone: e.target.value})}
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Employee Code</label>
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Staff Code</label>
                       <input 
                         required
-                        className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 rounded-2xl transition-all outline-none font-bold text-slate-900 text-sm"
+                        className={`w-full px-5 py-4 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 rounded-2xl transition-all outline-none font-bold text-sm`}
                         value={formData.employee_code}
                         onChange={e => setFormData({...formData, employee_code: e.target.value})}
                       />
@@ -316,25 +322,25 @@ const AdminAgents = () => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Role</label>
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Access Role</label>
                       <select 
                         required
-                        className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 rounded-2xl outline-none font-bold text-slate-900 text-sm appearance-none"
+                        className={`w-full px-5 py-4 ${isDark ? 'bg-[#111827] border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 rounded-2xl outline-none font-bold text-sm appearance-none cursor-pointer`}
                         value={formData.role}
                         onChange={e => setFormData({...formData, role: e.target.value})}
                       >
-                        <option value="sales_person">Sales Person</option>
-                        <option value="hr">Human Resources (HR)</option>
-                        <option value="bsm">Branch Sales Manager (BSM)</option>
-                        <option value="admin">Administrator</option>
+                        <option value="sales_person">Sales Executive</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="bsm">Branch Manager</option>
+                        <option value="admin">Super Admin</option>
                       </select>
                     </div>
                     <div>
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Branch</label>
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Branch Hub</label>
                       <select 
                         required={formData.role !== 'admin'}
                         disabled={formData.role === 'admin'}
-                        className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 rounded-2xl outline-none font-bold text-slate-900 text-sm appearance-none disabled:opacity-30"
+                        className={`w-full px-5 py-4 ${isDark ? 'bg-[#111827] border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 rounded-2xl outline-none font-bold text-sm appearance-none disabled:opacity-20 cursor-pointer`}
                         value={formData.branch_id}
                         onChange={e => setFormData({...formData, branch_id: e.target.value})}
                       >
@@ -347,29 +353,29 @@ const AdminAgents = () => {
                   </div>
 
                   <div>
-                     <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">{editMode ? 'New Password (Optional)' : 'Password'}</label>
+                     <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">{editMode ? 'Update Security Key (Optional)' : 'Security Key'}</label>
                      <input 
                        required={!editMode}
                        type="password"
-                       className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 rounded-2xl outline-none font-bold text-slate-900 text-sm"
+                       className={`w-full px-5 py-4 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 rounded-2xl transition-all outline-none font-bold text-sm`}
                        value={formData.password_hash}
                        onChange={e => setFormData({...formData, password_hash: e.target.value})}
                      />
                   </div>
                   
-                  <div className="pt-6 flex gap-4">
+                  <div className="pt-8 flex gap-4">
                     <button 
                       type="button"
                       onClick={() => setShowModal(false)}
-                      className="flex-1 py-4 text-slate-600 font-bold hover:bg-slate-50 rounded-2xl transition-all border border-slate-200"
+                      className={`flex-1 py-4 ${isDark ? 'text-slate-400 hover:bg-white/5 border-white/10' : 'text-slate-600 hover:bg-slate-100 border-slate-200'} font-bold rounded-2xl transition-all border`}
                     >
-                      Cancel
+                      Dismiss
                     </button>
                     <button 
                       type="submit"
-                      className="flex-1 py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-xl shadow-blue-500/20 hover:bg-blue-500 transition-all uppercase tracking-widest text-sm"
+                      className="flex-1 py-4 bg-blue-600 text-white font-black rounded-2xl shadow-2xl shadow-blue-500/30 hover:bg-blue-500 transition-all uppercase tracking-widest text-[10px]"
                     >
-                      {editMode ? 'Update' : 'Create'}
+                      {editMode ? 'Update Profile' : 'Authorize User'}
                     </button>
                   </div>
                 </form>
