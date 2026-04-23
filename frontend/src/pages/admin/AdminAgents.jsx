@@ -280,13 +280,19 @@ const AdminAgents = () => {
         {/* Modal - High Contrast Reset */}
         <AnimatePresence>
           {showModal && (
-            <>
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-[#020617]/90 backdrop-blur-3xl z-[100]" onClick={() => setShowModal(false)} />
+            <div className="fixed inset-0 flex items-center justify-center z-[100] p-4 md:p-8">
               <motion.div 
-                initial={{ opacity: 0, scale: 0.95, y: 100 }}
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                exit={{ opacity: 0 }} 
+                className="absolute inset-0 bg-[#020617]/90 backdrop-blur-3xl" 
+                onClick={() => setShowModal(false)} 
+              />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 40 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 100 }}
-                className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl ${isDark ? 'bg-[#0B0F19]/80 border-white/10 shadow-3xl shadow-black/80' : 'bg-white border-slate-200 shadow-2xl shadow-slate-200'} border rounded-[48px] z-[101] overflow-hidden backdrop-blur-xl flex flex-col md:flex-row`}
+                exit={{ opacity: 0, scale: 0.95, y: 40 }}
+                className={`relative w-full max-w-4xl h-fit max-h-[90vh] ${isDark ? 'bg-[#0B0F19]/80 border-white/10 shadow-3xl shadow-black/80' : 'bg-white border-slate-200 shadow-2xl shadow-slate-200'} border rounded-[48px] overflow-y-auto overflow-x-hidden backdrop-blur-xl flex flex-col md:flex-row`}
               >
                 {/* Visual Anchor Sidebar */}
                 <div className={`w-full md:w-1/3 p-12 ${isDark ? 'bg-blue-600/10' : 'bg-blue-50'} flex flex-col justify-between border-r ${isDark ? 'border-white/5' : 'border-slate-100'}`}>
@@ -423,7 +429,7 @@ const AdminAgents = () => {
                   </form>
                 </div>
               </motion.div>
-            </>
+            </div>
           )}
         </AnimatePresence>
 
