@@ -208,13 +208,13 @@ const ServiceDetails = () => {
                 </motion.div>
               </div>
               
-              <h1 className={`text-5xl md:text-7xl lg:text-[100px] font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-[0.85] tracking-tighter mb-8`}>
+              <h1 className={`text-4xl md:text-6xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-tight tracking-tight mb-8`}>
                 {data.title.split(' ').map((word, i) => (
                   <span key={i} className={i % 2 === 1 ? 'text-blue-600 italic' : ''}>{word} <br className={i === 0 ? 'hidden' : 'block'}/></span>
                 ))}
               </h1>
               
-              <p className={`text-xl md:text-2xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic max-w-2xl leading-relaxed border-l-4 border-blue-600/20 pl-8 ml-2`}>
+              <p className={`text-base md:text-xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic max-w-xl leading-relaxed border-l-4 border-blue-600/20 pl-6`}>
                 "{data.tagline}"
               </p>
 
@@ -266,8 +266,8 @@ const ServiceDetails = () => {
                       <Cpu className="w-12 h-12" />
                    </div>
                    <div>
-                      <h3 className={`text-4xl lg:text-5xl font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tight`}>Initial Entry</h3>
-                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.4em] mt-2 opacity-60 italic leading-none">Security Protocol: AES-256 Enabled</p>
+                      <h3 className={`text-2xl md:text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tight`}>Initial Entry</h3>
+                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-2 opacity-60 italic leading-none">Security Protocol: AES-256 Enabled</p>
                    </div>
                  </div>
 
@@ -367,7 +367,7 @@ const ServiceDetails = () => {
                  <motion.div initial={{ scale: 0 }} whileInView={{ scale: 1 }} className="w-24 h-24 bg-blue-600/10 text-blue-600 rounded-[36px] flex items-center justify-center shadow-3xl shadow-blue-600/10">
                     <HelpCircle className="w-12 h-12" />
                  </motion.div>
-                 <h2 className={`text-5xl md:text-9xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-[0.02em] uppercase leading-none`}>Deep <span className="text-blue-600 italic">Interface.</span></h2>
+                 <h2 className={`text-4xl md:text-6xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-tight uppercase leading-none`}>Deep <span className="text-blue-600 italic">Interface.</span></h2>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
@@ -390,8 +390,8 @@ const ServiceDetails = () => {
 // 🛡️ High-Fidelity Logic Components
 const MetricNode = ({ label, value, color, isDark }) => (
   <div className="space-y-4">
-     <p className={`text-[10px] font-black uppercase tracking-[0.4em] ${isDark ? 'text-slate-500' : 'text-slate-500'} leading-none`}>{label}</p>
-     <p className={`text-4xl md:text-5xl lg:text-7xl font-playfair font-black tracking-tighter leading-none ${color === 'blue' ? 'text-blue-600' : 'text-primary-gold'}`}>{value}</p>
+     <p className={`text-[10px] font-black uppercase tracking-[0.4em] ${isDark ? 'text-slate-500' : 'text-slate-500'} leading-none uppercase`}>{label}</p>
+     <p className={`text-4xl md:text-5xl font-playfair font-black tracking-tight leading-none ${color === 'blue' ? 'text-blue-600' : 'text-primary-gold'}`}>{value}</p>
   </div>
 );
 

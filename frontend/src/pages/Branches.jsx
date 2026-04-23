@@ -88,11 +88,11 @@ const Branches = () => {
            </motion.div>
 
            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
-              <div className="max-w-4xl space-y-6">
+              <div className="max-w-4xl space-y-4">
                  <motion.h1 
                    initial={{ opacity: 0, y: 30 }}
                    animate={{ opacity: 1, y: 0 }}
-                   className={`text-5xl md:text-8xl lg:text-[120px] font-playfair font-black leading-[0.85] tracking-tight uppercase transition-all`}
+                   className={`text-4xl md:text-6xl font-playfair font-black leading-tight tracking-tight uppercase transition-all`}
                  >
                    Regional <br /> <span className="text-blue-600 italic">Network.</span>
                  </motion.h1>
@@ -100,7 +100,7 @@ const Branches = () => {
                    initial={{ opacity: 0 }}
                    animate={{ opacity: 1 }}
                    transition={{ delay: 0.2 }}
-                   className={`${isDark ? 'text-slate-400' : 'text-slate-500'} text-lg md:text-2xl font-medium italic max-w-2xl leading-relaxed border-l-4 border-blue-600/20 pl-8 ml-2`}
+                   className={`${isDark ? 'text-slate-400' : 'text-slate-500'} text-base md:text-xl font-medium italic max-w-xl leading-relaxed border-l-4 border-blue-600/20 pl-6`}
                  >
                    "Integrating physical high-trust nodes with hyper-automated credit distribution for seamless regional financial governance."
                  </motion.p>
@@ -151,8 +151,8 @@ const Branches = () => {
                         <Server className="w-10 h-10" />
                      </div>
                      <div>
-                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-2 leading-none">Regional Node</p>
-                        <h2 className={`text-4xl md:text-5xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-none tracking-tighter uppercase`}>
+                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-1 leading-none">Regional Node</p>
+                        <h2 className={`text-2xl md:text-3xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-none tracking-tight uppercase`}>
                            {branch.city.split(' ')[0]} <br /> <span className="text-blue-600 italic">{branch.city.split(' ')[1]}</span>
                         </h2>
                      </div>
@@ -212,9 +212,9 @@ const Branches = () => {
                 </div>
              </div>
              
-             <h2 className={`text-4xl md:text-[100px] font-playfair font-black tracking-tighter uppercase leading-[0.8] ${isDark ? 'text-white' : 'text-white'}`}>Omni-Channel <br /> <span className="text-blue-600 italic">Connectivity.</span></h2>
+             <h2 className={`text-3xl md:text-6xl font-playfair font-black tracking-tighter uppercase leading-tight ${isDark ? 'text-white' : 'text-white'}`}>Omni-Channel <br /> <span className="text-blue-600 italic">Connectivity.</span></h2>
              
-             <p className={`text-slate-400 text-lg md:text-3xl font-medium italic max-w-4xl mx-auto leading-relaxed`}>
+             <p className={`text-slate-400 text-base md:text-xl font-medium italic max-w-3xl mx-auto leading-relaxed`}>
                 "Our regional nodes are synchronized with the central governance cloud. Access specialized credit sessions globally with zero protocol latency."
              </p>
 

@@ -119,11 +119,11 @@ const BranchDetails = () => {
                 </div>
               </div>
               
-              <h1 className={`text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-[0.85] tracking-tighter mb-8 transition-all`}>
+              <h1 className={`text-4xl md:text-6xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-tight tracking-tight mb-6 transition-all`}>
                 Swayamfin <br className="hidden md:block" /> <span className="text-blue-600 italic">{branch.city} Hub.</span>
               </h1>
               
-              <p className={`text-lg md:text-2xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic leading-relaxed mb-12 max-w-3xl border-l-4 border-blue-600/20 pl-8 ml-2`}>
+              <p className={`text-base md:text-xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic leading-relaxed mb-10 max-w-2xl border-l-4 border-blue-600/20 pl-6`}>
                 "Orchestrating regional economic liquidity through hyper-localized credit deployment and strategic financial consultancy."
               </p>
               
@@ -180,8 +180,8 @@ const BranchDetails = () => {
                        <Fingerprint className="w-12 h-12" />
                     </div>
                     <div>
-                      <h3 className={`text-4xl lg:text-5xl font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tight`}>Hub Access</h3>
-                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.4em] mt-4 opacity-60 italic">Regional Onboarding Matrix</p>
+                      <h3 className={`text-2xl md:text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tight`}>Hub Access</h3>
+                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-2 opacity-60 italic leading-none">Regional Onboarding Matrix</p>
                     </div>
                  </div>
 
@@ -266,7 +266,7 @@ const MetricCard = ({ icon, value, label, color, isDark }) => (
     <div className={`${color === 'blue' ? 'text-blue-600' : 'text-primary-gold'} mb-10`}>
        {React.cloneElement(icon, { className: "w-10 h-10" })}
     </div>
-    <h4 className={`text-4xl md:text-6xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-3 tracking-tighter leading-none`}>{value}</h4>
+    <h4 className={`text-3xl md:text-4xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-2 tracking-tighter leading-none`}>{value}</h4>
     <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.3em] leading-relaxed">{label.split(' ').map((w, i) => <span key={i}>{w}<br /></span>)}</p>
   </div>
 );
