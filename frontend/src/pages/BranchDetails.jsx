@@ -182,7 +182,7 @@ const BranchDetails = () => {
                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 opacity-60">Strategic Asset Class</label>
                         <div className="relative group/sel">
                           <select 
-                            className={`w-full px-7 py-5 ${isDark ? 'bg-white/2 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-3xl border-2 outline-none focus:border-blue-600 font-black text-xs appearance-none transition-all cursor-pointer shadow-inner`}
+                            className={`w-full px-6 py-4.5 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 outline-none focus:border-blue-600 font-black text-xs appearance-none transition-all cursor-pointer shadow-inner`}
                             value={formData.loanType}
                             onChange={e => setFormData({...formData, loanType: e.target.value})}
                           >
@@ -206,7 +206,7 @@ const BranchDetails = () => {
                         </button>
                       </div>
                       
-                      <div className={`${isDark ? 'bg-white/2 border-white/5' : 'bg-blue-50/50 border-blue-100'} p-6 rounded-[32px] border flex gap-5 items-start ring-1 ring-blue-500/5`}>
+                      <div className={`${isDark ? 'bg-white/5 border-white/10' : 'bg-blue-50/50 border-blue-100'} p-6 rounded-[32px] border flex gap-5 items-start ring-1 ring-blue-500/5`}>
                           <Shield className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
                           <p className={`text-[10px] md:text-[11px] ${isDark ? 'text-slate-500' : 'text-slate-600'} font-black italic leading-relaxed uppercase tracking-wider`}>
                              Entry flags this lead as <span className="text-blue-600">Priority Delta</span> for the {branch.city} Regional Governance Center.
@@ -227,7 +227,7 @@ const BranchDetails = () => {
 
 const InfoItem = ({ icon, label, value, subValue, isDark, isLarge, color }) => (
   <div className="flex gap-6 group">
-    <div className={`w-14 h-14 md:w-20 md:h-20 ${isDark ? 'bg-white/2 border-white/5 text-blue-500 shadow-black' : 'bg-slate-50 border-slate-100 text-blue-600 shadow-xl shadow-slate-200/50'} rounded-[24px] md:rounded-[32px] flex items-center justify-center border shrink-0 transition-all group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white`}>
+    <div className={`w-14 h-14 md:w-20 md:h-20 ${isDark ? 'bg-white/5 border-white/10 text-blue-500 shadow-black' : 'bg-slate-50 border-slate-100 text-blue-600 shadow-xl shadow-slate-200/50'} rounded-[24px] md:rounded-[32px] flex items-center justify-center border shrink-0 transition-all group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white`}>
       {React.cloneElement(icon, { className: "w-6 h-6 md:w-10 md:h-10 transition-transform group-hover:rotate-12" })}
     </div>
     <div className="flex-1 space-y-1">
@@ -245,7 +245,7 @@ const InputField = ({ label, placeholder, value, onChange, type = 'text', isDark
       required
       type={type}
       placeholder={placeholder}
-      className={`w-full px-7 py-5 ${isDark ? 'bg-white/2 border-white/5 text-white shadow-black' : 'bg-slate-50 border-slate-100 text-[#020617] shadow-inner'} rounded-[28px] border-2 outline-none focus:border-blue-600 font-black text-xs transition-all`}
+      className={`w-full px-6 py-4.5 ${isDark ? 'bg-white/5 border-white/10 text-white shadow-black' : 'bg-slate-50 border-slate-100 text-[#020617] shadow-inner'} rounded-2xl border-2 outline-none focus:border-blue-600 font-black text-xs transition-all`}
       value={value}
       onChange={e => onChange(e.target.value)}
     />
