@@ -221,15 +221,18 @@ const Navbar = () => {
                   {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                 </button>
 
-                {/* Language Sync */}
-                <button 
-                  onClick={toggleLanguage}
-                  className={`px-6 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-500 ${
-                    isDark ? 'bg-white/5 border-white/10 text-white hover:border-blue-600/50' : 'bg-white border-slate-200 text-[#020617] hover:border-blue-600/50 shadow-sm'
+                {/* Rapid Comms Sync (WhatsApp) */}
+                <a 
+                  href="https://wa.me/918700965592" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={`hidden xl:flex px-6 py-3 rounded-2xl border text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-500 items-center gap-2 ${
+                    isDark ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20' : 'bg-emerald-50 border-emerald-200 text-emerald-600 hover:bg-emerald-100'
                   }`}
                 >
-                  {i18n.language === 'en' ? 'HI' : 'EN'}
-                </button>
+                  <MessageCircle className="w-4 h-4" />
+                  WhatsApp
+                </a>
               </div>
 
               {renderAuthSection(user, logout, navigate, isDark, false)}

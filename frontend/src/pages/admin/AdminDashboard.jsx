@@ -70,7 +70,7 @@ const AdminDashboard = () => {
   );
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-800'} p-4 md:p-8 lg:p-12 font-dmsans transition-colors duration-300 pb-32`}>
+    <div className={`min-h-screen ${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-800'} p-4 md:p-8 lg:p-12 pt-32 md:pt-44 font-dmsans transition-colors duration-300 pb-32`}>
       <div className="max-w-7xl mx-auto">
         <AdminTabs />
         
@@ -91,9 +91,13 @@ const AdminDashboard = () => {
 
         {/* Global KPIs: 2 cols on mobile, 4 on desktop */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-8 md:mb-16">
-          <KPICard title="Portfolio" value={stats.totalLeads} trend="+12%" icon={<TrendingUp />} color="blue" isDark={isDark} />
+          <Link to="/admin/leads" className="contents">
+            <KPICard title="Portfolio" value={stats.totalLeads} trend="+12%" icon={<TrendingUp />} color="blue" isDark={isDark} />
+          </Link>
           <KPICard title="Disbursement" value={`₹${(stats.totalDisbursed/10000000).toFixed(1)}Cr`} trend="+8%" icon={<DollarSign />} color="emerald" isDark={isDark} />
-          <KPICard title="Strategic Agents" value={stats.activeAgents} trend="Active" icon={<Users />} color="indigo" isDark={isDark} />
+          <Link to="/admin/agents" className="contents">
+            <KPICard title="Strategic Agents" value={stats.activeAgents} trend="Active" icon={<Users />} color="indigo" isDark={isDark} />
+          </Link>
           <KPICard title="Yield (Win%)" value={`${stats.conversionRate}%`} trend="Target 25%" icon={<BarChart3 />} color="rose" isDark={isDark} />
         </div>
 
@@ -112,15 +116,22 @@ const AdminDashboard = () => {
                  </div>
               </div>
               <div className="h-48 md:h-64 flex items-end gap-2 md:gap-3 justify-between relative z-10">
-                 {[40, 60, 45, 80, 55, 90, 70, 85, 50, 95].map((h, i) => (
-                    <motion.div 
-                      key={i}
-                      initial={{ height: 0 }}
-                      whileInView={{ height: `${h}%` }}
-                      transition={{ delay: i * 0.05, duration: 1 }}
-                      className={`flex-1 ${isDark ? 'bg-blue-600/20 group-hover:bg-blue-600/40' : 'bg-blue-100 group-hover:bg-blue-600'} rounded-t-lg md:rounded-t-xl transition-all duration-500`}
-                    />
-                 ))}
+                 {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed'].map((day, i) => {
+                   const h = [40, 60, 45, 80, 55, 90, 70, 85, 50, 95][i];
+                   return (
+                     <div key={i} className="flex-1 flex flex-col items-center gap-3 h-full">
+                       <div className="flex-1 w-full flex items-end">
+                        <motion.div 
+                          initial={{ height: 0 }}
+                          whileInView={{ height: `${h}%` }}
+                          transition={{ delay: i * 0.05, duration: 1 }}
+                          className={`w-full ${isDark ? 'bg-blue-600/20 group-hover:bg-blue-600/40' : 'bg-blue-100 group-hover:bg-blue-600'} rounded-t-lg md:rounded-t-xl transition-all duration-500`}
+                        />
+                       </div>
+                       <span className="text-[7px] md:text-[9px] font-black text-slate-500 uppercase tracking-tighter">{day}</span>
+                     </div>
+                   );
+                 })}
               </div>
            </div>
 
@@ -129,14 +140,19 @@ const AdminDashboard = () => {
               <div>
                  <h3 className={`text-xl md:text-2xl font-black ${isDark ? 'text-white' : 'text-white'} uppercase tracking-tight mb-4`}>Regional Hubs</h3>
                  <div className="space-y-5 md:space-y-6 mt-6 md:mt-8">
-                    {['Agra Hub', 'Mathura Hub', 'Hathras Hub', 'Kosi Hub'].map((city, i) => (
-                       <div key={i} className="flex items-center justify-between group cursor-pointer">
+                    {[
+                      { name: 'Agra Hub', slug: 'agra' },
+                      { name: 'Mathura Hub', slug: 'mathura' },
+                      { name: 'Hathras Hub', slug: 'hathras' },
+                      { name: 'Kosi Hub', slug: 'kosi' }
+                    ].map((branch, i) => (
+                       <Link to={`/branches/${branch.slug}`} key={i} className="flex items-center justify-between group cursor-pointer">
                           <div className="flex items-center gap-3 md:gap-4">
                              <Building2 className={`w-3.5 md:w-4 h-3.5 md:h-4 ${isDark ? 'text-blue-500' : 'text-blue-100/60'}`} />
-                             <span className={`font-black text-[10px] md:text-sm uppercase tracking-widest text-white`}>{city}</span>
+                             <span className={`font-black text-[10px] md:text-sm uppercase tracking-widest text-white`}>{branch.name}</span>
                           </div>
                           <ArrowRight className={`w-4 h-4 ${isDark ? 'text-slate-500' : 'text-white/40'} group-hover:translate-x-2 transition-transform`} />
-                       </div>
+                       </Link>
                     ))}
                  </div>
               </div>
