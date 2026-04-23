@@ -17,7 +17,8 @@ import {
   Hash,
   Search,
   Filter,
-  UserCheck
+  UserCheck,
+  User
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
