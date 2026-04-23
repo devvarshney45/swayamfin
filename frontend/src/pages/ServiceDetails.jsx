@@ -167,19 +167,19 @@ const ServiceDetails = () => {
   };
 
   return (
-    <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen font-dmsans transition-colors duration-500 overflow-hidden`}>
+    <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen font-dmsans transition-colors duration-500 overflow-x-hidden`}>
       
       {/* Institutional Hero */}
-      <section className="relative pt-32 pb-48 md:pt-48 md:pb-64 overflow-hidden">
+      <section className="relative pt-24 pb-12 md:pt-36 md:pb-20 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className={`absolute top-0 right-0 w-2/3 h-2/3 ${isDark ? 'bg-blue-600/5' : 'bg-blue-500/5'} blur-[140px] rounded-full translate-x-1/2 -translate-y-1/2`} />
           <div className={`absolute bottom-0 left-0 w-1/2 h-1/2 ${isDark ? 'bg-primary-gold/5' : 'bg-primary-gold/3'} blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2`} />
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 lg:gap-16 items-start">
             
-            <div className="lg:col-span-12 xl:col-span-7 space-y-10">
+            <div className="space-y-6">
               <nav className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] opacity-40">
                  <Link to="/" className="hover:text-blue-600 transition-colors">Home</Link>
                  <ChevronRight className="w-3 h-3" />
@@ -192,13 +192,13 @@ const ServiceDetails = () => {
                 <ShieldCheck className="w-4 h-4" /> Strategic Credit Line
               </motion.div>
               
-              <h1 className={`text-4xl md:text-9xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-[0.9] tracking-tighter`}>
+              <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-tight tracking-tight`}>
                 {data.title.split(' ').map((word, i) => (
                   <span key={i} className={i % 2 === 1 ? 'text-blue-600 italic' : ''}>{word} </span>
                 ))}
               </h1>
               
-              <p className={`text-xl md:text-3xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic max-w-2xl leading-relaxed`}>
+              <p className={`text-base md:text-xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic max-w-2xl leading-relaxed`}>
                 "{data.tagline}"
               </p>
 
@@ -208,11 +208,11 @@ const ServiceDetails = () => {
             </div>
 
             {/* Application Cockpit */}
-            <div className="lg:col-span-12 xl:col-span-5 relative mt-12 md:mt-0">
+            <div className="xl:col-span-1 relative mt-8 xl:mt-0">
                <motion.div 
                  initial={{ opacity: 0, scale: 0.95 }}
                  animate={{ opacity: 1, scale: 1 }}
-                 className={`${isDark ? 'bg-[#0B1221]/90 border-white/5 shadow-black' : 'bg-white/95 border-slate-200 shadow-22xl shadow-slate-200/50'} p-8 md:p-14 rounded-[50px] md:rounded-[80px] border backdrop-blur-3xl relative overflow-hidden group`}
+                 className={`${isDark ? 'bg-[#0B1221]/90 border-white/5' : 'bg-white border-slate-200 shadow-xl'} p-6 md:p-10 rounded-3xl border relative overflow-hidden group`}
                >
                  <div className="absolute top-0 right-0 w-48 h-48 bg-blue-600/5 blur-3xl rounded-full -mr-24 -mt-24 group-hover:scale-150 transition-transform duration-1000" />
                  

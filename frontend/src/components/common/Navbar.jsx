@@ -205,8 +205,8 @@ const Navbar = () => {
                 </AnimatePresence>
               </div>
 
-              <DesktopNavLink to="/process" label="Calculators" isDark={isDark} active={location.pathname === '/process'} />
-              <DesktopNavLink to="/about" label="Protocol" isDark={isDark} active={location.pathname === '/about'} />
+              <DesktopNavLink to="/process" label="Process" isDark={isDark} active={location.pathname === '/process'} />
+              <DesktopNavLink to="/about" label="About" isDark={isDark} active={location.pathname === '/about'} />
             </div>
 
             <div className="flex items-center gap-8">
@@ -277,8 +277,8 @@ const Navbar = () => {
                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em] ml-2 mb-6">Operations Hub</p>
                 <div className="grid grid-cols-1 gap-4">
                   <MobileLink to="/" label={t('nav_home')} icon={<Home />} isDark={isDark} />
-                  <MobileLink to="/about" label="Protocol" icon={<Shield />} isDark={isDark} />
-                  <MobileLink to="/process" label="Intelligence" icon={<AreaChart />} isDark={isDark} />
+                  <MobileLink to="/about" label="About" icon={<Shield />} isDark={isDark} />
+                  <MobileLink to="/process" label="Process" icon={<AreaChart />} isDark={isDark} />
                 </div>
 
                 <div className="pt-6">

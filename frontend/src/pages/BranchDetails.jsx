@@ -70,12 +70,12 @@ const BranchDetails = () => {
   };
 
   return (
-    <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen pt-32 pb-48 font-dmsans transition-colors duration-500 relative overflow-hidden`}>
+    <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen pt-24 pb-24 md:pt-32 md:pb-36 font-dmsans transition-colors duration-500 relative overflow-x-hidden`}>
       
       {/* Dynamic Background Accents */}
       <div className={`absolute top-0 right-0 w-[800px] h-[800px] ${isDark ? 'bg-blue-600/5' : 'bg-blue-500/5'} blur-[160px] rounded-full translate-x-1/2 -translate-y-1/2`} />
       
-      <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
         
         {/* Breadcrumb Protocol */}
         <nav className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] opacity-40 mb-12">
@@ -86,32 +86,32 @@ const BranchDetails = () => {
             <span className="text-blue-600">{branch.city} Hub</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 lg:gap-16 items-start">
           
           {/* Narrative Pillar */}
-          <div className="lg:col-span-12 xl:col-span-7 space-y-12">
+          <div className="space-y-8">
             <motion.div 
               initial={{ opacity: 0, x: -40 }} 
               animate={{ opacity: 1, x: 0 }} 
-              className={`${isDark ? 'bg-white/2 border-white/5 shadow-black' : 'bg-white border-slate-100 shadow-22xl shadow-slate-200/50'} p-10 md:p-20 rounded-[64px] md:rounded-[100px] border relative overflow-hidden group`}
+              className={`${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-100 shadow-lg'} p-6 md:p-10 rounded-3xl border relative overflow-hidden group`}
             >
               <div className={`absolute top-0 right-0 w-64 h-64 ${isDark ? 'bg-blue-600/5' : 'bg-blue-500/5'} blur-[100px] rounded-full -mr-32 -mt-32 transition-transform duration-1000 group-hover:scale-150`} />
               
-              <div className="flex justify-start mb-12">
+              <div className="flex justify-start mb-6">
                 <div className={`inline-flex items-center gap-3 ${isDark ? 'bg-white/5 border-white/10 shadow-inner' : 'bg-blue-600/10 border-blue-500/20'} text-primary-gold px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.4em] border shadow-sm`}>
                   <Globe className="w-4 h-4" /> Regional Governance Node
                 </div>
               </div>
               
-              <h1 className={`text-4xl md:text-9xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-[0.9] tracking-tighter mb-8`}>
+              <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-playfair font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-tight tracking-tight mb-4`}>
                 Swayamfin <br className="hidden md:block" /> <span className="text-blue-600 italic">{branch.city} Hub</span>
               </h1>
               
-              <p className={`text-lg md:text-2xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic leading-relaxed mb-16 max-w-2xl`}>
+              <p className={`text-base md:text-lg ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic leading-relaxed mb-8 max-w-2xl`}>
                 "Orchestrating regional economic liquidity through hyper-localized credit deployment and strategic financial consultancy."
               </p>
 
-              <div className={`grid grid-cols-1 sm:grid-cols-2 gap-12 pt-12 border-t ${isDark ? 'border-white/5' : 'border-slate-100'}`}>
+              <div className={`grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t ${isDark ? 'border-white/5' : 'border-slate-100'}`}>
                 <div className="space-y-12">
                   <InfoItem icon={<MapPin />} label="Geospatial Hub" value={branch.address} isDark={isDark} />
                   <InfoItem icon={<Phone />} label="Direct Interface" value={branch.phone} isDark={isDark} isLarge color="blue" />
