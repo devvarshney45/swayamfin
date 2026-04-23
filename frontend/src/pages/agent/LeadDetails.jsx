@@ -150,7 +150,7 @@ const LeadDetails = () => {
   const tabs = ['Personal Details', 'Documents', 'Remarks & Activity Log', 'Status'];
 
   return (
-    <div className={`${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-900'} min-h-screen pb-20 font-inter transition-colors duration-300`}>
+    <div className={`${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-900'} min-h-screen pt-24 md:pt-28 pb-20 font-inter transition-colors duration-300 relative`}>
       
       {/* Premium Glass Header */}
       <div className={`${isDark ? 'bg-white/2 border-white/5 shadow-2xl shadow-black/50' : 'bg-white/80 border-slate-200 shadow-xl shadow-slate-200/50'} border-b sticky top-0 z-30 backdrop-blur-2xl transition-all`}>

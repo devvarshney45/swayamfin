@@ -41,7 +41,7 @@ const NewLead = () => {
   };
 
   return (
-    <div className={`${isDark ? 'bg-[#0B0F19] text-slate-200' : 'bg-slate-50 text-slate-900'} min-h-screen pb-20 font-inter transition-colors duration-300`}>
+    <div className={`${isDark ? 'bg-[#0B0F19] text-slate-200' : 'bg-slate-50 text-slate-900'} min-h-screen pt-24 md:pt-28 pb-20 font-inter transition-colors duration-300 relative`}>
       <div className="max-w-3xl mx-auto px-4 pt-10">
         <button onClick={() => navigate(-1)} className={`flex items-center gap-2 ${isDark ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-900'} font-medium mb-8 transition text-sm`}>
           <ArrowLeft className="w-4 h-4" /> {t('portal_back_dashboard')}
