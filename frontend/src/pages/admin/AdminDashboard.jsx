@@ -150,26 +150,37 @@ const AdminDashboard = () => {
   );
 };
 
-const KPICard = ({ title, value, trend, icon, color, isDark }) => (
-  <motion.div 
-    initial={{ opacity: 0, scale: 0.95 }} 
-    whileInView={{ opacity: 1, scale: 1 }}
-    className={`${isDark ? 'bg-white/5 border-white/5 shadow-22xl shadow-black/50' : 'bg-white border-slate-200 shadow-xl shadow-slate-200/50'} p-4 md:p-8 rounded-2xl md:rounded-[40px] border relative overflow-hidden group hover:scale-[1.02] transition-all`}
-  >
-    <div className={`absolute top-0 right-0 w-24 md:w-32 h-24 md:h-32 ${isDark ? `bg-${color}-500/10` : `bg-${color}-50`} blur-2xl md:blur-3xl rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-all duration-700`} />
-    <div className="flex justify-between items-start mb-3 md:mb-6 relative z-10">
-      <div className={`p-2.5 md:p-4 ${isDark ? `bg-${color}-500/10 border-${color}-500/30 text-${color}-400` : `bg-${color}-50 border-${color}-100 text-${color}-600'} rounded-xl md:rounded-2xl border shadow-sm`}>
-        {React.cloneElement(icon, { className: "w-5 h-5 md:w-6 md:h-6" })}
+const KPICard = ({ title, value, trend, icon, color, isDark }) => {
+  const statusClasses = color === 'rose' ? 'text-rose-500' : 'text-emerald-500';
+  const containerClasses = isDark 
+    ? 'bg-white/5 border-white/5 shadow-22xl shadow-black/50' 
+    : 'bg-white border-slate-200 shadow-xl shadow-slate-200/50';
+  const accentClasses = isDark ? `bg-${color}-500/10` : `bg-${color}-50`;
+  const iconBoxClasses = isDark 
+    ? `bg-${color}-500/10 border-${color}-500/30 text-${color}-400` 
+    : `bg-${color}-50 border-${color}-100 text-${color}-600`;
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95 }} 
+      whileInView={{ opacity: 1, scale: 1 }}
+      className={containerClasses + " p-4 md:p-8 rounded-2xl md:rounded-[40px] border relative overflow-hidden group hover:scale-[1.02] transition-all"}
+    >
+      <div className={"absolute top-0 right-0 w-24 md:w-32 h-24 md:h-32 " + accentClasses + " blur-2xl md:blur-3xl rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-all duration-700"} />
+      <div className="flex justify-between items-start mb-3 md:mb-6 relative z-10">
+        <div className={iconBoxClasses + " p-2.5 md:p-4 rounded-xl md:rounded-2xl border shadow-sm"}>
+          {React.cloneElement(icon, { className: "w-5 h-5 md:w-6 md:h-6" })}
+        </div>
+        <div className={"hidden md:flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest " + statusClasses}>
+           {trend} <ArrowUpRight className="w-3 h-3" />
+        </div>
       </div>
-      <div className={`hidden md:flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest ${color === 'rose' ? 'text-rose-500' : 'text-emerald-500'}`}>
-         {trend} <ArrowUpRight className="w-3 h-3" />
+      <div className="relative z-10 text-center md:text-left">
+        <p className="text-slate-500 text-[8px] md:text-[10px] font-black uppercase tracking-widest mb-1 md:mb-2 opacity-80 italic">{title}</p>
+        <h3 className={"text-base sm:text-2xl md:text-3xl font-black " + (isDark ? "text-white" : "text-slate-900") + " tracking-tighter leading-none"}>{value}</h3>
       </div>
-    </div>
-    <div className="relative z-10 text-center md:text-left">
-      <p className="text-slate-500 text-[8px] md:text-[10px] font-black uppercase tracking-widest mb-1 md:mb-2 opacity-80 italic">{title}</p>
-      <h3 className={`text-base sm:text-2xl md:text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-tighter leading-none`}>{value}</h3>
-    </div>
-  </motion.div>
-);
+    </motion.div>
+  );
+};
 
 export default AdminDashboard;
