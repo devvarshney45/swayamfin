@@ -144,7 +144,7 @@ const BranchDetails = () => {
           </div>
 
           {/* Regional Onboarding Cockpit */}
-          <div className="lg:col-span-5 lg:sticky lg:top-32 mt-12 lg:mt-0">
+          <div className="lg:col-span-5 mt-12 lg:mt-0">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}

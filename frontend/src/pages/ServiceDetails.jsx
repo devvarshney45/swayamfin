@@ -224,7 +224,7 @@ const ServiceDetails = () => {
             </div>
 
             {/* Application Cockpit */}
-            <div className="lg:col-span-12 xl:col-span-5 relative mt-12 xl:mt-0 xl:p-8">
+            <div className="lg:col-span-12 xl:col-span-5 relative mt-12 xl:mt-0 lg:pl-10">
                <motion.div 
                  initial={{ opacity: 0, scale: 0.95 }}
                  animate={{ opacity: 1, scale: 1 }}
