@@ -224,8 +224,6 @@ const ServiceDetails = () => {
                  <MetricNode label="Deployment Velocity" value="48H" color="gold" isDark={isDark} />
               </div>
             </motion.div>
-
-            </motion.div>
           </div>
         </div>
 
