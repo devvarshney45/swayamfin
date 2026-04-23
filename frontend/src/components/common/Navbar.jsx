@@ -107,14 +107,14 @@ const Navbar = () => {
                   <Zap className="w-6 h-6 md:w-7 md:h-7 text-primary-gold" />
                 </div>
                 <div className="flex flex-col relative">
-                  <span className={`text-xl md:text-3xl font-playfair font-black ${isDark ? 'text-white' : 'text-[#020617]'} tracking-tighter leading-[0.8]`}>swayamfin<span className="text-blue-600">.</span></span>
-                  <span className="text-[7px] md:text-[8px] font-black text-slate-500 tracking-[0.5em] leading-tight uppercase mt-2 opacity-60">Institutional Grade</span>
+                  <span className={`text-xl md:text-4xl font-playfair font-black ${isDark ? 'text-white' : 'text-[#020617]'} tracking-tighter leading-[0.8]`}>swayamfin<span className="text-blue-600">.</span></span>
+                  <span className="text-[7px] md:text-[9px] font-black text-slate-500 tracking-[0.6em] leading-tight uppercase mt-2.5 opacity-60">Institutional Grade</span>
                 </div>
               </Link>
             </div>
 
             {/* Desktop Navigation Protocol */}
-            <div className="hidden lg:flex items-center space-x-2 xl:space-x-8">
+            <div className="hidden lg:flex items-center space-x-4 xl:space-x-12">
               <DesktopNavLink to="/" label={t('nav_home')} isDark={isDark} active={location.pathname === '/'} />
               
               {/* Product Architecture Dropdown */}
@@ -374,7 +374,7 @@ const Navbar = () => {
 const DesktopNavLink = ({ to, label, isDark, active }) => (
   <Link 
     to={to} 
-    className={`px-6 py-4 text-[10px] font-black uppercase tracking-[0.3em] transition-all relative group h-full flex items-center ${
+    className={`px-8 py-5 text-[10px] font-black uppercase tracking-[0.4em] transition-all relative group h-full flex items-center ${
       active 
         ? (isDark ? 'text-blue-500' : 'text-blue-600') 
         : (isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-[#020617]')

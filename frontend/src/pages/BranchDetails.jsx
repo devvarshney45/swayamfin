@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, Calendar, CheckCircle2, ChevronRight, Building2, Sparkles, Navigation, ChevronDown, UserCircle, Shield, Zap, Globe, Activity } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Calendar, CheckCircle2, ChevronRight, Building2, Sparkles, Navigation, ChevronDown, UserCircle, Shield, Zap, Globe, Activity, TrendingUp } from 'lucide-react';
 import axios from 'axios';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';

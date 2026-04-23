@@ -79,61 +79,22 @@ async function seed() {
     is_active: true
   });
 
-  // HRs
-  await User.create({
-    full_name: 'Pooja HR Agra',
-    email: 'agra.hr@swipfin.com',
-    phone: '8700965596',
-    password_hash: commonPassword,
-    role: 'hr',
-    branch_id: branches[0]._id, // Agra
-    employee_code: 'HR001',
-    is_active: true
-  });
+  // HRs role removed per user request
 
-  await User.create({
-    full_name: 'Rahul HR Mathura',
-    email: 'mathura.hr@swipfin.com',
-    phone: '8700965597',
-    password_hash: commonPassword,
-    role: 'hr',
-    branch_id: branches[1]._id, // Mathura
-    employee_code: 'HR002',
-    is_active: true
-  });
-
-  await User.create({
-    full_name: 'Neha HR Hathras',
-    email: 'hathras.hr@swipfin.com',
-    phone: '8700965598',
-    password_hash: commonPassword,
-    role: 'hr',
-    branch_id: branches[2]._id, // Hathras
-    employee_code: 'HR003',
-    is_active: true
-  });
-
-  await User.create({
-    full_name: 'Vikas HR Kosi',
-    email: 'kosi.hr@swipfin.com',
-    phone: '8700965599',
-    password_hash: commonPassword,
-    role: 'hr',
-    branch_id: branches[3]._id, // Kosi
-    employee_code: 'HR004',
-    is_active: true
-  });
-
-  // Sales Agents (2 per branch for Round-Robin testing)
+  // Sales Agents (3 per branch for Round-Robin testing)
   const agents = [
     { name: 'Agra Agent 1', branch: branches[0]._id, email: 'agra.sp1@swipfin.com', code: 'SP001' },
     { name: 'Agra Agent 2', branch: branches[0]._id, email: 'agra.sp2@swipfin.com', code: 'SP002' },
-    { name: 'Mathura Agent 1', branch: branches[1]._id, email: 'mathura.sp1@swipfin.com', code: 'SP003' },
-    { name: 'Mathura Agent 2', branch: branches[1]._id, email: 'mathura.sp2@swipfin.com', code: 'SP004' },
-    { name: 'Hathras Agent 1', branch: branches[2]._id, email: 'hathras.sp1@swipfin.com', code: 'SP005' },
-    { name: 'Hathras Agent 2', branch: branches[2]._id, email: 'hathras.sp2@swipfin.com', code: 'SP006' },
-    { name: 'Kosi Agent 1', branch: branches[3]._id, email: 'kosi.sp1@swipfin.com', code: 'SP007' },
-    { name: 'Kosi Agent 2', branch: branches[3]._id, email: 'kosi.sp2@swipfin.com', code: 'SP008' }
+    { name: 'Agra Agent 3', branch: branches[0]._id, email: 'agra.sp3@swipfin.com', code: 'SP003' },
+    { name: 'Mathura Agent 1', branch: branches[1]._id, email: 'mathura.sp1@swipfin.com', code: 'SP004' },
+    { name: 'Mathura Agent 2', branch: branches[1]._id, email: 'mathura.sp2@swipfin.com', code: 'SP005' },
+    { name: 'Mathura Agent 3', branch: branches[1]._id, email: 'mathura.sp3@swipfin.com', code: 'SP006' },
+    { name: 'Hathras Agent 1', branch: branches[2]._id, email: 'hathras.sp1@swipfin.com', code: 'SP007' },
+    { name: 'Hathras Agent 2', branch: branches[2]._id, email: 'hathras.sp2@swipfin.com', code: 'SP008' },
+    { name: 'Hathras Agent 3', branch: branches[2]._id, email: 'hathras.sp3@swipfin.com', code: 'SP009' },
+    { name: 'Kosi Agent 1', branch: branches[3]._id, email: 'kosi.sp1@swipfin.com', code: 'SP010' },
+    { name: 'Kosi Agent 2', branch: branches[3]._id, email: 'kosi.sp2@swipfin.com', code: 'SP011' },
+    { name: 'Kosi Agent 3', branch: branches[3]._id, email: 'kosi.sp3@swipfin.com', code: 'SP012' }
   ];
 
   for(const agent of agents) {
