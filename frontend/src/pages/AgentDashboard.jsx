@@ -132,7 +132,7 @@ const AgentDashboard = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-48 md:pt-60">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 md:pt-36">
         {/* Responsive KPI Grid: 2 cols on mobile, 4 on desktop */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12">
           <StatCard title="Total Leads" value={leads.length} icon={<LayoutDashboard />} color="blue" delay={0} isDark={isDark} />
