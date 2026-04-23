@@ -87,7 +87,7 @@ const BsmDashboard = () => {
   return (
     <div className={`${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-900'} min-h-screen pb-20 font-inter transition-colors duration-300`}>
       {/* Premium Header */}
-      <div className={`${isDark ? 'bg-white/2 border-white/5 shadow-2xl shadow-black/50' : 'bg-white/80 border-slate-200 shadow-xl shadow-slate-200/50'} border-b pt-10 pb-20 sticky top-0 z-20 backdrop-blur-2xl transition-all rounded-b-[60px]`}>
+      <div className={`${isDark ? 'bg-white/2 border-white/5 shadow-2xl shadow-black/50' : 'bg-white/80 border-slate-200 shadow-xl shadow-slate-200/50'} border-b pt-32 md:pt-40 pb-20 sticky top-0 z-20 backdrop-blur-2xl transition-all rounded-b-[60px]`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex justify-between items-center mb-8">
              <div className="flex items-center gap-6">
