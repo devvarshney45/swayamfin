@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { ShieldCheck, ArrowRight, CheckCircle2, AlertCircle, TrendingUp, Sparkles } from 'lucide-react';
+import { ShieldCheck, ArrowRight, CheckCircle2, AlertCircle, TrendingUp, Sparkles, ChevronDown } from 'lucide-react';
 import { getUTMParams } from '../utils/helpers';
 import { useTheme } from '../context/ThemeContext';
 
