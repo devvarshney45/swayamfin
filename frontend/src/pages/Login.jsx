@@ -14,7 +14,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { isDark } = useTheme();
@@ -29,7 +29,7 @@ const Login = () => {
       const response = await axios.post(`${API_URL}/api/auth/login`, { email, password });
       
       const { token, user } = response.data;
-      login(user, token);
+      setAuth(user, token);
       
       const role = response.data.user.role;
       if (role === 'admin') navigate('/admin/dashboard');

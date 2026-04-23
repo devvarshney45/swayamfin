@@ -45,13 +45,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const setAuth = (userData, token) => {
+    localStorage.setItem('swayamfin_token', token);
+    setUser(userData);
+  };
+
   const logout = () => {
     localStorage.removeItem('swayamfin_token');
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading, error }}>
+    <AuthContext.Provider value={{ user, login, logout, setAuth, loading, error }}>
       {children}
     </AuthContext.Provider>
   );
