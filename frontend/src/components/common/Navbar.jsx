@@ -134,9 +134,9 @@ const Navbar = () => {
                       initial={{ opacity: 0, y: 15, scale: 0.98 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 15, scale: 0.98 }}
-                      className={`absolute top-[120%] left-1/2 -translate-x-1/2 w-[600px] lg:w-[700px] mt-2 ${isDark ? 'bg-[#0F172A]/95 border-white/5 shadow-22xl shadow-black/80' : 'bg-white/95 border-slate-200 shadow-22xl shadow-slate-200/50'} border rounded-[40px] p-8 grid grid-cols-2 gap-4 backdrop-blur-3xl z-[110]`}
+                      className={`absolute top-[120%] left-1/2 -translate-x-1/2 w-[340px] sm:w-[480px] lg:w-[560px] mt-2 ${isDark ? 'bg-[#0F172A]/95 border-white/5 shadow-22xl shadow-black/80' : 'bg-white/95 border-slate-200 shadow-22xl shadow-slate-200/50'} border rounded-3xl md:rounded-[40px] p-6 lg:p-8 grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4 backdrop-blur-3xl z-[110]`}
                     >
-                       <div className="col-span-2 flex items-center gap-4 mb-4 border-b border-white/5 pb-6">
+                       <div className="col-span-1 md:col-span-2 flex items-center gap-4 mb-2 md:mb-4 border-b border-white/5 pb-4 md:pb-6">
                           <Cpu className="w-5 h-5 text-blue-600" />
                           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">Asset Management Protocols</span>
                        </div>
@@ -144,7 +144,7 @@ const Navbar = () => {
                         <Link 
                           key={item.slug}
                           to={`/services/${item.slug}`}
-                          className={`flex items-center gap-6 p-5 rounded-[32px] transition-all duration-500 group/item ${
+                          className={`flex items-center gap-4 lg:gap-6 p-4 lg:p-5 rounded-2xl lg:rounded-[32px] transition-all duration-500 group/item ${
                             isDark ? 'hover:bg-white/5' : 'hover:bg-slate-50 shadow-sm'
                           }`}
                         >
@@ -181,7 +181,7 @@ const Navbar = () => {
                       initial={{ opacity: 0, y: 15, scale: 0.98 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 15, scale: 0.98 }}
-                      className={`absolute top-[120%] left-0 w-72 mt-2 ${isDark ? 'bg-[#0F172A]/95 border-white/5 shadow-22xl shadow-black/80' : 'bg-white/95 border-slate-200 shadow-22xl shadow-slate-200/50'} border rounded-[32px] p-5 backdrop-blur-3xl z-[110]`}
+                      className={`absolute top-[120%] left-0 w-64 md:w-72 mt-2 ${isDark ? 'bg-[#0F172A]/95 border-white/5 shadow-22xl shadow-black/80' : 'bg-white/95 border-slate-200 shadow-22xl shadow-slate-200/50'} border rounded-3xl md:rounded-[32px] p-4 md:p-5 backdrop-blur-3xl z-[110]`}
                     >
                       <div className="mb-4 px-5 pt-2 flex items-center gap-3">
                          <MapPin className="w-4 h-4 text-blue-600" />
@@ -191,7 +191,7 @@ const Navbar = () => {
                         <Link 
                           key={item.slug}
                           to={`/branches/${item.slug}`}
-                          className={`flex items-center justify-between px-5 py-4 rounded-[24px] group/branch transition-all duration-500 ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-50 shadow-sm'}`}
+                          className={`flex items-center justify-between px-4 lg:px-5 py-3 lg:py-4 rounded-2xl lg:rounded-[24px] group/branch transition-all duration-500 ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-50 shadow-sm'}`}
                         >
                            <div className="flex flex-col">
                               <span className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-white' : 'text-[#020617]'} group-hover/branch:text-blue-600 transition-colors`}>{item.name.split(' ')[0]} Hub</span>

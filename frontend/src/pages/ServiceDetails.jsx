@@ -251,7 +251,7 @@ const ServiceDetails = () => {
                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 opacity-60">Regional Node</label>
                                <div className="relative group/sel">
                                  <select 
-                                   className={`w-full px-6 py-4.5 ${isDark ? 'bg-white/2 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 outline-none focus:border-blue-600 font-black text-xs appearance-none transition-all cursor-pointer`}
+                                   className={`w-full px-6 py-4.5 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 outline-none focus:border-blue-600 font-black text-xs appearance-none transition-all cursor-pointer`}
                                    value={formData.city}
                                    onChange={e => setFormData({...formData, city: e.target.value})}
                                  >
@@ -265,7 +265,7 @@ const ServiceDetails = () => {
                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 opacity-60">Requirement Scale</label>
                                <div className="relative group/sel">
                                  <select 
-                                   className={`w-full px-6 py-4.5 ${isDark ? 'bg-white/2 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 outline-none focus:border-blue-600 font-black text-xs appearance-none transition-all cursor-pointer`}
+                                   className={`w-full px-6 py-4.5 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 outline-none focus:border-blue-600 font-black text-xs appearance-none transition-all cursor-pointer`}
                                    value={formData.amount}
                                    onChange={e => setFormData({...formData, amount: e.target.value})}
                                  >
@@ -311,7 +311,7 @@ const ServiceDetails = () => {
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className={`${isDark ? 'bg-[#0B1221] border-white/5 shadow-black' : 'bg-white border-slate-100 shadow-22xl shadow-slate-200/40'} p-10 md:p-24 rounded-[64px] md:rounded-[100px] border shadow-22xl relative overflow-hidden group`}
+              className={`${isDark ? 'bg-[#0B1221] border-white/5' : 'bg-white border-slate-100'} p-8 md:p-16 lg:p-20 rounded-3xl md:rounded-[60px] border shadow-2xl relative overflow-hidden group`}
             >
                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/5 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2" />
                
@@ -328,7 +328,7 @@ const ServiceDetails = () => {
 
                   <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
                      {data.features.map((f, i) => (
-                       <div key={i} className={`p-8 md:p-10 ${isDark ? 'bg-white/2 border-white/5' : 'bg-slate-50/50 border-slate-100'} rounded-[40px] md:rounded-[50px] border group/feat hover:bg-blue-600 transition-all duration-700`}>
+                       <div key={i} className={`p-6 md:p-10 ${isDark ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-100'} rounded-[32px] md:rounded-[40px] border group/feat hover:bg-blue-600 transition-all duration-700`}>
                           <div className={`w-12 h-12 rounded-2xl ${isDark ? 'bg-white/5' : 'bg-white shadow-sm'} flex items-center justify-center mb-6 group-hover/feat:bg-white`}>
                              <CheckCircle2 className="w-6 h-6 text-blue-600" />
                           </div>
@@ -345,7 +345,7 @@ const ServiceDetails = () => {
                  initial={{ opacity: 0, x: -40 }}
                  whileInView={{ opacity: 1, x: 0 }}
                  viewport={{ once: true }}
-                 className={`${isDark ? 'bg-[#0B1221] border-white/5 shadow-black' : 'bg-[#020617] border-white/5 shadow-22xl shadow-black/80'} p-12 md:p-20 rounded-[64px] md:rounded-[80px] border shadow-22xl relative group`}
+                 className={`${isDark ? 'bg-[#0B1221] border-white/5' : 'bg-[#020617] border-white/5'} p-8 md:p-14 rounded-3xl md:rounded-[50px] border shadow-2xl relative group`}
                >
                   <div className="absolute top-0 left-0 w-64 h-64 bg-blue-600/5 blur-3xl rounded-full -ml-32 -mt-32" />
                   <div className="relative z-10 space-y-12">
@@ -368,7 +368,7 @@ const ServiceDetails = () => {
                  initial={{ opacity: 0, x: 40 }}
                  whileInView={{ opacity: 1, x: 0 }}
                  viewport={{ once: true }}
-                 className={`${isDark ? 'bg-primary-gold/10' : 'bg-primary-gold'} p-12 md:p-20 rounded-[64px] md:rounded-[80px] border border-primary-gold/5 flex flex-col justify-between group shadow-22xl`}
+                 className={`${isDark ? 'bg-primary-gold/10' : 'bg-primary-gold'} p-8 md:p-14 rounded-3xl md:rounded-[50px] border border-primary-gold/5 flex flex-col justify-between group shadow-2xl`}
                >
                   <div className="space-y-16">
                      <div className="flex items-center gap-4">
@@ -378,7 +378,7 @@ const ServiceDetails = () => {
                      <div className="space-y-16 mt-4">
                         <div className="border-b border-primary-navy/5 pb-10">
                            <p className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-primary-navy/40'} mb-4`}>Benchmark Yield</p>
-                           <p className={`text-5xl md:text-8xl font-playfair font-black ${isDark ? 'text-white' : 'text-[#020617]'} tracking-tighter leading-none`}>{data.rates}</p>
+                           <p className={`text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-playfair font-black ${isDark ? 'text-white' : 'text-[#020617]'} tracking-tighter leading-none`}>{data.rates}</p>
                         </div>
                         <div>
                            <p className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-primary-navy/40'} mb-4`}>Deployment Fee</p>
@@ -386,7 +386,7 @@ const ServiceDetails = () => {
                         </div>
                      </div>
                   </div>
-                  <div className={`${isDark ? 'bg-white/2 border-white/5' : 'bg-[#020617]/10 border-white/5'} p-6 rounded-[36px] flex items-center gap-5 mt-16 border`}>
+                  <div className={`${isDark ? 'bg-white/5 border-white/10' : 'bg-[#020617]/10 border-white/5'} p-6 rounded-3xl flex items-start sm:items-center gap-5 mt-16 border`}>
                       <AlertCircle className={`w-6 h-6 shrink-0 ${isDark ? 'text-primary-gold' : 'text-[#020617]'}`} />
                       <p className={`text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] ${isDark ? 'text-slate-500' : 'text-[#020617]/60'} leading-relaxed`}>*Final Deployment parameters subject to institutional credit appraisal.</p>
                   </div>
@@ -404,7 +404,7 @@ const ServiceDetails = () => {
                
                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
                   {data.faqs.map((faq, i) => (
-                    <div key={i} className={`p-12 md:p-14 ${isDark ? 'bg-white/2 border-white/5' : 'bg-white border-slate-100 shadow-xl shadow-slate-200/40'} rounded-[50px] md:rounded-[64px] border group hover:border-blue-600 transition-all duration-700`}>
+                    <div key={i} className={`p-8 md:p-12 ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-slate-100'} rounded-[32px] md:rounded-[48px] border group hover:border-blue-600 transition-all duration-700 shadow-xl`}>
                        <h4 className={`text-xl md:text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-6 font-playfair tracking-tight leading-tight uppercase`}>{faq.q}</h4>
                        <div className="w-12 h-1 bg-blue-600 mb-8 opacity-20 group-hover:w-full transition-all duration-1000" />
                        <p className={`text-base md:text-lg ${isDark ? 'text-slate-500' : 'text-slate-500'} font-medium italic leading-relaxed`}>{faq.a}</p>
@@ -427,7 +427,7 @@ const InputField = ({ label, placeholder, value, onChange, type = 'text', isDark
       required
       type={type}
       placeholder={placeholder}
-      className={`w-full px-6 py-4.5 ${isDark ? 'bg-white/2 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 outline-none focus:border-blue-600 font-black text-xs transition-all shadow-inner`}
+      className={`w-full px-6 py-4.5 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl border-2 outline-none focus:border-blue-600 font-black text-xs transition-all shadow-inner`}
       value={value}
       onChange={e => onChange(e.target.value)}
     />
