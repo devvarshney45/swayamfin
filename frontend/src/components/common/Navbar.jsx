@@ -106,20 +106,20 @@ const Navbar = () => {
                 <div className={`w-12 h-12 md:w-14 md:h-14 ${isDark ? 'bg-white/5 border-white/10' : 'bg-[#020617]'} rounded-[18px] md:rounded-[22px] flex items-center justify-center group-hover:rotate-[15deg] transition-all duration-700 shadow-2xl relative border`}>
                   <Zap className="w-6 h-6 md:w-7 md:h-7 text-primary-gold" />
                 </div>
-                <div className="flex flex-col relative">
-                  <span className={`text-xl md:text-4xl font-playfair font-black ${isDark ? 'text-white' : 'text-[#020617]'} tracking-tighter leading-[0.8]`}>swayamfin<span className="text-blue-600">.</span></span>
-                  <span className="text-[7px] md:text-[9px] font-black text-slate-500 tracking-[0.6em] leading-tight uppercase mt-2.5 opacity-60">Institutional Grade</span>
+                <div className="flex flex-col relative leading-none">
+                  <span className={`text-xl md:text-3xl font-playfair font-black ${isDark ? 'text-white' : 'text-[#020617]'} tracking-tighter`}>swayamfin<span className="text-blue-600">.</span></span>
+                  <span className="text-[7px] md:text-[8px] font-black text-slate-500 tracking-[0.5em] uppercase mt-1.5 opacity-60">Institutional Grade</span>
                 </div>
               </Link>
             </div>
 
             {/* Desktop Navigation Protocol */}
-            <div className="hidden lg:flex items-center space-x-4 xl:space-x-12">
+            <div className="hidden lg:flex items-center gap-1 xl:gap-4">
               <DesktopNavLink to="/" label={t('nav_home')} isDark={isDark} active={location.pathname === '/'} />
               
               {/* Product Architecture Dropdown */}
               <div 
-                className="relative group px-4 py-3"
+                className="relative group px-1 xl:px-4 py-3"
                 onMouseEnter={() => setActiveDropdown('services')}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
@@ -209,8 +209,8 @@ const Navbar = () => {
               <DesktopNavLink to="/about" label="About" isDark={isDark} active={location.pathname === '/about'} />
             </div>
 
-            <div className="flex items-center gap-8">
-              <div className="hidden xl:flex items-center gap-5">
+            <div className="flex items-center gap-3 xl:gap-8">
+              <div className="hidden lg:flex items-center gap-3 xl:gap-5">
                 {/* Theme Interface */}
                 <button 
                   onClick={toggleTheme}
@@ -374,7 +374,7 @@ const Navbar = () => {
 const DesktopNavLink = ({ to, label, isDark, active }) => (
   <Link 
     to={to} 
-    className={`px-8 py-5 text-[10px] font-black uppercase tracking-[0.4em] transition-all relative group h-full flex items-center ${
+    className={`px-3 xl:px-6 py-4 text-[10px] font-black uppercase tracking-[0.3em] transition-all relative group h-full flex items-center ${
       active 
         ? (isDark ? 'text-blue-500' : 'text-blue-600') 
         : (isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-[#020617]')
