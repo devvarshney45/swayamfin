@@ -84,17 +84,17 @@ const BranchDetails = () => {
             >
               <div className={`absolute top-0 right-0 w-48 h-48 ${isDark ? 'bg-blue-600/5' : 'bg-blue-500/5'} blur-3xl rounded-full -mr-24 -mt-24 group-hover:scale-150 transition-transform duration-1000`} />
               
-              <div className="flex justify-center md:justify-start">
+              <div className="flex justify-start">
                 <div className={`inline-flex items-center gap-2 md:gap-3 ${isDark ? 'bg-white/5 border-white/10' : 'bg-blue-50 border-blue-100'} text-primary-gold px-4 md:px-6 py-2 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] mb-8 md:mb-10 shadow-inner border shadow-sm`}>
                   <MapPin className="w-4 h-4" /> Strategic Branch Network
                 </div>
               </div>
               
-              <h1 className={`text-3xl sm:text-5xl md:text-7xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-6 md:mb-8 tracking-tighter leading-tight text-center md:text-left`}>
+              <h1 className={`text-3xl sm:text-5xl md:text-7xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-6 md:mb-8 tracking-tighter leading-tight text-left`}>
                 Swayamfin <span className="text-blue-600 italic">{branch.city}</span>
               </h1>
               
-              <p className={`text-base md:text-xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium leading-relaxed mb-8 md:mb-12 italic text-center md:text-left`}>
+              <p className={`text-base md:text-xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium leading-relaxed mb-8 md:mb-12 italic text-left`}>
                 Empowering the economic landscape of {branch.city} with hyper-localized credit solutions and expert financial consultancy.
               </p>
 
@@ -130,67 +130,75 @@ const BranchDetails = () => {
             </motion.div>
           </div>
 
-          {/* Sidebar Form */}
-          <div className="w-full lg:w-1/3 lg:sticky lg:top-32">
+          {/* Sidebar Lead Capture Form */}
+          <div className="w-full lg:w-1/3 lg:sticky lg:top-32 h-fit">
             <motion.div 
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              className={`${isDark ? 'bg-white/5 border-white/5 shadow-22xl shadow-black/50' : 'bg-white border-slate-200 shadow-2xl shadow-slate-200/50'} p-6 sm:p-10 rounded-[32px] md:rounded-[50px] border relative overflow-hidden group`}
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className={`${isDark ? 'bg-white/5 border-white/10 shadow-black' : 'bg-white border-slate-200 shadow-2xl shadow-slate-200/50'} p-8 sm:p-10 rounded-[40px] md:rounded-[50px] border relative overflow-hidden group`}
             >
-               <div className={`absolute top-0 right-0 w-32 h-32 ${isDark ? 'bg-blue-600/10' : 'bg-blue-600/5'} blur-3xl rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-all`} />
+               {/* Ambient Background Glow */}
+               <div className={`absolute top-0 right-0 w-48 h-48 ${isDark ? 'bg-blue-600/10' : 'bg-blue-600/5'} blur-[60px] rounded-full -mr-24 -mt-24 transition-transform duration-1000 group-hover:scale-110`} />
                
-               <div className="flex items-center gap-4 mb-8 md:mb-10">
-                  <div className="w-1.5 h-8 md:h-10 bg-blue-600 rounded-full" />
-                  <h3 className={`text-xl md:text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Lead Deployment</h3>
-               </div>
+               <div className="relative z-10 space-y-8 md:space-y-10">
+                 <div className="flex items-center gap-4 border-b border-white/5 pb-6">
+                    <div className="w-1.5 h-10 bg-blue-600 rounded-full" />
+                    <div>
+                      <h3 className={`text-xl md:text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tighter`}>Onboarding</h3>
+                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest opacity-60">Initialize Lead Protocol</p>
+                    </div>
+                 </div>
 
-               <AnimatePresence mode="wait">
-                 {success ? (
-                   <motion.div key="success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8 md:py-12">
-                     <div className="w-20 h-20 md:w-24 md:h-24 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 shadow-inner border border-emerald-500/20">
-                       <CheckCircle2 className="w-10 h-10 md:w-12 md:h-12" />
-                     </div>
-                     <h4 className="text-xl md:text-2xl font-black mb-3 md:mb-4 uppercase tracking-tight">Deployment Active</h4>
-                     <p className={`text-xs md:text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'} font-bold italic leading-relaxed`}>"Our {branch.city} rapid-response team will contact you within the next 30 minutes."</p>
-                     <button onClick={() => setSuccess(false)} className="mt-8 md:mt-10 text-blue-600 font-black uppercase tracking-widest text-[9px] md:text-[10px] underline decoration-blue-500/30 underline-offset-8 hover:decoration-blue-500 transition-all">Submit Fresh Acquisition</button>
-                   </motion.div>
-                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-                    <InputField label="Candidate Name" value={formData.fullName} onChange={v => setFormData({...formData, fullName: v})} isDark={isDark} />
-                    <InputField label="Mobile Protocol" value={formData.mobile} onChange={v => setFormData({...formData, mobile: v.replace(/\D/g, '').slice(0,10)})} type="tel" isDark={isDark} />
-                    
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Asset Preference</label>
-                      <div className="relative">
-                        <select 
-                          className={`w-full px-5 md:px-6 py-3.5 md:py-4 ${isDark ? 'bg-[#111827] border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-700'} rounded-2xl md:rounded-[24px] border-2 outline-none focus:border-blue-600 font-black text-xs md:text-sm appearance-none transition-all cursor-pointer shadow-inner`}
-                          value={formData.loanType}
-                          onChange={e => setFormData({...formData, loanType: e.target.value})}
-                        >
-                          <option value="msme_structured">MSME Structured Product</option>
-                          <option value="lap">Loan Against Property (LAP)</option>
-                          <option value="home_loan">Housing Loan</option>
-                          <option value="supply_chain">Supply Chain Finance</option>
-                        </select>
-                        <div className="absolute right-5 md:right-6 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
-                           <ChevronDown className="w-5 h-5 text-blue-500" />
+                 <AnimatePresence mode="wait">
+                   {success ? (
+                     <motion.div key="success" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-10 md:py-16">
+                       <div className="w-20 h-20 md:w-24 md:h-24 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner border border-emerald-500/20">
+                         <CheckCircle2 className="w-10 h-10 md:w-12 md:h-12" />
+                       </div>
+                       <h4 className="text-xl md:text-2xl font-black mb-4 uppercase tracking-tight italic">Deployment Active</h4>
+                       <p className={`text-[11px] md:text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'} font-bold leading-relaxed max-w-[200px] mx-auto`}>"Our relationship governance team will contact your lead shortly."</p>
+                       <button onClick={() => setSuccess(false)} className="mt-10 bg-blue-600/10 text-blue-500 px-6 py-2.5 rounded-full font-black uppercase tracking-widest text-[9px] hover:bg-blue-600 hover:text-white transition-all active:scale-95">Reset Protocol</button>
+                     </motion.div>
+                   ) : (
+                    <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
+                      <InputField label="Applicant Identity" value={formData.fullName} onChange={v => setFormData({...formData, fullName: v})} isDark={isDark} />
+                      <InputField label="Communication Liaison" value={formData.mobile} onChange={v => setFormData({...formData, mobile: v.replace(/\D/g, '').slice(0,10)})} type="tel" isDark={isDark} />
+                      
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 opacity-70">Asset Category Preference</label>
+                        <div className="relative group/sel">
+                          <select 
+                            className={`w-full px-6 py-4.5 ${isDark ? 'bg-[#0B0F19] border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-700'} rounded-2xl md:rounded-[28px] border-2 outline-none focus:border-blue-600 font-extrabold text-xs md:text-sm appearance-none transition-all cursor-pointer shadow-inner`}
+                            value={formData.loanType}
+                            onChange={e => setFormData({...formData, loanType: e.target.value})}
+                          >
+                            <option value="msme_structured">MSME Structured Lending</option>
+                            <option value="lap">Loan Against Property (LAP)</option>
+                            <option value="home_loan">Strategic Housing Finance</option>
+                            <option value="supply_chain">Supply Chain Liquidity</option>
+                          </select>
+                          <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-blue-500 opacity-40 group-hover/sel:opacity-100 transition-opacity">
+                             <ChevronDown className="w-5 h-5" />
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <button type="submit" className="w-full bg-blue-600 text-white py-5 md:py-6 rounded-2xl md:rounded-[28px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-blue-600/30 flex items-center justify-center gap-3 group transition-all active:scale-95 text-[10px] md:text-xs">
-                      Initialize Onboarding <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-                    </button>
-                    
-                    <div className={`${isDark ? 'bg-white/5 border-white/5' : 'bg-blue-50 border-blue-100'} p-4 md:p-5 rounded-2xl md:rounded-[24px] border flex gap-3 md:gap-4 items-start`}>
-                        <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-blue-500 shrink-0" />
-                        <p className={`text-[9px] md:text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-600'} font-bold italic leading-relaxed`}>
-                           This lead is high-priority and will be directly assigned to our {branch.city} branch Relationship Governance officer.
-                        </p>
-                    </div>
-                  </form>
-                 )}
-               </AnimatePresence>
+                      <div className="pt-4">
+                        <button type="submit" className="w-full bg-[#020617] text-white py-6 rounded-2xl md:rounded-[32px] font-black uppercase tracking-[0.2em] shadow-2xl flex items-center justify-center gap-4 group/btn transition-all active:scale-95 text-[10px] md:text-xs">
+                          Launch Onboarding <ChevronRight className="w-5 h-5 group-hover/btn:translate-x-2 transition-transform text-primary-gold" />
+                        </button>
+                      </div>
+                      
+                      <div className={`${isDark ? 'bg-white/5 border-white/5' : 'bg-blue-50/50 border-blue-100'} p-5 rounded-[28px] border flex gap-4 items-start ring-1 ring-blue-500/5`}>
+                          <Sparkles className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                          <p className={`text-[10px] md:text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-600'} font-bold italic leading-relaxed`}>
+                             Submitting this entry flags the lead as high-priority for our {branch.city} regional governance center.
+                          </p>
+                      </div>
+                    </form>
+                   )}
+                 </AnimatePresence>
+               </div>
             </motion.div>
           </div>
 
@@ -215,12 +223,12 @@ const InfoItem = ({ icon, label, value, subValue, isDark, isLarge }) => (
 
 const InputField = ({ label, value, onChange, type = 'text', isDark }) => (
   <div className="space-y-2">
-    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{label}</label>
+    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1 opacity-70">{label}</label>
     <input 
       required
       type={type}
-      placeholder="Capture entry..."
-      className={`w-full px-5 md:px-6 py-3.5 md:py-4 ${isDark ? 'bg-white/5 border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-2xl md:rounded-[24px] border-2 outline-none focus:border-blue-600 font-black text-xs md:text-sm transition-all shadow-inner`}
+      placeholder="Type here..."
+      className={`w-full px-6 py-4 ${isDark ? 'bg-[#0B0F19] border-white/5 text-white' : 'bg-slate-50 border-slate-100 text-slate-900'} rounded-[24px] border-2 outline-none focus:border-blue-600 font-bold text-xs md:text-sm transition-all shadow-inner`}
       value={value}
       onChange={e => onChange(e.target.value)}
     />
