@@ -16,6 +16,7 @@ import {
   Truck,
   Briefcase,
   ChevronRight,
+  ChevronDown,
   Shield,
   Target,
   BarChart3,
