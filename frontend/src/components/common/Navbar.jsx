@@ -114,7 +114,7 @@ const Navbar = () => {
             </div>
 
             {/* Desktop Navigation Protocol */}
-            <div className="hidden lg:flex items-center space-x-1">
+            <div className="hidden lg:flex items-center space-x-2 xl:space-x-8">
               <DesktopNavLink to="/" label={t('nav_home')} isDark={isDark} active={location.pathname === '/'} />
               
               {/* Product Architecture Dropdown */}
@@ -134,7 +134,7 @@ const Navbar = () => {
                       initial={{ opacity: 0, y: 15, scale: 0.98 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 15, scale: 0.98 }}
-                      className={`absolute top-full left-1/2 -translate-x-1/2 w-[800px] mt-2 ${isDark ? 'bg-[#0F172A]/95 border-white/5 shadow-22xl shadow-black/80' : 'bg-white/95 border-slate-200 shadow-22xl shadow-slate-200/50'} border rounded-[56px] p-10 grid grid-cols-2 gap-6 backdrop-blur-3xl z-[110]`}
+                      className={`absolute top-[120%] left-1/2 -translate-x-1/2 w-[600px] lg:w-[700px] mt-2 ${isDark ? 'bg-[#0F172A]/95 border-white/5 shadow-22xl shadow-black/80' : 'bg-white/95 border-slate-200 shadow-22xl shadow-slate-200/50'} border rounded-[40px] p-8 grid grid-cols-2 gap-4 backdrop-blur-3xl z-[110]`}
                     >
                        <div className="col-span-2 flex items-center gap-4 mb-4 border-b border-white/5 pb-6">
                           <Cpu className="w-5 h-5 text-blue-600" />
@@ -181,7 +181,7 @@ const Navbar = () => {
                       initial={{ opacity: 0, y: 15, scale: 0.98 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 15, scale: 0.98 }}
-                      className={`absolute top-full left-0 w-72 mt-2 ${isDark ? 'bg-[#0F172A]/95 border-white/5 shadow-22xl shadow-black/80' : 'bg-white/95 border-slate-200 shadow-22xl shadow-slate-200/50'} border rounded-[40px] p-5 backdrop-blur-3xl z-[110]`}
+                      className={`absolute top-[120%] left-0 w-72 mt-2 ${isDark ? 'bg-[#0F172A]/95 border-white/5 shadow-22xl shadow-black/80' : 'bg-white/95 border-slate-200 shadow-22xl shadow-slate-200/50'} border rounded-[32px] p-5 backdrop-blur-3xl z-[110]`}
                     >
                       <div className="mb-4 px-5 pt-2 flex items-center gap-3">
                          <MapPin className="w-4 h-4 text-blue-600" />

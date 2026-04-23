@@ -77,7 +77,7 @@ const Hero = () => {
   return (
     <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} font-dmsans transition-colors duration-700 overflow-x-hidden`}>
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-screen flex items-start pt-28 pb-16 md:pt-32 md:pb-20">
+      <section className="relative min-h-screen flex items-center pt-40 pb-16 md:pt-48 md:pb-24">
 
         {/* Background */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
