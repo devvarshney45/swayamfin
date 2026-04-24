@@ -133,7 +133,7 @@ const ServiceDetails = () => {
           <div className="lg:col-span-7 space-y-10">
             <motion.div 
               initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}
-              className="bg-white border border-slate-100 p-10 md:p-16 rounded-[60px] shadow-sm relative overflow-hidden group"
+              className="bg-white border border-slate-100 p-6 md:p-16 rounded-[40px] md:rounded-[60px] shadow-sm relative overflow-hidden group"
             >
               <div className="absolute top-0 right-0 w-80 h-80 bg-[#0EA5E9]/5 blur-[100px] rounded-full -mr-40 -mt-40 group-hover:bg-[#0EA5E9]/10 transition-colors duration-700" />
               
@@ -171,7 +171,7 @@ const ServiceDetails = () => {
             </motion.div>
 
             {/* Operational Scope */}
-            <div className="bg-white p-10 md:p-14 border border-slate-100 rounded-[60px] shadow-sm relative overflow-hidden group">
+            <div className="bg-white p-6 md:p-14 border border-slate-100 rounded-[40px] md:rounded-[60px] shadow-sm relative overflow-hidden group">
                <div className="absolute top-0 right-0 w-32 h-32 bg-[#0EA5E9]/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-all duration-700" />
                <div className="flex justify-between items-center mb-10 pb-6 border-b border-slate-50">
                  <div className="flex items-center gap-3">
@@ -193,8 +193,8 @@ const ServiceDetails = () => {
           </div>
 
           {/* Action Column */}
-          <div className="lg:col-span-5 sticky top-32 space-y-10">
-             <div className="bg-[#1E293B] p-12 rounded-[56px] shadow-2xl relative overflow-hidden group border border-slate-800">
+          <div className="lg:col-span-5 lg:sticky top-32 space-y-10">
+             <div className="bg-[#1E293B] p-6 md:p-12 rounded-[40px] md:rounded-[56px] shadow-2xl relative overflow-hidden group border border-slate-800">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-[#0EA5E9]/10 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2" />
                 <div className="relative z-10 space-y-8 text-center md:text-left">
                    <div>
@@ -214,7 +214,7 @@ const ServiceDetails = () => {
              </div>
 
              {/* Eligibility Details */}
-             <div className="bg-white border border-slate-100 p-12 rounded-[56px] shadow-sm space-y-8 group">
+             <div className="bg-white border border-slate-100 p-6 md:p-12 rounded-[40px] md:rounded-[56px] shadow-sm space-y-8 group">
                 <div className="flex justify-between items-center mb-4">
                    <h3 className="text-xl font-black text-[#1E293B] uppercase tracking-tight flex items-center gap-3">
                       Criteria Matrix
@@ -247,7 +247,7 @@ const ServiceDetails = () => {
            </div>
            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {data.faqs.map((faq, i) => (
-                <div key={i} className="p-10 md:p-14 bg-white border border-slate-100 rounded-[48px] space-y-6 shadow-sm hover:shadow-xl transition-all">
+                <div key={i} className="p-6 md:p-14 bg-white border border-slate-100 rounded-[40px] md:rounded-[48px] space-y-6 shadow-sm hover:shadow-xl transition-all">
                    <h4 className="text-xl font-black text-[#1E293B] uppercase tracking-tight leading-tight flex items-start gap-4">
                      <span className="text-[#0EA5E9]">Q.</span> {faq.q}
                    </h4>

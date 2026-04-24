@@ -45,7 +45,7 @@ const NewLead = () => {
 
         <motion.div 
            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-           className="bg-white border border-slate-100 p-10 md:p-14 rounded-[48px] shadow-2xl relative overflow-hidden"
+           className="bg-white border border-slate-100 p-6 md:p-14 rounded-[40px] md:rounded-[48px] shadow-2xl relative overflow-hidden"
         >
            <div className="absolute top-0 right-0 w-64 h-64 bg-[#0EA5E9]/5 blur-3xl rounded-full -mr-32 -mt-32" />
            

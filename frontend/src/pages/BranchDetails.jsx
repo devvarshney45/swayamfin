@@ -118,7 +118,7 @@ const BranchDetails = () => {
           <div className="lg:col-span-7 space-y-12">
             <motion.div 
               initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}
-              className="bg-white border border-slate-100 p-10 md:p-14 lg:p-20 rounded-[48px] shadow-2xl relative overflow-hidden"
+              className="bg-white border border-slate-100 p-6 md:p-14 lg:p-20 rounded-[40px] md:rounded-[48px] shadow-2xl relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-80 h-80 bg-[#0EA5E9]/5 blur-[100px] rounded-full -mr-40 -mt-40" />
               
@@ -155,10 +155,10 @@ const BranchDetails = () => {
           </div>
 
           {/* Inline Form */}
-          <div className="lg:col-span-5 sticky top-32">
+          <div className="lg:col-span-5 lg:sticky top-32">
             <motion.div 
                initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-               className="bg-[#1E293B] p-10 md:p-12 lg:p-16 rounded-[48px] shadow-2xl relative overflow-hidden text-center md:text-left"
+               className="bg-[#1E293B] p-6 md:p-12 lg:p-16 rounded-[40px] md:rounded-[48px] shadow-2xl relative overflow-hidden text-center md:text-left"
             >
                <div className="absolute top-0 right-0 w-64 h-64 bg-[#0EA5E9]/10 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
                

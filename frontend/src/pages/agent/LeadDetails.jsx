@@ -150,7 +150,7 @@ const LeadDetails = () => {
       <div className="max-w-7xl mx-auto px-6">
         
         {/* Header Bridge */}
-        <div className="bg-white border border-slate-100 p-10 md:p-14 rounded-[48px] shadow-sm mb-12 relative overflow-hidden group">
+        <div className="bg-white border border-slate-100 p-6 md:p-14 rounded-[40px] md:rounded-[48px] shadow-sm mb-12 relative overflow-hidden group">
            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#0EA5E9]/5 blur-[80px] rounded-full translate-x-1/4 -translate-y-1/4" />
            <div className="relative z-10">
               <button onClick={() => navigate(-1)} className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-[#0EA5E9] mb-8 flex items-center gap-2 transition-all">
@@ -191,7 +191,7 @@ const LeadDetails = () => {
            <div className="lg:col-span-8 space-y-10">
               {activeTab === 'Personal Details' && (
                 <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} className="space-y-10">
-                   <div className="bg-white border border-slate-100 p-10 md:p-14 rounded-[48px] shadow-sm space-y-10 relative overflow-hidden">
+                   <div className="bg-white border border-slate-100 p-6 md:p-14 rounded-[32px] md:rounded-[48px] shadow-sm space-y-10 relative overflow-hidden">
                       <div className="flex items-center gap-3 mb-6">
                          <div className="w-1 h-8 bg-[#0EA5E9] rounded-full" />
                          <h3 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">Demographic Profile</h3>
@@ -204,7 +204,7 @@ const LeadDetails = () => {
                       </div>
                    </div>
 
-                   <div className="bg-white border border-slate-100 p-10 md:p-14 rounded-[48px] shadow-sm space-y-10">
+                   <div className="bg-white border border-slate-100 p-6 md:p-14 rounded-[32px] md:rounded-[48px] shadow-sm space-y-10">
                       <div className="flex items-center gap-3 mb-6">
                          <div className="w-1 h-8 bg-[#1E293B] rounded-full" />
                          <h3 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">Economic Velocity</h3>
@@ -229,7 +229,7 @@ const LeadDetails = () => {
                    ].map((docConfig) => {
                      const uploadedDoc = documents.find(d => d.doc_type === docConfig.id);
                      return (
-                       <div key={docConfig.id} className="bg-white border border-slate-100 p-10 rounded-[48px] shadow-sm flex flex-col justify-between h-[320px] group transition-all hover:shadow-2xl">
+                       <div key={docConfig.id} className="bg-white border border-slate-100 p-6 md:p-10 rounded-[32px] md:rounded-[48px] shadow-sm flex flex-col justify-between h-[320px] group transition-all hover:shadow-2xl">
                           <div>
                              <div className="flex justify-between items-start mb-6">
                                 <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center font-black text-[#0EA5E9]">D</div>
@@ -257,7 +257,7 @@ const LeadDetails = () => {
 
               {activeTab === 'Remarks & Activity Log' && (
                 <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                   <div className="lg:col-span-5 bg-white border border-slate-100 p-10 rounded-[48px] shadow-sm h-fit">
+                   <div className="lg:col-span-5 bg-white border border-slate-100 p-6 md:p-10 rounded-[32px] md:rounded-[48px] shadow-sm h-fit">
                       <h3 className="text-xl font-black text-[#1E293B] uppercase tracking-tight mb-8">Intelligence Log</h3>
                       <div className="space-y-6">
                         <SelectGroup label="Event Taxonomy" value={newRemarkType} onChange={v => setNewRemarkType(v)} options={['note', 'call_log', 'follow_up']} />
@@ -281,7 +281,7 @@ const LeadDetails = () => {
 
               {activeTab === 'Status' && (
                  <motion.div initial={{opacity:0, scale:0.98}} animate={{opacity:1, scale:1}} className="flex justify-center">
-                    <div className="bg-white border border-slate-100 p-14 rounded-[60px] shadow-2xl max-w-xl w-full text-center space-y-10">
+                    <div className="bg-white border border-slate-100 p-8 md:p-14 rounded-[40px] md:rounded-[60px] shadow-2xl max-w-xl w-full text-center space-y-10">
                        <h3 className="text-3xl font-black text-[#1E293B] uppercase tracking-tighter">Governance Node</h3>
                        <div className="grid grid-cols-2 gap-4">
                          {['New', 'Contacted', 'In Progress', 'Document Submitted', 'Sanctioned', 'Disbursed', 'Closed - Won', 'Dead Lead'].map(s => (
@@ -300,8 +300,8 @@ const LeadDetails = () => {
               )}
            </div>
 
-           <div className="lg:col-span-4 sticky top-12 space-y-8">
-              <div className="bg-[#1E293B] p-10 rounded-[48px] shadow-2xl text-center space-y-8 relative overflow-hidden">
+           <div className="lg:col-span-4 lg:sticky top-12 space-y-8">
+              <div className="bg-[#1E293B] p-6 md:p-10 rounded-[32px] md:rounded-[48px] shadow-2xl text-center space-y-8 relative overflow-hidden">
                  <div className="absolute top-0 left-0 w-full h-full bg-[#0EA5E9]/5" />
                  <div className="relative z-10">
                     <h4 className="text-white font-black text-lg uppercase tracking-tight mb-4">Core Integrity</h4>

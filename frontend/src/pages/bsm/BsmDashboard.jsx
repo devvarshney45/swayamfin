@@ -106,7 +106,7 @@ const BsmDashboard = () => {
 
       <div className="max-w-7xl mx-auto px-6 -mt-12 relative z-20">
         {/* KPIs */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
           <StatCard title="Total Hub Leads" value={totalLeads} sub="Cumulative" />
           <StatCard title="Pipeline" value={`₹${(activePipelineValue/100000).toFixed(1)}L`} sub="In Progress" color="blue" />
           <StatCard title="MTD Disbursed" value={`₹${(disbursedValue/100000).toFixed(1)}L`} sub="Approved" color="emerald" />
@@ -114,8 +114,8 @@ const BsmDashboard = () => {
         </div>
 
         {/* Table */}
-        <div className="bg-white border border-slate-100 rounded-[48px] shadow-xl overflow-hidden mb-12">
-          <div className="p-10 border-b border-slate-100 flex justify-between items-center">
+        <div className="bg-white border border-slate-100 rounded-[40px] md:rounded-[48px] shadow-xl overflow-hidden mb-12">
+          <div className="p-6 md:p-10 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
              <h2 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">Personnel <span className="text-[#0EA5E9] italic">Roster.</span></h2>
              <input 
                type="text" 
@@ -180,7 +180,7 @@ const BsmDashboard = () => {
 };
 
 const StatCard = ({ title, value, sub, color }) => (
-  <div className="bg-white border border-slate-100 p-8 rounded-[40px] shadow-sm hover:shadow-xl transition-all group">
+  <div className="bg-white border border-slate-100 p-6 md:p-8 rounded-[32px] md:rounded-[40px] shadow-sm hover:shadow-xl transition-all group">
     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 italic">{title}</p>
     <h3 className="text-3xl font-black text-[#1E293B] tracking-tighter leading-none mb-1">{value}</h3>
     <p className={`text-[9px] font-black uppercase tracking-widest ${color === 'emerald' ? 'text-emerald-500' : color==='blue' ? 'text-blue-500' : color==='rose' ? 'text-rose-500' : 'text-slate-400'}`}>{sub}</p>
@@ -190,7 +190,7 @@ const StatCard = ({ title, value, sub, color }) => (
 const PipelineCol = ({ title, status, leads, navigate }) => {
   const filtered = leads.filter(l => Array.isArray(status) ? status.includes(l.status) : l.status === status);
   return (
-    <div className="bg-white border border-slate-100 rounded-[48px] p-8 shadow-sm h-[600px] overflow-y-auto no-scrollbar">
+    <div className="bg-white border border-slate-100 rounded-[32px] md:rounded-[48px] p-6 md:p-8 shadow-sm h-[600px] overflow-y-auto no-scrollbar">
       <h3 className="font-black text-[#1E293B] text-[10px] uppercase tracking-widest mb-8 flex justify-between items-center group sticky top-0 bg-white pb-4 z-10">
         {title} <span className="bg-[#0EA5E9] text-white px-3 py-1 rounded-full">{filtered.length}</span>
       </h3>

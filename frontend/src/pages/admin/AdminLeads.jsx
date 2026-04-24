@@ -104,7 +104,7 @@ const AdminLeads = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white border border-slate-100 p-8 rounded-[40px] shadow-sm mb-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white border border-slate-100 p-6 md:p-8 rounded-[32px] md:rounded-[40px] shadow-sm mb-12 grid grid-cols-1 md:grid-cols-3 gap-6">
            <div className="relative">
               <input
                 type="text"

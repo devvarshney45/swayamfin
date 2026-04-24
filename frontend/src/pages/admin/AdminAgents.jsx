@@ -197,7 +197,7 @@ const AdminAgents = () => {
             <motion.div
               key={u._id}
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-              className="bg-white border border-slate-100 p-10 rounded-[48px] shadow-sm hover:shadow-2xl hover:border-[#0EA5E9]/30 transition-all flex flex-col justify-between group h-[400px]"
+              className="bg-white border border-slate-100 p-6 md:p-10 rounded-[40px] md:rounded-[48px] shadow-sm hover:shadow-2xl hover:border-[#0EA5E9]/30 transition-all flex flex-col justify-between group h-[400px]"
             >
               <div className="space-y-6">
                 <div className="flex justify-between items-start">
@@ -236,7 +236,7 @@ const AdminAgents = () => {
           {showModal && (
             <div className="fixed inset-0 flex items-center justify-center z-[100] px-6">
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[#1E293B]/90 backdrop-blur-3xl" onClick={() => setShowModal(false)} />
-              <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="bg-white rounded-[60px] p-12 md:p-16 max-w-4xl w-full relative z-10 shadow-3xl overflow-hidden">
+              <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="bg-white rounded-[40px] md:rounded-[60px] p-6 md:p-16 max-w-4xl w-full relative z-10 shadow-3xl overflow-hidden max-h-[90vh] overflow-y-auto no-scrollbar">
                  <div className="absolute top-0 right-0 w-64 h-64 bg-[#0EA5E9]/5 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2" />
                  
                  <div className="relative z-10 space-y-12">

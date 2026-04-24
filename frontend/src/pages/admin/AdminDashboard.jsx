@@ -108,7 +108,7 @@ const AdminDashboard = () => {
 
         {/* Secondary Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-           <div className="lg:col-span-2 bg-white border border-slate-100 p-10 rounded-[48px] shadow-sm relative overflow-hidden group">
+           <div className="lg:col-span-2 bg-white border border-slate-100 p-6 md:p-10 rounded-[40px] md:rounded-[48px] shadow-sm relative overflow-hidden group">
               <div className="flex justify-between items-center mb-12">
                  <div>
                     <h3 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">Growth Velocity</h3>
@@ -132,7 +132,7 @@ const AdminDashboard = () => {
               </div>
            </div>
 
-           <div className="bg-[#1E293B] p-10 rounded-[48px] shadow-2xl relative overflow-hidden flex flex-col justify-between">
+           <div className="bg-[#1E293B] p-6 md:p-10 rounded-[40px] md:rounded-[48px] shadow-2xl relative overflow-hidden flex flex-col justify-between">
               <div className="absolute top-0 right-0 w-48 h-48 bg-[#0EA5E9]/10 blur-3xl rounded-full -mr-20 -mt-20" />
               <div>
                  <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-8">Regional Hubs</h3>
@@ -159,7 +159,7 @@ const KPICard = ({ title, value, sub, color }) => (
   <motion.div 
     initial={{ opacity: 0, y: 10 }}
     whileInView={{ opacity: 1, y: 0 }}
-    className="bg-white border border-slate-100 p-8 rounded-[40px] shadow-sm hover:shadow-xl transition-all group relative overflow-hidden"
+    className="bg-white border border-slate-100 p-6 md:p-8 rounded-[32px] md:rounded-[40px] shadow-sm hover:shadow-xl transition-all group relative overflow-hidden"
   >
     <div className="absolute top-0 right-10 w-24 h-24 bg-slate-50 blur-2xl rounded-full translate-x-1/2 -translate-y-1/2 group-hover:bg-[#0EA5E9]/10 transition-all" />
     <div className="relative z-10">

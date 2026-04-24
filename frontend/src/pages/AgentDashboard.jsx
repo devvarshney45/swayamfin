@@ -122,7 +122,7 @@ const AgentDashboard = () => {
 
         {/* Action Bar */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-           <div className="bg-white border border-slate-100 p-8 rounded-[40px] shadow-sm relative overflow-hidden group">
+           <div className="bg-white border border-slate-100 p-6 md:p-8 rounded-[32px] md:rounded-[40px] shadow-sm relative overflow-hidden group">
               <div className="flex justify-between items-center mb-6">
                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Monthly Target</span>
                  <span className="text-xl font-black text-[#0EA5E9]">{targetProgress.toFixed(0)}%</span>
@@ -171,7 +171,7 @@ const AgentDashboard = () => {
                  key={lead._id}
                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                  transition={{ delay: i * 0.05 }}
-                 className="bg-white border border-slate-100 p-8 rounded-[40px] hover:shadow-2xl hover:border-[#0EA5E9]/30 transition-all cursor-pointer group flex flex-col justify-between"
+                 className="bg-white border border-slate-100 p-6 md:p-8 rounded-[32px] md:rounded-[40px] hover:shadow-2xl hover:border-[#0EA5E9]/30 transition-all cursor-pointer group flex flex-col justify-between"
                  onClick={() => navigate(`/agent/lead/${lead._id}`)}
                >
                   <div className="space-y-6">
@@ -207,7 +207,7 @@ const AgentDashboard = () => {
 };
 
 const StatCard = ({ title, value, sub, color }) => (
-  <div className="bg-white border border-slate-100 p-8 rounded-[40px] shadow-sm group hover:shadow-xl transition-all">
+  <div className="bg-white border border-slate-100 p-6 md:p-8 rounded-[32px] md:rounded-[40px] shadow-sm group hover:shadow-xl transition-all">
      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 italic">{title}</p>
      <h3 className="text-3xl font-black text-[#1E293B] tracking-tighter leading-none mb-1">{value}</h3>
      <p className={`text-[9px] font-black uppercase tracking-widest ${color === 'emerald' ? 'text-emerald-500' : color==='blue' ? 'text-blue-500' : color==='rose' ? 'text-rose-500' : 'text-slate-400'}`}>{sub}</p>
