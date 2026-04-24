@@ -2,185 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
 @layer base {
   :root {
-    --bg-primary: #FFFFFF;
-    --text-primary: #0F172A;
-    --accent-blue: #2563EB;
-    --border-soft: #E2E8F0;
-  }
-
-  .dark-theme {
-    --bg-primary: #020617; /* Deep Navy Black */
-    --text-primary: #F8FAFC;
-    --accent-primary: #c5a059; /* Gold */
-    --accent-indigo: #6366F1;
+    --primary: #0EA5E9;
+    --dark: #1E293B;
   }
 
   html {
     scroll-behavior: smooth;
   }
+
   body {
-    @apply antialiased text-slate-900 bg-white font-dmsans;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    @apply antialiased text-[#1E293B] bg-white font-plus;
+  }
+
+  * {
+    font-family: 'Plus Jakarta Sans', sans-serif;
   }
 }
 
-/* ========================
-   LIGHT SITE OVERRIDES
-   Applied when user toggles to light mode on public website
-   ======================== */
-html.light-site body {
-  background-color: #F8FAFC !important;
+/* Global Utility Classes */
+.section-padding {
+  @apply py-16 md:py-20;
 }
 
-html.light-site .public-nav {
-  background-color: #ffffff !important;
-  border-bottom-color: #e2e8f0 !important;
+.card-standard {
+  @apply bg-white rounded-[16px] p-6 md:p-8 border border-[#F1F5F9] shadow-[0_4px_24px_rgba(14,165,233,0.08)];
 }
 
-html.light-site .public-nav .nav-link {
-  color: #0f172a !important;
+/* Input Styles */
+.input-standard {
+  @apply w-full h-11 px-4 border border-[#E2E8F0] rounded-[8px] outline-none transition-all focus:ring-2 focus:ring-[#0EA5E9]/30 focus:border-[#0EA5E9];
 }
 
-html.light-site .site-hero {
-  background-color: #f8fafc !important;
+/* Button Styles */
+.btn-primary {
+  @apply bg-[#0EA5E9] text-white px-6 py-3 rounded-[8px] font-bold transition-all hover:bg-[#0369A1] active:scale-95;
 }
 
-/* Global Light Mode Adjustments for Dark Components */
-html.light-site .text-white:not(.keep-white),
-html.light-site .text-slate-100,
-html.light-site .text-slate-200,
-html.light-site .text-slate-300 {
-  color: #0f172a !important;
+/* Hindi text optimization handled via React states in components and global class */
+body.lang-hindi * {
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  word-break: keep-all !important;
 }
 
-html.light-site .text-slate-400 {
-  color: #475569 !important;
+body.lang-hindi h1, 
+body.lang-hindi h2, 
+body.lang-hindi h3, 
+body.lang-hindi h4, 
+body.lang-hindi h5, 
+body.lang-hindi h6 {
+  line-height: normal !important;
 }
 
-html.light-site .text-slate-400,
-html.light-site .text-slate-500 {
-  color: #475569 !important; /* Forces slate-600 for better visibility */
-}
-
-html.light-site .text-slate-300 {
-  color: #64748b !important; /* Forces slate-500 */
-}
-
-html.light-site .text-white {
-  color: #0f172a !important; /* Force nearly black for any missed text-white */
-}
-
-/* Exception for buttons and badges where white text is intentional */
-html.light-site .bg-blue-600 .text-white,
-html.light-site .bg-primary-gold .text-white,
-html.light-site .bg-green-600 .text-white,
-html.light-site .bg-red-600 .text-white,
-html.light-site button .text-white,
-html.light-site .rounded-full .text-white {
-  color: #ffffff !important;
-}
-
-html.light-site .bg-\[\#020617\],
-html.light-site .bg-\[\#0B0F19\] {
-  background-color: #ffffff !important;
-}
-
-html.light-site .bg-white\/5 {
-  background-color: rgba(0, 0, 0, 0.03) !important;
-}
-
-html.light-site select.bg-\[\#111827\],
-html.light-site input.bg-\[\#111827\] {
-  background-color: #f8fafc !important;
-  color: #0f172a !important;
-  border-color: #e2e8f0 !important;
-}
-
-html.light-site {
-  color-scheme: light !important;
-}
-
-/* Hide Google Translate Banner and Widget UI */
-iframe.skiptranslate, 
-.goog-te-banner-frame,
-#goog-gt-tt, 
-.goog-te-balloon-frame {
-  display: none !important;
-}
-
-body {
-  top: 0 !important;
-}
-
-.goog-te-combo {
-  display: none !important;
-}
-
-#google_translate_element {
-  display: none !important;
-}
-
-/* Transition for smooth theme switching */
-*,
-*::before,
-*::after {
-  transition-property: background-color, border-color, color;
-  transition-duration: 0.25s;
-  transition-timing-function: ease;
-}
-
-/* Premium Scrollbar - Institutional Minimalist Protocol */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #F1F5F9;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(197, 160, 89, 0.2);
-  border-radius: 20px;
-  transition: all 0.5s ease;
+  background: #0EA5E9;
+  border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c5a059;
+  background: #0369A1;
 }
 
-/* Light mode scrollbar - Corporate Blue Protocol */
-html.light-site ::-webkit-scrollbar-thumb {
-  background: rgba(37, 99, 235, 0.2);
-}
-html.light-site ::-webkit-scrollbar-thumb:hover {
-  background: #2563eb;
-}
-
-/* Modern Selection Architecture */
-::selection {
-  background: rgba(197, 160, 89, 0.9);
-  color: #020617;
-}
-
-html.light-site ::selection {
-  background: rgba(37, 99, 235, 0.9);
-  color: #ffffff;
-}
-
-/* Smooth Navigation Interactions */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 3px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(197, 160, 89, 0.1);
-}
-.custom-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(197, 160, 89, 0.3);
-}
-
-/* Typography Smoothing */
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
+/* Hide Google Translate Bar */
+.goog-te-banner-frame { display: none !important; }
+body { top: 0 !important; }
+.goog-te-combo { display: none !important; }
+#google_translate_element { display: none !important; }

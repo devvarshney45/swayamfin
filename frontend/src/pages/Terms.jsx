@@ -1,55 +1,69 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ScrollText, ShieldAlert, BadgeCheck } from 'lucide-react';
 
 const Terms = () => {
   return (
-    <div className="bg-[#f8fafc] min-h-screen pt-24 pb-20">
-      <div className="max-w-4xl mx-auto px-4">
+    <div className="bg-[#F8FAFC] min-h-screen pt-32 pb-40 font-plus-jakarta-sans overflow-hidden">
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
         
-        <div className="text-center mb-16">
-          <motion.div 
-             initial={{ scale: 0.9, opacity: 0 }}
-             animate={{ scale: 1, opacity: 1 }}
-             className="inline-flex items-center gap-2 bg-slate-200 text-slate-700 px-4 py-2 rounded-full text-sm font-bold mb-6"
-          >
-            <ScrollText className="w-4 h-4" />
-            Terms of Service
-          </motion.div>
-          <h1 className="text-4xl font-extrabold text-slate-900 mb-6">Terms & <span className="text-primary-blue">Conditions</span></h1>
-          <p className="text-slate-500 font-medium">Please read these terms carefully before using the Swayamfin platform.</p>
+        {/* Header */}
+        <div className="text-center mb-24 space-y-6">
+           <motion.div 
+             initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+             className="inline-flex items-center gap-2 bg-slate-100 text-slate-500 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em] border border-slate-200"
+           >
+             Institutional Terms Node
+           </motion.div>
+           <h1 className="text-4xl md:text-6xl font-black text-[#1E293B] mb-6 uppercase tracking-tighter leading-none">
+              Service <span className="text-[#0EA5E9] italic">Charter.</span>
+           </h1>
+           <p className="text-slate-500 font-medium italic text-lg md:text-xl max-w-2xl mx-auto leading-relaxed opacity-80">
+              "Establishing legal parameters and operational boundaries for institutional engagement via the Swayamfin platform."
+           </p>
         </div>
 
-        <div className="bg-white p-8 md:p-12 rounded-[40px] shadow-fintech border border-slate-100 space-y-10 text-slate-600 leading-relaxed">
+        <div className="bg-white p-12 md:p-16 rounded-[60px] shadow-sm border border-slate-100 space-y-16 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-[#0EA5E9]/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-all duration-700" />
           
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-               <BadgeCheck className="w-6 h-6 text-primary-blue" />
-               1. Acceptance of Terms
+          <section className="relative z-10">
+            <h2 className="text-2xl font-black text-[#1E293B] mb-6 uppercase tracking-tight flex items-center gap-4">
+               Segment 01: Protocol Acceptance
             </h2>
-            <p>By accessing or using swayamfin.com, you agree to be bound by these Terms and Conditions. If you do not agree, please do not use our services. We may update these terms periodically to remain compliant with changing RBI or digital laws.</p>
+            <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest leading-relaxed italic">
+               "By accessing the Swayamfin node (swayamfin.com), you initialize a binding agreement with these institutional conditions. Non-agreement requires immediate session termination. Terms are periodically re-synchronized with evolving RBI and digital legislative cycles."
+            </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-               <ShieldAlert className="w-6 h-6 text-primary-blue" />
-               2. Nature of Services
+          <section className="relative z-10">
+            <h2 className="text-2xl font-black text-[#1E293B] mb-6 uppercase tracking-tight flex items-center gap-4">
+               Segment 02: Operational Scope
             </h2>
-            <p>Swayamfin is a digital platform owned by Green Miles Mobility Pvt. Ltd. We act as a **Loan Service Provider (LSP)**. We do not provide banking or lending services directly. We facilitate your application to regulated lenders. The ultimate approval and disbursement depend entirely on the lender's appraisal.</p>
+            <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest leading-relaxed italic">
+               "Swayamfin is a digital infrastructure owned by Green Miles Mobility Pvt. Ltd. We operate as a Loan Service Provider (LSP). We do not initialize banking or lending transactions directly. All credit appraisals and deployments are centralized at regulated partner nodes."
+            </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">3. Eligibility</h2>
-            <p>You must be at least 18 years of age and a resident of India with valid KYC documents to apply for a loan through our platform. For business loans, you must represent a valid legal entity (Proprietorship, LLP, Pvt. Ltd., etc.) registered in India.</p>
+          <section className="relative z-10">
+            <h2 className="text-2xl font-black text-[#1E293B] mb-6 uppercase tracking-tight flex items-center gap-4">
+               Segment 03: Personnel Eligibility
+            </h2>
+            <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest leading-relaxed italic">
+               "Eligibility requires a minimum age of 18 and sovereign residency in India with valid KYC parameters. Enterprise applications must represent a legal entity (Proprietorship, LLP, Pvt. Ltd.) registered within the Indian jurisdiction."
+            </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">4. Intellectual Property</h2>
-            <p>The name "Swayamfin", logo, designs, and content are the intellectual property of Green Miles Mobility Pvt. Ltd. Unauthorized use or reproduction is strictly prohibited.</p>
+          <section className="relative z-10">
+            <h2 className="text-2xl font-black text-[#1E293B] mb-6 uppercase tracking-tight flex items-center gap-4">
+               Segment 04: Intellectual Assets
+            </h2>
+            <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest leading-relaxed italic">
+               "The 'Swayamfin' identity, including visual nodes, logic, and content, is the proprietary intellectual asset of Green Miles Mobility Pvt. Ltd. Unauthorized node reproduction is strictly prohibited."
+            </p>
           </section>
 
-          <div className="bg-slate-50 p-6 rounded-2xl text-sm italic border border-slate-100">
-             Note: These terms were last updated on April 16, 2025.
+          <div className="pt-10 border-t border-slate-50 flex justify-between items-center opacity-50 italic">
+             <span className="text-[10px] font-black uppercase tracking-widest">Charter Revision v4.2</span>
+             <span className="text-[10px] font-black uppercase tracking-widest">April 2025</span>
           </div>
         </div>
 

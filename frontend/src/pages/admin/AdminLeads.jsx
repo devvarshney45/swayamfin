@@ -1,32 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, 
-  Download, 
-  MoreVertical, 
-  ChevronLeft, 
-  ChevronRight,
-  Phone,
-  User,
-  MapPin,
-  Mail,
-  FileText,
-  Building2
-} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useTheme } from '../../context/ThemeContext';
 import AdminTabs from '../../components/admin/AdminTabs';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 const AdminLeads = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
-  const { isDark } = useTheme();
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -38,13 +22,17 @@ const AdminLeads = () => {
   const fetchLeads = async () => {
     try {
       setLoading(true);
+      setError(null);
       const token = localStorage.getItem('swayamfin_token');
+      if (!token) throw new Error('Session expired.');
+
       const res = await axios.get(`${API_URL}/api/leads`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setLeads(res.data.data);
+      setLeads(res.data.data || []);
     } catch (err) {
       console.error('Failed to fetch leads');
+      setError(err.response?.data?.message || err.message || 'Node link error.');
     } finally {
       setLoading(false);
     }
@@ -52,15 +40,15 @@ const AdminLeads = () => {
 
   const getStatusColor = (status) => {
     switch(status) {
-      case 'New': return isDark ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-blue-50 text-blue-600 border-blue-200';
-      case 'Contacted': return isDark ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' : 'bg-yellow-50 text-yellow-600 border-yellow-200';
-      case 'In Progress': return isDark ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-200';
-      case 'Document Submitted': return isDark ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' : 'bg-purple-50 text-purple-600 border-purple-200';
+      case 'New': return 'bg-blue-50 text-blue-600 border-blue-200';
+      case 'Contacted': return 'bg-yellow-50 text-yellow-600 border-yellow-200';
+      case 'In Progress': return 'bg-indigo-50 text-indigo-600 border-indigo-200';
+      case 'Document Submitted': return 'bg-purple-50 text-purple-600 border-purple-200';
       case 'Sanctioned': 
       case 'Disbursed': 
-      case 'Closed - Won': return isDark ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-50 text-emerald-600 border-emerald-200';
-      case 'Dead Lead': return isDark ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-rose-50 text-rose-600 border-rose-200';
-      default: return isDark ? 'bg-slate-500/10 text-slate-400 border-slate-500/20' : 'bg-slate-50 text-slate-600 border-slate-200';
+      case 'Closed - Won': return 'bg-green-50 text-green-600 border-green-200';
+      case 'Dead Lead': return 'bg-red-50 text-red-600 border-red-200';
+      default: return 'bg-slate-50 text-slate-600 border-slate-200';
     }
   };
 
@@ -76,187 +64,138 @@ const AdminLeads = () => {
     return matchesSearch && matchesStatus && matchesType;
   });
 
+  if (loading) return (
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center space-y-4">
+       <div className="w-12 h-12 border-4 border-[#0EA5E9]/20 border-t-[#0EA5E9] rounded-full animate-spin" />
+       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Querying Repository...</p>
+    </div>
+  );
+
+  if (error) return (
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center space-y-6">
+       <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-2xl">!</div>
+       <div className="space-y-2">
+         <h2 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">Repository Fail</h2>
+         <p className="text-slate-500 text-sm font-medium italic max-w-md">{error}</p>
+       </div>
+       <button onClick={fetchLeads} className="btn-primary py-3 px-8 text-xs">Reconnect Node</button>
+    </div>
+  );
+
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-800'} px-4 md:px-8 pt-24 md:pt-28 font-inter transition-colors duration-300`}>
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 px-4 md:px-8 pt-24 md:pt-32 pb-32">
       <div className="max-w-7xl mx-auto">
         <AdminTabs />
         
-        {/* Header Section */}
-        <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-             <div className={`${isDark ? 'bg-blue-500/10 border-blue-500/20' : 'bg-blue-50 border-blue-100'} rounded-xl p-3 shadow-sm border`}>
-                <FileText className="text-blue-500 w-6 h-6" />
-             </div>
-             <div>
-                <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Global Lead Repository</h1>
-                <p className={`${isDark ? 'text-slate-400' : 'text-slate-500'} text-sm font-medium italic`}>All incoming inquiries across all branches.</p>
-             </div>
-          </div>
-          <button className={`${isDark ? 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'} px-6 py-3 rounded-2xl font-bold flex items-center gap-2 transition-all shadow-sm border`}>
-             <Download className="w-5 h-5" /> Export {filteredLeads.length} Leads
-          </button>
+        {/* Header */}
+        <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
+           <div>
+              <div className="flex items-center gap-3 mb-4">
+                 <div className="w-2 h-2 rounded-full bg-[#0EA5E9]" />
+                 <span className="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em]">Core Financial Node</span>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-black text-[#1E293B] uppercase tracking-tighter leading-none">
+                 Global <span className="text-[#0EA5E9] italic">Repository.</span>
+              </h1>
+           </div>
+           <button className="bg-white border border-slate-200 px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-[#1E293B] hover:bg-slate-50 transition-all shadow-sm">
+              Export {filteredLeads.length} Node Data
+           </button>
         </div>
 
-        {/* Filters and Search */}
-        <div className={`${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-slate-200'} p-6 rounded-[32px] border mb-8 shadow-sm`}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="relative group lg:col-span-1">
-              <Search className="absolute left-4 top-3.5 text-slate-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors" />
+        {/* Filters */}
+        <div className="bg-white border border-slate-100 p-8 rounded-[40px] shadow-sm mb-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+           <div className="relative">
               <input
                 type="text"
-                className={`w-full pl-12 pr-4 py-3.5 ${isDark ? 'bg-white/5 border-white/10 text-white placeholder-slate-500' : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'} focus:border-blue-500 focus:bg-transparent rounded-2xl transition-all outline-none font-medium focus:ring-2 focus:ring-blue-500/10`}
-                placeholder="Search name, mobile, lead ID..."
+                className="input-standard w-full h-14 pl-12 rounded-2xl"
+                placeholder="Search Identity / Mobile / ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-            </div>
-
-            <div>
-              <select 
-                className={`w-full px-5 py-3.5 ${isDark ? 'bg-[#111827] border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-700'} focus:border-blue-500 rounded-2xl transition-all outline-none font-bold appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/10`}
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-              >
-                <option value="all">All Statuses</option>
-                <option value="New">New</option>
-                <option value="Contacted">Contacted</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Document Submitted">Docs Submitted</option>
-                <option value="Sanctioned">Sanctioned</option>
-                <option value="Disbursed">Disbursed</option>
-                <option value="Dead Lead">Dead Lead</option>
-              </select>
-            </div>
-
-            <div>
-              <select 
-                className={`w-full px-5 py-3.5 ${isDark ? 'bg-[#111827] border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-700'} focus:border-blue-500 rounded-2xl transition-all outline-none font-bold appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/10`}
-                value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value)}
-              >
-                <option value="all">All Loan Types</option>
-                <option value="msme_structured">MSME Structured Product</option>
-                <option value="lap">Loan Against Property (LAP)</option>
-                <option value="micro_lap">Micro LAP</option>
-                <option value="home_loan">Housing Loan</option>
-                <option value="supply_chain">Supply Chain Finance</option>
-                <option value="hybrid">Hybrid Product</option>
-              </select>
-            </div>
-          </div>
-          <div className="mt-4 flex items-center justify-between text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] px-2">
-            <span>Displaying {filteredLeads.length} records</span>
-            <button onClick={() => { setSearchTerm(''); setStatusFilter('all'); setTypeFilter('all'); }} className="text-blue-500 hover:text-blue-700 transition-colors">Reset Global Filters</button>
-          </div>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-xs font-black">S</span>
+           </div>
+           <select 
+             className="input-standard w-full h-14 rounded-2xl appearance-none"
+             value={statusFilter}
+             onChange={(e) => setStatusFilter(e.target.value)}
+           >
+              <option value="all">All States</option>
+              <option value="New">New</option>
+              <option value="Contacted">Contacted</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Document Submitted">Docs Submitted</option>
+              <option value="Sanctioned">Sanctioned</option>
+              <option value="Disbursed">Disbursed</option>
+              <option value="Dead Lead">Dead Lead</option>
+           </select>
+           <select 
+             className="input-standard w-full h-14 rounded-2xl appearance-none"
+             value={typeFilter}
+             onChange={(e) => setTypeFilter(e.target.value)}
+           >
+              <option value="all">All Product Classes</option>
+              <option value="msme-loans">MSME Product</option>
+              <option value="lap">LAP Asset</option>
+              <option value="housing-loans">Housing Loan</option>
+              <option value="supply-chain">Supply Chain</option>
+           </select>
         </div>
 
-        {/* Leads Table */}
-        <div className={`${isDark ? 'bg-white/5 border-white/5' : 'bg-white border-slate-200'} rounded-[40px] border overflow-hidden shadow-sm`}>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className={`${isDark ? 'bg-white/5 border-white/5' : 'bg-slate-50 border-slate-200'} border-b`}>
-                  <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Applicant / Contact</th>
-                  <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Loan & Amount</th>
-                  <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Location & Branch</th>
-                  <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Assigned Personnel</th>
-                  <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Status</th>
-                  <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em] text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className={`divide-y ${isDark ? 'divide-white/5' : 'divide-slate-100'}`}>
-                {loading ? (
-                  <tr><td colSpan="6" className="p-20 text-center text-slate-500 font-bold"><div className="animate-pulse">Loading records...</div></td></tr>
-                ) : (
-                  <AnimatePresence>
-                    {filteredLeads.map((lead) => (
-                      <motion.tr 
-                        key={lead._id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className={`group ${isDark ? 'hover:bg-white/5' : 'hover:bg-blue-50/30'} transition-all cursor-pointer`}
-                        onClick={() => navigate(`/agent/lead/${lead._id}`)}
-                      >
-                        <td className="px-8 py-5">
-                          <div className={`flex items-center gap-2 ${isDark ? 'text-white' : 'text-slate-900'} font-bold group-hover:text-blue-500 transition-colors`}>
-                            {lead.applicant_name}
-                            <span className={`${isDark ? 'bg-white/10 text-slate-400' : 'bg-slate-100 text-slate-500'} text-[10px] font-black border ${isDark ? 'border-white/10' : 'border-slate-200'} px-2 py-0.5 rounded uppercase tracking-wider`}>{lead.lead_number}</span>
-                          </div>
-                          <div className="flex items-center gap-3 mt-2">
-                             <div className="flex items-center gap-1.5 text-slate-500 font-medium text-xs">
-                               <Phone className="w-3 h-3" /> {lead.mobile}
-                             </div>
-                             {lead.email && (
-                               <div className={`${isDark ? 'text-slate-500' : 'text-slate-400'} flex items-center gap-1.5 font-medium text-xs`}>
-                                 <Mail className="w-3 h-3" /> {lead.email}
+        {/* List */}
+        <div className="bg-white border border-slate-100 rounded-[40px] shadow-sm overflow-hidden">
+           <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                 <thead>
+                    <tr className="bg-slate-50 border-b border-slate-100">
+                       <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Applicant Identity</th>
+                       <th className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Asset Class</th>
+                       <th className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Node Location</th>
+                       <th className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Protocol State</th>
+                       <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Details</th>
+                    </tr>
+                 </thead>
+                 <tbody className="divide-y divide-slate-100">
+                    <AnimatePresence>
+                       {filteredLeads.map((lead) => (
+                         <motion.tr 
+                            key={lead._id}
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                            className="hover:bg-slate-50 transition-all cursor-pointer group"
+                            onClick={() => navigate(`/agent/lead/${lead._id}`)}
+                         >
+                            <td className="px-10 py-6">
+                               <div className="font-black text-[#1E293B] group-hover:text-[#0EA5E9] transition-all flex items-center gap-3">
+                                  {lead.applicant_name}
+                                  <span className="text-[9px] bg-slate-100 px-2 py-0.5 rounded border border-slate-200">ID: {lead.lead_number}</span>
                                </div>
-                             )}
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className={`${isDark ? 'text-slate-300' : 'text-slate-800'} font-bold text-sm capitalize mb-1`}>{lead.loan_type?.replace('_', ' ')}</div>
-                          <div className="text-blue-500 font-black text-xs tracking-wide">
-                            ₹{(lead.loan_amount_required/100000).toFixed(2)}L
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className={`flex items-center gap-2 ${isDark ? 'text-slate-300' : 'text-slate-700'} font-bold text-xs uppercase tracking-wider mb-1.5`}>
-                             <MapPin className="w-3.5 h-3.5 text-slate-500" />
-                             {lead.location_city}
-                          </div>
-                          <div className="text-[10px] text-slate-500 font-bold flex items-center gap-1.5">
-                             <Building2 className="w-3 h-3" />
-                             <span className={`${isDark ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-blue-50 border-blue-100 text-blue-600'} px-1.5 py-0.5 rounded text-[9px] font-black border`}>
-                               {lead.branch_id?.code || 'H.O.'}
-                             </span> Branch
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className="flex items-center gap-2">
-                             <div className={`${isDark ? 'bg-white/5 border-white/10 text-slate-500 group-hover:text-blue-400' : 'bg-slate-100 border-slate-200 text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600'} w-9 h-9 rounded-xl flex items-center justify-center transition-all border`}>
-                               <User className="w-4 h-4" />
-                             </div>
-                             <div>
-                               <div className={`text-xs font-bold ${isDark ? 'text-slate-300' : 'text-slate-800'}`}>
-                                 {lead.assigned_to?.full_name || <span className="text-slate-500 italic">Available</span>}
-                               </div>
-                               <div className="text-[10px] text-slate-500 font-medium">Sales Executive</div>
-                             </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <span className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em] border ${getStatusColor(lead.status)}`}>
-                            {lead.status}
-                          </span>
-                        </td>
-                        <td className="px-8 py-5 text-right">
-                          <button className={`p-2.5 ${isDark ? 'text-slate-500 hover:text-white' : 'text-slate-400 hover:text-slate-700'} hover:bg-white/5 rounded-xl transition-all`}>
-                            <MoreVertical className="w-5 h-5" />
-                          </button>
-                        </td>
-                      </motion.tr>
-                    ))}
-                  </AnimatePresence>
-                )}
-                {!loading && filteredLeads.length === 0 && (
-                   <tr><td colSpan="6" className="p-20 text-center text-slate-500 font-bold">No records found matching current criteria.</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-          
-          <div className={`px-8 py-5 ${isDark ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-200'} flex items-center justify-between border-t transition-colors`}>
-             <span className="text-xs text-slate-500 font-bold uppercase tracking-[0.15em]">Showing {filteredLeads.length} of {leads.length} entries</span>
-             <div className="flex gap-3">
-                <button className={`w-10 h-10 flex items-center justify-center rounded-xl ${isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:text-white' : 'bg-white border-slate-200 text-slate-500 hover:text-slate-900'} transition-all shadow-sm border`}>
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button className={`w-10 h-10 flex items-center justify-center rounded-xl ${isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:text-white' : 'bg-white border-slate-200 text-slate-500 hover:text-slate-900'} transition-all shadow-sm border`}>
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-             </div>
-          </div>
+                               <div className="text-xs text-slate-400 font-bold mt-1 ">+91 {lead.mobile}</div>
+                            </td>
+                            <td className="px-6 py-6 font-bold text-[#1E293B] text-xs">
+                               <div className="uppercase tracking-widest opacity-60 mb-1">{lead.loan_type?.replace('-', ' ')}</div>
+                               <div className="text-[#0EA5E9] font-black">₹{(lead.loan_amount_required/100000).toFixed(2)}L</div>
+                            </td>
+                            <td className="px-6 py-6">
+                               <div className="text-xs font-black text-slate-600 uppercase tracking-widest mb-1">{lead.location_city} Hub</div>
+                               <div className="text-[9px] font-bold text-slate-400">Hub Code: {lead.branch_id?.code || 'H.O.'}</div>
+                            </td>
+                            <td className="px-6 py-6">
+                               <span className={`px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border ${getStatusColor(lead.status)}`}>
+                                  {lead.status}
+                               </span>
+                            </td>
+                            <td className="px-10 py-6 text-right">
+                               <span className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-widest">Intercept →</span>
+                            </td>
+                         </motion.tr>
+                       ))}
+                    </AnimatePresence>
+                    {!loading && filteredLeads.length === 0 && (
+                      <tr><td colSpan="5" className="px-10 py-20 text-center text-slate-400 text-xs font-bold uppercase tracking-widest">Zero Node Data Matches Search Protocol</td></tr>
+                    )}
+                 </tbody>
+              </table>
+           </div>
         </div>
 
       </div>

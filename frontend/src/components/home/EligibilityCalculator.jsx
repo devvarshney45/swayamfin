@@ -1,200 +1,199 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ShieldCheck, Zap, Target, Activity } from 'lucide-react';
-import { useTheme } from '../../context/ThemeContext';
-import { useTranslation } from 'react-i18next';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 const EligibilityCalculator = () => {
-  const { isDark } = useTheme();
-  const { t } = useTranslation();
-  const [calcType, setCalcType] = useState('eligibility'); // 'eligibility' or 'emi'
-  const [monthlyIncome, setMonthlyIncome] = useState(150000);
-  const [existingEMIs, setExistingEMIs] = useState(25000);
-  const [loanAmount, setLoanAmount] = useState(5000000);
-  const [loanTenure, setLoanTenure] = useState(20);
-  const [interestRate] = useState(9.5);
+  const [amount, setAmount] = useState(500000);
+  const [rate, setRate] = useState(12);
+  const [tenure, setTenure] = useState(60);
+  const [tenureType, setTenureType] = useState('Months'); // Months or Years
 
-  const calculateEligibility = () => {
-    const foir = 0.55;
-    const availableEMI = (monthlyIncome * foir) - existingEMIs;
-    if (availableEMI <= 0) return 0;
-    const monthlyRate = interestRate / (12 * 100);
-    const months = loanTenure * 12;
-    return Math.floor(availableEMI * (Math.pow(1 + monthlyRate, months) - 1) / (monthlyRate * Math.pow(1 + monthlyRate, months)));
-  };
+  const [results, setResults] = useState({
+    emi: 0,
+    totalInterest: 0,
+    totalPayable: 0,
+    interestRatio: 0
+  });
 
   const calculateEMI = () => {
-    const monthlyRate = interestRate / (12 * 100);
-    const months = loanTenure * 12;
-    const emi = (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
-    return Math.floor(emi);
+    const P = amount;
+    const R = rate / 12 / 100;
+    const N = tenureType === 'Years' ? tenure * 12 : tenure;
+    
+    const emi = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+    const totalPayable = emi * N;
+    const totalInterest = totalPayable - P;
+    const interestRatio = (totalInterest / totalPayable) * 100;
+
+    setResults({
+      emi: Math.round(emi),
+      totalInterest: Math.round(totalInterest),
+      totalPayable: Math.round(totalPayable),
+      interestRatio: Math.round(interestRatio)
+    });
   };
 
-  const eligibleAmount = calculateEligibility();
-  const emiAmount = calculateEMI();
+  useEffect(() => {
+    calculateEMI();
+  }, [amount, rate, tenure, tenureType]);
 
-  const getAssetTier = (amount) => {
-    if (amount >= 10000000) return { name: 'Institutional Hub', color: 'blue' };
-    if (amount >= 5000000) return { name: 'Gold Priority', color: 'primary-gold' };
-    return { name: 'Silver Asset', color: 'slate-500' };
+  const formatCurrency = (val) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0
+    }).format(val);
   };
-
-  const tier = getAssetTier(calcType === 'eligibility' ? eligibleAmount : loanAmount);
 
   return (
-    <section className={`py-16 md:py-24 lg:py-32 relative overflow-hidden ${isDark ? 'bg-[#020617]' : 'bg-white'}`}>
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className={`absolute top-0 right-0 w-[500px] h-[500px] ${isDark ? 'bg-blue-600/5' : 'bg-blue-500/3'} blur-[140px] rounded-full translate-x-1/2 -translate-y-1/2`} />
-        <div className={`absolute bottom-0 left-0 w-[400px] h-[400px] ${isDark ? 'bg-primary-gold/5' : 'bg-primary-gold/2'} blur-[120px] rounded-full -translate-x-1/3`} />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-
-          {/* Left Info Panel */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="space-y-8 text-center lg:text-left"
-          >
-            <div className="flex justify-center lg:justify-start">
-              <div className={`inline-flex items-center gap-3 px-5 py-2.5 rounded-full ${isDark ? 'bg-white/5 border-white/10' : 'bg-blue-600/10 border-blue-500/20'} border text-primary-gold text-[10px] font-black uppercase tracking-[0.4em]`}>
-                <Activity className="w-3.5 h-3.5 animate-pulse" /> Asset Modeling Engine
-              </div>
-            </div>
-
-            <div className="space-y-4">
-               <h2 className={`text-4xl md:text-6xl font-black ${isDark ? 'text-white' : 'text-[#020617]'} leading-none tracking-tighter font-playfair uppercase`}>
-                 Credit <br /> <span className="text-blue-600 italic">Financial</span> Node.
-               </h2>
-               <p className={`text-sm md:text-lg ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium italic max-w-lg mx-auto lg:mx-0 leading-relaxed border-l-4 border-blue-600/20 pl-6`}>
-                 "Deploying sophisticated algorithms to simulate high-precision credit scenarios for institutional and enterprise scaling."
-               </p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 md:gap-6">
-              <div className={`${isDark ? 'bg-white/2 border-white/5' : 'bg-white border-slate-100 shadow-xl'} p-6 rounded-[32px] border group`}>
-                <div className="flex items-center gap-3 mb-4">
-                  <Zap className="w-5 h-5 text-primary-gold group-hover:rotate-12 transition-transform" />
-                  <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">{t('calc_rate')}</span>
-                </div>
-                <p className={`text-3xl md:text-4xl font-playfair font-black ${isDark ? 'text-white' : 'text-[#020617]'} tracking-tight`}>9.5%</p>
-              </div>
-              <div className={`${isDark ? 'bg-white/2 border-white/5' : 'bg-white border-slate-100 shadow-xl'} p-6 rounded-[32px] border group`}>
-                <div className="flex items-center gap-3 mb-4">
-                  <ShieldCheck className="w-5 h-5 text-blue-500" />
-                  <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Security</span>
-                </div>
-                <p className={`text-3xl md:text-4xl font-playfair font-black ${isDark ? 'text-white' : 'text-[#020617]'} tracking-tight`}>FIPS</p>
-              </div>
-            </div>
-
-            <div className={`p-6 rounded-[32px] ${isDark ? 'bg-blue-600/5 border-blue-600/10' : 'bg-blue-50 border-blue-100'} border flex items-center gap-6`}>
-               <div className={`px-4 py-2 rounded-full bg-${tier.color} text-white text-[10px] font-black uppercase tracking-widest shadow-lg`}>
-                  {tier.name}
-               </div>
-               <p className={`text-[11px] font-bold ${isDark ? 'text-slate-500' : 'text-slate-600'} uppercase tracking-widest`}>Verification Tier Status</p>
-            </div>
-          </motion.div>
-
-          {/* Right Calculator Panel */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className={`absolute -inset-4 bg-blue-600/10 blur-[100px] rounded-full opacity-50 z-0`} />
-            
-            <div className={`${isDark ? 'bg-[#0B1221] border-white/5 shadow-3xl shadow-black/80' : 'bg-white border-slate-200 shadow-2xl'} rounded-[48px] p-8 md:p-12 border relative z-10 backdrop-blur-3xl`}>
-              
-              {/* Type Switcher */}
-              <div className="flex p-1.5 bg-slate-500/10 rounded-[28px] mb-12 border border-white/5">
-                 <button 
-                  onClick={() => setCalcType('eligibility')}
-                  className={`flex-1 py-4 rounded-[22px] text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${calcType === 'eligibility' ? 'bg-blue-600 text-white shadow-xl' : 'text-slate-500 hover:text-blue-500'}`}
-                 >
-                   Eligibility
-                 </button>
-                 <button 
-                  onClick={() => setCalcType('emi')}
-                  className={`flex-1 py-4 rounded-[22px] text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${calcType === 'emi' ? 'bg-blue-600 text-white shadow-xl' : 'text-slate-500 hover:text-blue-500'}`}
-                 >
-                   EMI Simulation
-                 </button>
-              </div>
-
-              <AnimatePresence mode="wait">
-                {calcType === 'eligibility' ? (
-                  <motion.div key="eligibility" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-10">
-                    <SliderBlock label="Monthly Yield" value={monthlyIncome} min={15000} max={1000000} step={5000} icon={<Activity />} color="blue" isDark={isDark} onChange={setMonthlyIncome} prefix="₹" />
-                    <SliderBlock label="Existing Liabilities" value={existingEMIs} min={0} max={500000} step={2000} icon={<Activity />} color="rose" isDark={isDark} onChange={setExistingEMIs} prefix="₹" />
-                    <SliderBlock label="Repayment Cycle" value={loanTenure} min={1} max={30} step={1} icon={<Target />} color="emerald" isDark={isDark} onChange={setLoanTenure} suffix=" Yrs" />
-                  </motion.div>
-                ) : (
-                  <motion.div key="emi" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-10">
-                    <SliderBlock label="Requested Capital" value={loanAmount} min={100000} max={50000000} step={100000} icon={<Zap />} color="blue" isDark={isDark} onChange={setLoanAmount} prefix="₹" />
-                    <SliderBlock label="Repayment Cycle" value={loanTenure} min={1} max={30} step={1} icon={<Target />} color="emerald" isDark={isDark} onChange={setLoanTenure} suffix=" Yrs" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Result Interface */}
-              <div className={`mt-12 bg-[#020617] p-8 md:p-10 rounded-[32px] border border-white/5 text-center relative overflow-hidden group`}>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/20 blur-[60px] rounded-full translate-x-1/2 -translate-y-1/2" />
-                
-                <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em] mb-4 relative z-10">
-                  {calcType === 'eligibility' ? 'Estimated Credit Limit' : 'Projected Monthly Service'}
-                </p>
-                
-                <h3 className="text-white text-5xl md:text-7xl font-black tracking-tighter font-playfair relative z-10 leading-none">
-                  {calcType === 'eligibility' ? (
-                    <>₹{(eligibleAmount / 100000).toFixed(1)}<span className="text-2xl md:text-3xl text-blue-500 ml-2">L</span></>
-                  ) : (
-                    <>₹{emiAmount.toLocaleString()}<span className="text-xl md:text-2xl text-blue-500 ml-2">/MO</span></>
-                  )}
-                </h3>
-
-                <p className="text-blue-600/50 text-[9px] font-black uppercase tracking-widest mt-6 mb-8 italic">
-                   @ {interestRate}% Benchmark Yield Rate
-                </p>
-
-                <button
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                  className="w-full py-5 bg-white text-[#020617] rounded-[22px] font-black uppercase tracking-[0.4em] text-[10px] hover:bg-blue-600 hover:text-white transition-all duration-700 flex items-center justify-center gap-4 group/btn"
-                >
-                  Initiate Application <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-2 transition-transform" />
-                </button>
-              </div>
-
-            </div>
-          </motion.div>
+    <section className="py-24 bg-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div className="text-center mb-16 space-y-4">
+          <div className="inline-flex items-center gap-3 px-5 py-2 bg-[#0EA5E9]/10 border border-[#0EA5E9]/20 rounded-full">
+            <span className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em]">Precision Simulation</span>
+          </div>
+          <h2 className="text-4xl md:text-6xl font-black text-[#1E293B] uppercase tracking-tight">
+            EMI & Loan <span className="text-[#0EA5E9] italic">Calculator</span>
+          </h2>
         </div>
+
+        <div className="max-w-5xl mx-auto bg-white border border-slate-100 rounded-[40px] shadow-2xl p-8 md:p-16 grid grid-cols-1 lg:grid-cols-2 gap-16 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#0EA5E9]/5 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
+          
+          {/* Inputs */}
+          <div className="space-y-10 relative z-10">
+            {/* Amount */}
+            <div className="space-y-4">
+              <div className="flex justify-between items-end">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Loan Amount</label>
+                <div className="flex items-end gap-2 border-b-2 border-slate-100 focus-within:border-[#0EA5E9] transition-all">
+                  <span className="text-xl font-bold text-slate-400">₹</span>
+                  <input 
+                    type="number"
+                    className="w-32 bg-transparent text-2xl font-black text-[#1E293B] outline-none"
+                    value={amount}
+                    onChange={(e) => setAmount(Number(e.target.value))}
+                  />
+                </div>
+              </div>
+              <input 
+                type="range"
+                min="100000"
+                max="10000000"
+                step="50000"
+                className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#0EA5E9]"
+                value={amount}
+                onChange={(e) => setAmount(Number(e.target.value))}
+              />
+            </div>
+
+            {/* Interest */}
+            <div className="space-y-4">
+              <div className="flex justify-between items-end">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Interest Rate (% p.a)</label>
+                <div className="flex items-end gap-2 border-b-2 border-slate-100 focus-within:border-[#0EA5E9] transition-all">
+                  <input 
+                    type="number"
+                    className="w-16 bg-transparent text-2xl font-black text-[#1E293B] outline-none text-right"
+                    value={rate}
+                    onChange={(e) => setRate(Number(e.target.value))}
+                  />
+                   <span className="text-xl font-bold text-slate-400">%</span>
+                </div>
+              </div>
+              <input 
+                type="range"
+                min="8"
+                max="24"
+                step="0.1"
+                className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#0EA5E9]"
+                value={rate}
+                onChange={(e) => setRate(Number(e.target.value))}
+              />
+            </div>
+
+            {/* Tenure */}
+            <div className="space-y-4">
+              <div className="flex justify-between items-end">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Repayment Tenure</label>
+                <div className="flex items-center gap-4 bg-slate-50 p-1 rounded-xl border border-slate-200">
+                   <button 
+                    onClick={() => { setTenureType('Months'); if(tenureType==='Years') setTenure(tenure*12); }}
+                    className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${tenureType === 'Months' ? 'bg-[#0EA5E9] text-white shadow-lg' : 'text-slate-400'}`}
+                   >
+                     Months
+                   </button>
+                   <button 
+                    onClick={() => { setTenureType('Years'); if(tenureType==='Months') setTenure(Math.round(tenure/12)); }}
+                    className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${tenureType === 'Years' ? 'bg-[#0EA5E9] text-white shadow-lg' : 'text-slate-400'}`}
+                   >
+                     Years
+                   </button>
+                </div>
+              </div>
+              <div className="flex justify-between items-center gap-4">
+                 <input 
+                  type="range"
+                  min={tenureType === 'Years' ? 1 : 6}
+                  max={tenureType === 'Years' ? 15 : 180}
+                  step="1"
+                  className="flex-1 h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#0EA5E9]"
+                  value={tenure}
+                  onChange={(e) => setTenure(Number(e.target.value))}
+                />
+                <div className="w-16 border-b-2 border-slate-100 text-center text-2xl font-black text-[#1E293B]">
+                   {tenure}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Outputs */}
+          <div className="bg-[#F8FAFC] rounded-[32px] p-8 md:p-12 flex flex-col justify-between space-y-12">
+            <div>
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4">Monthly EMI</p>
+               <h3 className="text-5xl md:text-6xl font-black text-[#1E293B] tracking-tighter">{formatCurrency(results.emi)}</h3>
+            </div>
+
+            <div className="space-y-8">
+              <div className="flex justify-between gap-4">
+                 <div className="space-y-1">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Total Interest</p>
+                    <p className="text-xl font-bold text-[#1E293B]">{formatCurrency(results.totalInterest)}</p>
+                 </div>
+                 <div className="space-y-1 text-right">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Total Payable</p>
+                    <p className="text-xl font-bold text-[#1E293B]">{formatCurrency(results.totalPayable)}</p>
+                 </div>
+              </div>
+
+              {/* Ratio Bar */}
+              <div className="space-y-3">
+                 <div className="flex justify-between text-[8px] font-black uppercase tracking-widest text-slate-400">
+                    <span className="flex items-center gap-2">
+                       <div className="w-2 h-2 rounded-full bg-[#0EA5E9]" /> Principal
+                    </span>
+                    <span className="flex items-center gap-2">
+                       <div className="w-2 h-2 rounded-full bg-slate-300" /> Interest
+                    </span>
+                 </div>
+                 <div className="w-full h-3 bg-slate-200 rounded-full overflow-hidden flex">
+                    <div className="h-full bg-[#0EA5E9] shadow-inner" style={{ width: `${100 - results.interestRatio}%` }} />
+                    <div className="h-full bg-slate-300" style={{ width: `${results.interestRatio}%` }} />
+                 </div>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
+               <p className="text-[9px] font-bold text-slate-400 italic">Estimated simulation based on chosen parameters.</p>
+               <button className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-widest hover:underline transition-all">Submit Details →</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
   );
 };
-
-const SliderBlock = ({ label, value, min, max, step, color, isDark, onChange, prefix = '', suffix = '' }) => (
-  <div className="space-y-6">
-    <div className="flex justify-between items-center">
-      <h4 className={`text-[11px] font-black uppercase tracking-widest ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{label}</h4>
-      <span className={`text-lg md:text-2xl font-playfair font-black ${color === 'rose' ? 'text-rose-500' : color === 'emerald' ? 'text-emerald-500' : 'text-blue-600'} italic`}>
-        {prefix}{value > 99999 ? (value / 100000).toFixed(value % 100000 === 0 ? 0 : 1) + 'L' : value}{suffix}
-      </span>
-    </div>
-    <div className="relative pt-2">
-      <input
-        type="range" min={min} max={max} step={step}
-        value={value} onChange={e => onChange(Number(e.target.value))}
-        className={`w-full h-1.5 rounded-full appearance-none cursor-pointer bg-${color}-500/20 active:scale-[1.02] transition-transform`}
-        style={{
-           accentColor: color === 'rose' ? '#f43f5e' : color === 'emerald' ? '#10b981' : '#2563eb'
-        }}
-      />
-    </div>
-  </div>
-);
 
 export default EligibilityCalculator;

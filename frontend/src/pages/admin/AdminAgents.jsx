@@ -1,37 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Users, 
-  Plus, 
-  Trash2, 
-  UserPlus, 
-  Building2, 
-  Mail, 
-  Shield, 
-  X,
-  CheckCircle2,
-  AlertCircle,
-  Pencil,
-  Phone,
-  Hash,
-  Search,
-  Filter,
-  UserCheck,
-  User
-} from 'lucide-react';
-import { useTheme } from '../../context/ThemeContext';
-import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import AdminTabs from '../../components/admin/AdminTabs';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 const AdminAgents = () => {
-  const { isDark } = useTheme();
-  const { t } = useTranslation();
   const [users, setUsers] = useState([]);
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({ 
@@ -53,16 +32,19 @@ const AdminAgents = () => {
 
   const fetchData = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const token = localStorage.getItem('swayamfin_token');
       const headers = { Authorization: `Bearer ${token}` };
       const [usersRes, branchesRes] = await Promise.all([
         axios.get(`${API_URL}/api/users`, { headers }),
         axios.get(`${API_URL}/api/branches`, { headers })
       ]);
-      setUsers(usersRes.data.data);
-      setBranches(branchesRes.data.data);
+      setUsers(usersRes.data.data || []);
+      setBranches(branchesRes.data.data || []);
     } catch (err) {
       console.error('Failed to fetch data');
+      setError('Connection to security node failed.');
     } finally {
       setLoading(false);
     }
@@ -72,13 +54,13 @@ const AdminAgents = () => {
     setEditMode(true);
     setEditingId(user._id);
     setFormData({
-      full_name: user.full_name,
-      email: user.email,
+      full_name: user.full_name || '',
+      email: user.email || '',
       password_hash: '',
       phone: user.phone || '',
       employee_code: user.employee_code || '',
       branch_id: user.branch_id?._id || '',
-      role: user.role
+      role: user.role || 'sales_person'
     });
     setShowModal(true);
   };
@@ -96,23 +78,17 @@ const AdminAgents = () => {
 
       if (editMode) {
         await axios.put(`${API_URL}/api/users/${editingId}`, payload, { headers });
-        setNotification({ type: 'success', message: 'Credentials updated successfully!' });
+        setNotification({ type: 'success', message: 'Clearance level updated.' });
       } else {
         await axios.post(`${API_URL}/api/users`, payload, { headers });
-        setNotification({ type: 'success', message: 'New member onboarded!' });
+        setNotification({ type: 'success', message: 'New node onboarded.' });
       }
       
       setShowModal(false);
       setEditMode(false);
       setEditingId(null);
       setFormData({ 
-        full_name: '', 
-        email: '', 
-        password_hash: '', 
-        phone: '',
-        employee_code: '',
-        branch_id: '', 
-        role: 'sales_person' 
+        full_name: '', email: '', password_hash: '', phone: '', employee_code: '', branch_id: '', role: 'sales_person' 
       });
       fetchData();
       setTimeout(() => setNotification(null), 3000);
@@ -122,312 +98,180 @@ const AdminAgents = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to revoke access?')) return;
+    if (!window.confirm('Are you sure you want to revoke access for this node?')) return;
     try {
       const token = localStorage.getItem('swayamfin_token');
       await axios.delete(`${API_URL}/api/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setNotification({ type: 'success', message: 'Access revoked' });
+      setNotification({ type: 'success', message: 'Access revoked.' });
       fetchData();
       setTimeout(() => setNotification(null), 3000);
     } catch (err) {
-      setNotification({ type: 'error', message: 'Failed to delete' });
+      setNotification({ type: 'error', message: 'Termination failed.' });
     }
   };
 
   const filteredUsers = users.filter(u => 
-    u.full_name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    u.role.toLowerCase().includes(searchTerm.toLowerCase())
+    u.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    u.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.role?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) return (
-    <div className={`min-h-screen ${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} flex items-center justify-center`}>
-      <div className="w-12 h-12 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center space-y-4">
+       <div className="w-12 h-12 border-4 border-[#0EA5E9]/20 border-t-[#0EA5E9] rounded-full animate-spin" />
+       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Checking Personnel Security...</p>
+    </div>
+  );
+
+  if (error) return (
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center space-y-6">
+       <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-2xl">!</div>
+       <div className="space-y-2">
+         <h2 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">Access Restricted</h2>
+         <p className="text-slate-500 text-sm font-medium italic max-w-md">{error}</p>
+       </div>
+       <button onClick={fetchData} className="btn-primary py-3 px-8 text-xs">Reconnect Security Hub</button>
     </div>
   );
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-800'} px-4 md:px-12 pt-24 md:pt-28 font-inter transition-colors duration-300`}>
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 px-4 md:px-12 pt-24 md:pt-32 pb-32">
       <div className="max-w-7xl mx-auto">
         <AdminTabs />
         
-        {/* Header - Premium Styled */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-16">
-          <div className="flex items-center gap-6">
-             <div className="relative">
-                <div className="absolute inset-0 bg-blue-600 blur-2xl opacity-20 scale-125" />
-                <div className={`${isDark ? 'bg-white/5 border-white/10 shadow-2xl shadow-black/50' : 'bg-blue-600 border-blue-700 shadow-xl shadow-blue-600/30'} rounded-[24px] p-5 border relative z-10 hover:scale-105 transition-transform`}>
-                   <Users className={`w-8 h-8 ${isDark ? 'text-blue-400' : 'text-white'}`} />
-                </div>
-             </div>
-             <div>
-                <h1 className={`text-4xl font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-tighter uppercase mb-1`}>Personnel Directory</h1>
-                <p className={`${isDark ? 'text-slate-500' : 'text-slate-500'} text-[11px] font-black uppercase tracking-[0.3em]`}>Global Workforce Governance</p>
-             </div>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-            <div className="relative flex-1 sm:w-64 group">
-               <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 ${isDark ? 'text-slate-500' : 'text-slate-400'} group-focus-within:text-blue-500 transition-colors`} />
-               <input 
-                 type="text" 
-                 placeholder="Filter directory..."
-                 className={`w-full pl-11 pr-4 py-4 ${isDark ? 'bg-white/5 border-white/5 text-white' : 'bg-white border-slate-200 text-slate-900 shadow-sm'} rounded-2xl border text-xs font-black outline-none focus:border-blue-500 transition-all`}
-                 value={searchTerm}
-                 onChange={e => setSearchTerm(e.target.value)}
-               />
-            </div>
-            <button 
-              onClick={() => {
-                setEditMode(false);
-                setFormData({ 
-                  full_name: '', email: '', password_hash: '', phone: '', employee_code: '', branch_id: '', role: 'sales_person' 
-                });
-                setShowModal(true);
-              }}
-              className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl font-black flex items-center justify-center gap-3 shadow-2xl shadow-blue-600/30 active:scale-95 transition-all uppercase tracking-widest text-[11px]"
-            >
-              <UserPlus className="w-5 h-5" /> Onboard Human Capital
-            </button>
-          </div>
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-16 px-2">
+           <div>
+              <div className="flex items-center gap-3 mb-4">
+                 <div className="w-2 h-2 rounded-full bg-[#0EA5E9]" />
+                 <span className="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em]">Personnel Management Node</span>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-black text-[#1E293B] uppercase tracking-tighter leading-none">
+                 Team <span className="text-[#0EA5E9] italic">Directory.</span>
+              </h1>
+           </div>
+           
+           <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+              <div className="relative w-full sm:w-64">
+                 <input 
+                   type="text" 
+                   placeholder="Filter Personnel..."
+                   className="input-standard w-full h-14 rounded-2xl px-12"
+                   value={searchTerm}
+                   onChange={e => setSearchTerm(e.target.value)}
+                 />
+                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-xs font-black">S</span>
+              </div>
+              <button 
+                onClick={() => {
+                  setEditMode(false);
+                  setFormData({ 
+                    full_name: '', email: '', password_hash: '', phone: '', employee_code: '', branch_id: '', role: 'sales_person' 
+                  });
+                  setShowModal(true);
+                }}
+                className="btn-primary px-8 py-4 rounded-2xl text-[10px] uppercase tracking-widest shadow-2xl"
+              >
+                Onboard New Node
+              </button>
+           </div>
         </div>
 
         {/* Notifications */}
         <AnimatePresence>
           {notification && (
             <motion.div 
-              initial={{ opacity: 0, y: -20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className={`mb-10 p-6 rounded-[32px] flex items-center gap-4 font-black uppercase tracking-widest text-[10px] border shadow-2xl ${notification.type === 'success' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-rose-500/10 text-rose-500 border-rose-500/20'}`}
+              initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+              className={`mb-8 p-6 rounded-[24px] text-[10px] font-black uppercase tracking-widest border shadow-xl ${notification.type === 'success' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100'}`}
             >
-              {notification.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
               {notification.message}
-              <button className="ml-auto opacity-50 hover:opacity-100" onClick={() => setNotification(null)}><X className="w-4 h-4" /></button>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* User Intelligence Grid */}
+        {/* User Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredUsers.map((u, i) => (
             <motion.div
               key={u._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-              className={`${isDark ? 'bg-white/2 border-white/5 shadow-2xl shadow-black/50 hover:bg-white/5' : 'bg-white border-slate-200 shadow-xl shadow-slate-200/50 hover:border-blue-400'} rounded-[48px] p-8 border group relative transition-all h-full flex flex-col hover:scale-[1.02]`}
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              className="bg-white border border-slate-100 p-10 rounded-[48px] shadow-sm hover:shadow-2xl hover:border-[#0EA5E9]/30 transition-all flex flex-col justify-between group h-[400px]"
             >
-              <div className="absolute top-8 right-8 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
-                <button 
-                  onClick={() => handleEdit(u)}
-                  className={`${isDark ? 'bg-white/5 hover:bg-blue-500/20 text-slate-500' : 'bg-slate-50 hover:bg-blue-50 text-slate-400'} p-3 rounded-xl hover:text-blue-500 transition-all border ${isDark ? 'border-white/10' : 'border-slate-100'}`}
-                >
-                  <Pencil className="w-4 h-4" />
-                </button>
-                <button 
-                  onClick={() => handleDelete(u._id)}
-                  className={`${isDark ? 'bg-white/5 hover:bg-rose-500/20 text-slate-500' : 'bg-slate-50 hover:bg-rose-50 text-slate-400'} p-3 rounded-xl hover:text-rose-500 transition-all border ${isDark ? 'border-white/10' : 'border-slate-100'}`}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-              
-              <div className={`${isDark ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-slate-50 text-slate-300 border-slate-100'} w-14 h-14 rounded-[22px] flex items-center justify-center mb-8 group-hover:scale-110 transition-transform border`}>
-                <Shield className="w-7 h-7" />
-              </div>
-              
-              <h3 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'} mb-2 tracking-tight`}>{u.full_name}</h3>
-              <div className="flex items-center gap-2 text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] mb-8">
-                <Building2 className="w-4 h-4" />
-                {u.branch_id?.name || 'Central Command'}
+              <div className="space-y-6">
+                <div className="flex justify-between items-start">
+                   <div className="w-14 h-14 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center font-black text-[#0EA5E9] group-hover:bg-[#0EA5E9] group-hover:text-white transition-all">
+                      {u.full_name?.charAt(0)}
+                   </div>
+                   <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                      <button onClick={() => handleEdit(u)} className="p-2 transition-all hover:text-[#0EA5E9]">E</button>
+                      <button onClick={() => handleDelete(u._id)} className="p-2 transition-all hover:text-rose-500">×</button>
+                   </div>
+                </div>
+                <div>
+                   <Link to={`/admin/agents/${u._id}`} className="group/link">
+                      <h3 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight truncate group-hover/link:text-[#0EA5E9] transition-all">{u.full_name}</h3>
+                   </Link>
+                   <p className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-widest mt-2">{u.branch_id?.name || 'Central Hub'}</p>
+                </div>
               </div>
 
-              <div className={`space-y-4 pt-6 border-t ${isDark ? 'border-white/5' : 'border-slate-100'} mt-auto`}>
-                <div className="flex items-center gap-3 ${isDark ? 'text-slate-400' : 'text-slate-500'} font-bold">
-                  <Mail className="w-4 h-4 text-slate-400" />
-                  <span className="text-[11px] truncate uppercase tracking-tight opacity-70">{u.email}</span>
-                </div>
-                <div className="flex items-center gap-3 ${isDark ? 'text-slate-400' : 'text-slate-500'} font-bold">
-                  <Phone className="w-4 h-4 text-slate-400" />
-                  <span className="text-[11px] uppercase tracking-tight opacity-70">{u.phone}</span>
-                </div>
-                <div className="flex items-center gap-3 ${isDark ? 'text-slate-400' : 'text-slate-500'} font-bold">
-                  <Hash className="w-4 h-4 text-slate-400" />
-                  <span className="text-[11px] uppercase tracking-tight opacity-70">{u.employee_code}</span>
-                </div>
-                <div className="mt-8 flex flex-wrap gap-2">
-                  <span className={`text-[9px] font-black uppercase tracking-widest px-4 py-2 rounded-xl border shadow-sm ${
-                    u.role === 'admin' ? (isDark ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' : 'bg-indigo-600 text-white border-indigo-700') : 
-                    u.role === 'bsm' ? (isDark ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' : 'bg-amber-100 text-amber-700 border-amber-200') : 
-                    (isDark ? 'bg-white/10 text-slate-400 border-white/20' : 'bg-slate-100 text-slate-700 border-slate-200')
-                  }`}>
-                    {u.role.replace('_', ' ')}
-                  </span>
-                  {u.is_active && (
-                    <span className="text-[9px] font-black bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-4 py-2 rounded-xl uppercase tracking-widest shadow-sm flex items-center gap-1.5">
-                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Active
-                    </span>
-                  )}
-                </div>
+              <div className="pt-8 border-t border-slate-100 space-y-4">
+                 <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 italic">
+                    <span className="uppercase tracking-widest">Email Node</span>
+                    <span className="text-[#1E293B] font-black not-italic">{u.email}</span>
+                 </div>
+                 <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 italic">
+                    <span className="uppercase tracking-widest">Access Level</span>
+                    <span className="bg-slate-100 text-[#1E293B] px-3 py-1 rounded-full text-[9px] font-black uppercase shadow-inner">{u.role}</span>
+                 </div>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Modal - High Contrast Reset */}
+        {/* Modal */}
         <AnimatePresence>
           {showModal && (
-            <div className="fixed inset-0 flex items-center justify-center z-[100] p-4 md:p-8">
-              <motion.div 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
-                exit={{ opacity: 0 }} 
-                className="absolute inset-0 bg-[#020617]/90 backdrop-blur-3xl" 
-                onClick={() => setShowModal(false)} 
-              />
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95, y: 40 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 40 }}
-                className={`relative w-full max-w-4xl h-fit max-h-[90vh] ${isDark ? 'bg-[#0B0F19]/80 border-white/10 shadow-3xl shadow-black/80' : 'bg-white border-slate-200 shadow-2xl shadow-slate-200'} border rounded-[48px] overflow-y-auto overflow-x-hidden backdrop-blur-xl flex flex-col md:flex-row`}
-              >
-                {/* Visual Anchor Sidebar */}
-                <div className={`w-full md:w-1/3 p-12 ${isDark ? 'bg-blue-600/10' : 'bg-blue-50'} flex flex-col justify-between border-r ${isDark ? 'border-white/5' : 'border-slate-100'}`}>
-                   <div>
-                      <div className="w-16 h-16 bg-blue-600 rounded-[22px] flex items-center justify-center mb-8 shadow-2xl shadow-blue-600/40">
-                         <Shield className="text-white w-8 h-8" />
-                      </div>
-                      <h2 className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-none tracking-tighter uppercase mb-4`}>
-                        {editMode ? 'Modify \nClearance' : 'Onboard \nTalent'}
-                      </h2>
-                      <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] leading-relaxed">Infrastructure Access Protocol v4.2</p>
-                   </div>
-                   <div className="mt-12 space-y-6">
-                      <div className="flex items-center gap-4 text-[9px] font-black uppercase tracking-widest text-slate-400">
-                         <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                         Secure Encryption Enabled
-                      </div>
-                   </div>
-                </div>
-
-                {/* Form Matrix */}
-                <div className="flex-1 p-10 md:p-14">
-                  <form onSubmit={handleSubmit} className="space-y-8 relative">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                       <div className="space-y-3">
-                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Full Legal Name</label>
-                          <div className="relative group">
-                             <User className={`absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-blue-500' : 'text-slate-400'}`} />
-                             <input 
-                               required
-                               className={`w-full pl-14 pr-6 py-4 px-1 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 focus:bg-transparent rounded-2xl transition-all outline-none font-bold text-sm`}
-                               value={formData.full_name}
-                               onChange={e => setFormData({...formData, full_name: e.target.value})}
-                               placeholder="e.g. Vikkrant Prasad"
-                             />
-                          </div>
-                       </div>
-                       <div className="space-y-3">
-                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Officer Email</label>
-                          <div className="relative group">
-                             <Mail className={`absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-blue-500' : 'text-slate-400'}`} />
-                             <input 
-                               required
-                               type="email"
-                               className={`w-full pl-14 pr-6 py-4 px-1 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 focus:bg-transparent rounded-2xl transition-all outline-none font-bold text-sm`}
-                               value={formData.email}
-                               onChange={e => setFormData({...formData, email: e.target.value})}
-                               placeholder="name@swayamfin.com"
-                             />
-                          </div>
-                       </div>
+            <div className="fixed inset-0 flex items-center justify-center z-[100] px-6">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[#1E293B]/90 backdrop-blur-3xl" onClick={() => setShowModal(false)} />
+              <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="bg-white rounded-[60px] p-12 md:p-16 max-w-4xl w-full relative z-10 shadow-3xl overflow-hidden">
+                 <div className="absolute top-0 right-0 w-64 h-64 bg-[#0EA5E9]/5 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2" />
+                 
+                 <div className="relative z-10 space-y-12">
+                    <div className="text-center md:text-left">
+                       <h2 className="text-4xl font-black text-[#1E293B] uppercase tracking-tighter leading-none">{editMode ? 'Modify Clearance' : 'Onboard Node'}</h2>
+                       <p className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em] mt-2 italic">Infrastructure Credentials</p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                       <div className="space-y-3">
-                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Direct Mobile</label>
-                          <div className="relative group">
-                             <Phone className={`absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-blue-500' : 'text-slate-400'}`} />
-                             <input 
-                               required
-                               className={`w-full pl-14 pr-6 py-4 px-1 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 focus:bg-transparent rounded-2xl transition-all outline-none font-bold text-sm`}
-                               value={formData.phone}
-                               onChange={e => setFormData({...formData, phone: e.target.value})}
-                               placeholder="+91 00000 00000"
-                             />
-                          </div>
-                       </div>
-                       <div className="space-y-3">
-                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Staff Code</label>
-                          <div className="relative group">
-                             <Hash className={`absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-blue-500' : 'text-slate-400'}`} />
-                             <input 
-                               required
-                               className={`w-full pl-14 pr-6 py-4 px-1 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 focus:bg-transparent rounded-2xl transition-all outline-none font-bold text-sm`}
-                               value={formData.employee_code}
-                               onChange={e => setFormData({...formData, employee_code: e.target.value})}
-                               placeholder="BSM001"
-                             />
-                          </div>
-                       </div>
-                    </div>
+                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                       <InputGroup label="Full Legal Name" value={formData.full_name} onChange={v => setFormData({...formData, full_name: v})} />
+                       <InputGroup label="Officer Email" value={formData.email} onChange={v => setFormData({...formData, email: v})} type="email" />
+                       <InputGroup label="Communication Link" value={formData.phone} onChange={v => setFormData({...formData, phone: v})} />
+                       <InputGroup label="Employee ID / Code" value={formData.employee_code} onChange={v => setFormData({...formData, employee_code: v})} />
+                       
+                       <SelectGroup label="Strategic Role" value={formData.role} onChange={v => setFormData({...formData, role: v})} options={[
+                         {v: 'sales_person', l: 'Strategic Partner'},
+                         {v: 'bsm', l: 'Hub Manager'},
+                         {v: 'admin', l: 'Global Admin'}
+                       ]} />
+                       
+                       <SelectGroup label="Deployment Hub" value={formData.branch_id} onChange={v => setFormData({...formData, branch_id: v})} options={[
+                         {v: '', l: 'Select Hub Node'},
+                         ...branches.map(b => ({v: b._id, l: b.name}))
+                       ]} />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                       <div className="space-y-3">
-                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Personnel Role</label>
-                          <select 
-                            required
-                            className={`w-full px-6 py-4 ${isDark ? 'bg-[#111827] border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 rounded-2xl outline-none font-bold text-sm appearance-none cursor-pointer`}
-                            value={formData.role}
-                            onChange={e => setFormData({...formData, role: e.target.value})}
-                          >
-                            <option value="sales_person">Strategic Sales Person</option>
-                            <option value="bsm">Branch Sales Manager</option>
-                            <option value="admin">Global Administrator</option>
-                          </select>
+                       <div className="md:col-span-2">
+                          <InputGroup label={editMode ? 'Security Overwrite (Blank to retain)' : 'Master Security Key'} value={formData.password_hash} onChange={v => setFormData({...formData, password_hash: v})} type="password" />
                        </div>
-                       <div className="space-y-3">
-                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Deployment Hub</label>
-                          <select 
-                            required={formData.role !== 'admin'}
-                            disabled={formData.role === 'admin'}
-                            className={`w-full px-6 py-4 ${isDark ? 'bg-[#111827] border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 rounded-2xl outline-none font-bold text-sm appearance-none disabled:opacity-20 cursor-pointer`}
-                            value={formData.branch_id}
-                            onChange={e => setFormData({...formData, branch_id: e.target.value})}
-                          >
-                            <option value="">Select Strategic Hub</option>
-                            {branches.map(b => (
-                              <option key={b._id} value={b._id}>{b.name}</option>
-                            ))}
-                          </select>
-                       </div>
-                    </div>
 
-                    <div className="space-y-3">
-                       <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">
-                         {editMode ? 'Authentication Key Overwrite (Keep blank to retain current)' : 'Security Key Establishment'}
-                       </label>
-                       <input 
-                         required={!editMode}
-                         type="password"
-                         className={`w-full px-6 py-4 px-1 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900 shadow-inner'} focus:border-blue-500 focus:bg-transparent rounded-2xl transition-all outline-none font-bold text-sm`}
-                         value={formData.password_hash}
-                         onChange={e => setFormData({...formData, password_hash: e.target.value})}
-                         placeholder="••••••••••••"
-                       />
-                    </div>
-                    
-                    <div className="pt-10 flex gap-6">
-                      <button type="button" onClick={() => setShowModal(false)} className={`flex-1 py-5 ${isDark ? 'bg-white/5 text-slate-400 hover:text-white border-white/5' : 'bg-slate-50 text-slate-500 border-slate-100'} font-black rounded-2xl transition-all border uppercase tracking-widest text-[10px]`}>Discard</button>
-                      <button type="submit" className="flex-2 px-12 py-5 bg-blue-600 text-white font-black rounded-2xl shadow-2xl shadow-blue-600/30 hover:bg-blue-500 transition-all uppercase tracking-widest text-[10px] flex items-center justify-center gap-3">
-                         <Shield className="w-4 h-4" /> Confirm Protocol
-                      </button>
-                    </div>
-                  </form>
-                </div>
+                       <div className="md:col-span-2 pt-6 flex gap-4">
+                          <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-5 bg-slate-50 text-slate-400 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-all">Abort</button>
+                          <button type="submit" className="flex-[2] py-5 btn-primary rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] shadow-2xl">Confirm Transmission</button>
+                       </div>
+                    </form>
+                 </div>
               </motion.div>
             </div>
           )}
@@ -437,5 +281,21 @@ const AdminAgents = () => {
     </div>
   );
 };
+
+const InputGroup = ({ label, value, onChange, type = 'text' }) => (
+  <div className="space-y-2">
+    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{label}</label>
+    <input type={type} className="input-standard w-full h-14 rounded-2xl px-6 text-sm" value={value} onChange={e => onChange(e.target.value)} required={type !== 'password'} />
+  </div>
+);
+
+const SelectGroup = ({ label, value, onChange, options }) => (
+  <div className="space-y-2">
+    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{label}</label>
+    <select className="input-standard w-full h-14 rounded-2xl px-6 text-sm appearance-none cursor-pointer" value={value} onChange={e => onChange(e.target.value)}>
+      {options.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
+    </select>
+  </div>
+);
 
 export default AdminAgents;

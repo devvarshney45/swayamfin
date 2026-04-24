@@ -1,37 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Phone, 
-  Search, 
-  ChevronRight, 
-  LogOut, 
-  MapPin, 
-  UserSquare2, 
-  TrendingUp, 
-  CheckCircle, 
-  XCircle, 
-  Plus,
-  LayoutDashboard,
-  Filter,
-  ArrowUpRight,
-  Target,
-  Menu,
-  X
-} from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useTheme } from '../context/ThemeContext';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 const AgentDashboard = () => {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const { t } = useTranslation();
-  const { isDark } = useTheme();
 
   useEffect(() => {
     fetchLeads();
@@ -39,17 +21,18 @@ const AgentDashboard = () => {
 
   const fetchLeads = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const token = localStorage.getItem('swayamfin_token');
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001';
-      const response = await fetch(`${apiUrl}/api/leads`, {
+      if (!token) throw new Error('Session Expired.');
+
+      const response = await axios.get(`${API_URL}/api/leads`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      const result = await response.json();
-      if (result.success) {
-        setLeads(result.data);
-      }
-    } catch (error) {
-      console.error('Error fetching leads:', error);
+      setLeads(response.data.data || []);
+    } catch (err) {
+      console.error('Fetch Leads Error:', err);
+      setError(err.response?.data?.message || err.message || 'Transmission Error.');
     } finally {
       setLoading(false);
     }
@@ -61,12 +44,6 @@ const AgentDashboard = () => {
   };
 
   const activeLeadsCount = leads.filter(l => ['New', 'Contacted', 'In Progress', 'Document Submitted'].includes(l.status)).length;
-  const wonLeadsCount = leads.filter(l => l.status === 'Closed - Won' || l.status === 'Disbursed' || l.status === 'Sanctioned').length;
-
-  const pipelineValue = leads
-    .filter(l => ['New', 'Contacted', 'In Progress', 'Document Submitted'].includes(l.status))
-    .reduce((sum, l) => sum + (Number(l.loan_amount_required) || 0), 0);
-
   const actualDisbursed = leads
     .filter(l => l.status === 'Disbursed' || l.status === 'Closed - Won')
     .reduce((sum, l) => sum + (Number(l.loan_amount_required) || 0), 0);
@@ -75,238 +52,166 @@ const AgentDashboard = () => {
   const targetProgress = Math.min((actualDisbursed / monthlyTarget) * 100, 100);
 
   const filteredLeads = leads.filter(l => {
-    const matchesSearch = l.applicant_name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          l.lead_number.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = l.applicant_name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          l.lead_number?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = filterStatus === 'All' || l.status === filterStatus;
     return matchesSearch && matchesFilter;
   });
 
   const getStatusColor = (status) => {
     switch(status) {
-      case 'New': return isDark ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-blue-50 text-blue-600 border-blue-200';
-      case 'Contacted': return isDark ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' : 'bg-yellow-50 text-yellow-600 border-yellow-200';
-      case 'In Progress': return isDark ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' : 'bg-indigo-50 text-indigo-600 border-indigo-200';
-      case 'Document Submitted': return isDark ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' : 'bg-purple-50 text-purple-600 border-purple-200';
+      case 'New': return 'bg-blue-50 text-blue-600 border-blue-200';
+      case 'Contacted': return 'bg-yellow-50 text-yellow-600 border-yellow-200';
+      case 'In Progress': return 'bg-indigo-50 text-indigo-600 border-indigo-200';
+      case 'Document Submitted': return 'bg-purple-50 text-purple-600 border-purple-200';
       case 'Sanctioned': 
       case 'Disbursed': 
-      case 'Closed - Won': return isDark ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-50 text-emerald-600 border-emerald-200';
-      case 'Dead Lead': return isDark ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-rose-50 text-rose-600 border-rose-200';
-      default: return isDark ? 'bg-slate-500/10 text-slate-400 border-slate-500/20' : 'bg-slate-50 text-slate-600 border-slate-200';
+      case 'Closed - Won': return 'bg-green-50 text-green-600 border-green-200';
+      case 'Dead Lead': return 'bg-red-50 text-red-600 border-red-200';
+      default: return 'bg-slate-50 text-slate-600 border-slate-200';
     }
   };
 
+  if (loading) return (
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center space-y-4">
+       <div className="w-12 h-12 border-4 border-[#0EA5E9]/20 border-t-[#0EA5E9] rounded-full animate-spin" />
+       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Syncing Partner Node...</p>
+    </div>
+  );
+
+  if (error) return (
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center space-y-6">
+       <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-2xl">!</div>
+       <div className="space-y-4">
+         <h2 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">Access Restricted</h2>
+         <p className="text-slate-500 text-sm font-medium italic max-w-md">{error}</p>
+       </div>
+       <div className="flex gap-4">
+          <button onClick={fetchLeads} className="btn-primary py-3 px-8 text-[10px] uppercase">Retry</button>
+          <button onClick={handleLogout} className="bg-slate-100 py-3 px-8 text-[10px] uppercase font-black text-slate-500 rounded-lg">Sign Out</button>
+       </div>
+    </div>
+  );
+
   return (
-    <div className={`${isDark ? 'bg-[#020617] text-white' : 'bg-[#F8FAFC] text-slate-900'} min-h-screen pt-24 md:pt-28 pb-20 font-inter transition-colors duration-300 relative`}>
-      {/* Mobile-First Header - Optimized Alignment */}
-      <div className={(isDark ? 'bg-white/2 border-white/5' : 'bg-white/90 border-slate-200 shadow-xl shadow-slate-200/50') + ' border-b relative z-10 backdrop-blur-2xl transition-all'}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4 md:py-6">
-            <div className="flex items-center gap-3 md:gap-5">
-              <Link to="/" className="relative group">
-                <div className="absolute inset-0 bg-blue-600 blur-lg opacity-20 scale-125 rounded-full" />
-                <div className={(isDark ? 'bg-white/10 border-white/20' : 'bg-blue-600 border-blue-700') + ' w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center border shadow-xl relative z-10 transition-transform group-hover:rotate-3'}>
-                  <UserSquare2 className={"w-5 h-5 md:w-7 md:h-7 " + (isDark ? 'text-blue-400' : 'text-white')} />
-                </div>
-              </Link>
-              <div>
-                <h1 className={(isDark ? 'text-white' : 'text-slate-900') + " text-lg md:text-2xl font-black tracking-tight leading-none mb-1 md:mb-2"}>
-                   Agent Portal
-                </h1>
-                <div className="flex items-center gap-2">
-                   <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-emerald-500 animate-pulse" />
-                   <p className={(isDark ? 'text-slate-500' : 'text-slate-500') + " text-[9px] md:text-[11px] font-black uppercase tracking-widest truncate max-w-[120px] md:max-w-none"}>
-                     {user?.full_name || 'Active Partner'}
-                   </p>
-                </div>
-              </div>
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 pb-20 relative">
+      {/* Header Overlay */}
+      <div className="bg-white/90 border-b border-slate-100 fixed top-0 left-0 right-0 z-50 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div className="flex items-center gap-4">
+               <div className="w-12 h-12 bg-[#0EA5E9] rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg">
+                  {user?.full_name?.charAt(0) || 'A'}
+               </div>
+               <div>
+                  <h1 className="text-xl font-black text-[#1E293B] uppercase tracking-tighter leading-none">Partner <span className="text-[#0EA5E9] italic">Hub.</span></h1>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1 italic">{user?.full_name}</p>
+               </div>
             </div>
-            <div className="flex items-center gap-2 md:gap-4">
-               <button 
-                 onClick={handleLogout}
-                 className={(isDark ? 'bg-white/5 border-white/10 text-slate-400 hover:text-rose-400' : 'bg-white border-slate-200 text-slate-500 hover:text-rose-600') + ' w-10 h-10 md:w-auto md:px-5 md:py-3 rounded-xl md:rounded-2xl flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest transition-all border shadow-sm active:scale-95'}
-               >
-                 <LogOut className="w-4 h-4" /> <span className="hidden md:inline">Sign Out</span>
-               </button>
-            </div>
-          </div>
+            <button onClick={handleLogout} className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors">Terminate Session</button>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 md:pt-36">
-        {/* Responsive KPI Grid: 2 cols on mobile, 4 on desktop */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12">
-          <StatCard title="Total Leads" value={leads.length} icon={<LayoutDashboard />} color="blue" delay={0} isDark={isDark} />
-          <StatCard title="Pipeline" value={"₹" + (pipelineValue/100000).toFixed(0) + "L"} icon={<TrendingUp />} color="indigo" delay={0.1} isDark={isDark} />
-          <StatCard title="Disbursed" value={"₹" + (actualDisbursed/100000).toFixed(0) + "L"} icon={<CheckCircle />} color="emerald" delay={0.2} isDark={isDark} />
-          <StatCard title="Success" value={(leads.length > 0 ? Math.round((wonLeadsCount/leads.length)*100) : 0) + "%"} icon={<ArrowUpRight />} color="rose" delay={0.3} isDark={isDark} />
+      <div className="max-w-7xl mx-auto px-6 pt-32">
+        {/* KPI Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+           <StatCard title="Total Leads" value={leads.length} sub="Cumulative" />
+           <StatCard title="Active PPL" value={activeLeadsCount} sub="In Pipeline" color="blue" />
+           <StatCard title="Disbursed" value={`₹${(actualDisbursed/100000).toFixed(1)}L`} sub="Approved" color="emerald" />
+           <StatCard title="Success" value={(leads.length > 0 ? Math.round((leads.filter(l=>['Disbursed','Closed - Won'].includes(l.status)).length/leads.length)*100) : 0) + "%"} sub="Win Rate" color="rose" />
         </div>
 
-        {/* Target & Controls Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-12">
-           {/* Mobile-Optimized Target Progress */}
-           <div className={(isDark ? 'bg-white/5 border-white/5 shadow-2xl' : 'bg-white border-slate-200 shadow-xl') + " lg:col-span-1 p-6 md:p-8 rounded-[32px] md:rounded-[40px] border flex flex-col justify-between relative overflow-hidden group"}>
-              <div className={"absolute top-0 right-0 w-32 h-32 " + (isDark ? 'bg-blue-600/10' : 'bg-blue-600/5') + " blur-3xl rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"} />
-              <div>
-                <div className="flex justify-between items-center mb-5 md:mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-blue-500/10 rounded-xl border border-blue-500/20 shrink-0">
-                      <Target className="w-5 h-5 text-blue-500" />
-                    </div>
-                    <span className={(isDark ? 'text-slate-400' : 'text-slate-600') + " text-[9px] md:text-[10px] font-black uppercase tracking-widest"}>Monthly Goal</span>
+        {/* Action Bar */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+           <div className="bg-white border border-slate-100 p-8 rounded-[40px] shadow-sm relative overflow-hidden group">
+              <div className="flex justify-between items-center mb-6">
+                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Monthly Target</span>
+                 <span className="text-xl font-black text-[#0EA5E9]">{targetProgress.toFixed(0)}%</span>
+              </div>
+              <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                 <motion.div initial={{ width: 0 }} animate={{ width: `${targetProgress}%` }} className="h-full bg-[#0EA5E9]" />
+              </div>
+              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-4 italic">₹{(actualDisbursed/100000).toFixed(1)}L / ₹1.0Cr Milestone</p>
+           </div>
+
+           <div className="lg:col-span-2 flex flex-col sm:flex-row gap-4">
+              <input 
+                type="text" 
+                placeholder="Search cases by ID or Name..."
+                className="input-standard flex-1 h-20 rounded-[28px] px-8 text-sm"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Link to="/agent/lead/new" className="btn-primary h-20 px-12 rounded-[28px] flex items-center justify-center text-[10px] uppercase tracking-widest shadow-2xl">
+                 Generate New Case
+              </Link>
+           </div>
+        </div>
+
+        {/* List Header */}
+        <div className="flex justify-between items-center mb-8 px-2">
+           <h2 className="text-xl font-black text-[#1E293B] uppercase tracking-tighter">Node <span className="text-[#0EA5E9] italic text-sm">Repository</span> ({filteredLeads.length})</h2>
+           <select 
+             className="input-standard w-40 h-10 rounded-xl text-[10px] uppercase tracking-widest font-black appearance-none"
+             value={filterStatus}
+             onChange={(e) => setFilterStatus(e.target.value)}
+           >
+              <option value="All">All States</option>
+              <option value="New">New</option>
+              <option value="In Progress">Active</option>
+              <option value="Disbursed">Disbursed</option>
+              <option value="Dead Lead">Dead</option>
+           </select>
+        </div>
+
+        {/* Grid Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+           <AnimatePresence>
+             {filteredLeads.map((lead, i) => (
+               <motion.div
+                 key={lead._id}
+                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                 transition={{ delay: i * 0.05 }}
+                 className="bg-white border border-slate-100 p-8 rounded-[40px] hover:shadow-2xl hover:border-[#0EA5E9]/30 transition-all cursor-pointer group flex flex-col justify-between"
+                 onClick={() => navigate(`/agent/lead/${lead._id}`)}
+               >
+                  <div className="space-y-6">
+                     <div className="flex justify-between items-start">
+                        <span className="text-[9px] font-black text-[#0EA5E9] uppercase tracking-widest">{lead.lead_number}</span>
+                        <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border ${getStatusColor(lead.status)} text-center`}>{lead.status}</span>
+                     </div>
+                     <h3 className="text-xl font-black text-[#1E293B] group-hover:text-[#0EA5E9] transition-all uppercase tracking-tight truncate">{lead.applicant_name}</h3>
                   </div>
-                  <span className="text-lg md:text-xl font-black text-blue-600">{targetProgress.toFixed(0)}%</span>
-                </div>
-                <div className={(isDark ? 'bg-white/5' : 'bg-slate-100') + " w-full h-2.5 rounded-full overflow-hidden mb-5 md:mb-6 shadow-inner"}>
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: targetProgress + "%" }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className="h-full bg-gradient-to-r from-blue-600 to-indigo-500 rounded-full"
-                  />
-                </div>
-                <p className={(isDark ? 'text-slate-500' : 'text-slate-500') + " text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-center md:text-left"}>
-                   ₹{(actualDisbursed/100000).toFixed(1)}L / ₹1.0Cr Target
-                </p>
-              </div>
-           </div>
-
-           {/* Mobile-Friendly Search & Action */}
-           <div className="lg:col-span-2 flex flex-col sm:flex-row gap-4 items-center">
-              <div className="relative flex-1 group w-full">
-                <Search className={"absolute left-5 top-1/2 -translate-y-1/2 " + (isDark ? 'text-slate-500 group-focus-within:text-blue-500' : 'text-slate-400 group-focus-within:text-blue-600') + " w-5 h-5 transition-colors"} />
-                <input 
-                  type="text" 
-                  placeholder="Case search..."
-                  className={(isDark ? 'bg-white/5 border-white/10 text-white placeholder-slate-700' : 'bg-white border-slate-200 text-slate-900 shadow-sm') + " w-full pl-12 pr-6 py-4 md:py-5 rounded-2xl md:rounded-[28px] focus:outline-none border-2 focus:border-blue-500 transition-all font-black text-xs md:text-sm shadow-inner"}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <button 
-                onClick={() => navigate('/agent/lead/new')}
-                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl md:rounded-[28px] font-black text-xs uppercase tracking-[0.2em] shadow-2xl shadow-blue-600/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 shrink-0"
-              >
-                <Plus className="w-5 h-5" /> New Case
-              </button>
-           </div>
-        </div>
-
-        {/* Lead Repository Header */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between mb-8 px-2 md:px-4">
-           <h2 className={(isDark ? 'text-white' : 'text-slate-900') + " text-lg md:text-xl font-black flex items-center w-full"}>
-              <LayoutDashboard className="w-5 h-5 md:w-6 md:h-6 mr-3 text-blue-500" /> Repository <span className="ml-2 text-[10px] text-slate-500 font-bold opacity-60">({filteredLeads.length})</span>
-           </h2>
-           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-              <Filter className="w-3.5 h-3.5 text-slate-500" />
-              <select 
-                 className={(isDark ? 'bg-[#111827] text-slate-300 border-white/5' : 'bg-white text-slate-700 shadow-sm border-slate-200') + " px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest outline-none cursor-pointer border shadow-sm transition-all"}
-                 value={filterStatus}
-                 onChange={(e) => setFilterStatus(e.target.value)}
-              >
-                 <option value="All">All Categories</option>
-                 <option value="New">New Entries</option>
-                 <option value="In Progress">Active</option>
-                 <option value="Disbursed">Disbursed</option>
-                 <option value="Dead Lead">Dead</option>
-              </select>
-           </div>
-        </div>
-
-        {loading ? (
-          <div className="flex justify-center py-20 md:py-32">
-            <div className="w-10 h-10 md:w-12 md:h-12 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
-            <AnimatePresence>
-              {filteredLeads.map((lead, idx) => (
-                <motion.div 
-                  key={lead._id}
-                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ delay: idx * 0.05 }}
-                  className={(isDark ? 'bg-white/5 border-white/5 hover:border-blue-500 shadow-22xl shadow-black/40' : 'bg-white border-slate-200 hover:border-blue-400 shadow-lg shadow-slate-200/40') + " group rounded-[32px] md:rounded-[40px] p-6 md:p-8 border transition-all cursor-pointer relative overflow-hidden active:scale-[0.98]"}
-                  onClick={() => navigate(`/agent/lead/${lead._id}`)}
-                >
-                  <div className={(isDark ? 'bg-blue-500/5' : 'bg-blue-50/50') + " absolute top-0 right-0 w-24 h-24 blur-2xl rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"} />
                   
-                  <div className="flex justify-between items-start mb-6 relative z-10">
-                    <div className="space-y-2 md:space-y-3">
-                       <span className={(isDark ? 'bg-white/10 text-slate-400' : 'bg-slate-100 text-slate-500') + " text-[8px] md:text-[9px] font-black uppercase tracking-widest px-2.5 py-1 md:px-3 md:py-1.5 rounded-lg border " + (isDark ? 'border-white/5' : 'border-slate-200')}>
-                         {lead.lead_number}
-                       </span>
-                       <h3 className={(isDark ? 'text-white' : 'text-slate-900') + " font-black text-lg md:text-xl leading-tight group-hover:text-blue-500 transition-colors truncate max-w-[150px] md:max-w-none"}>
-                         {lead.applicant_name}
-                       </h3>
-                    </div>
-                    <div className={(getStatusColor(lead.status)) + " px-2.5 py-1 md:px-3 md:py-1.5 rounded-full text-[8px] md:text-[9px] font-black uppercase tracking-widest border shadow-sm"}>
-                      {lead.status}
-                    </div>
+                  <div className="pt-8 mt-8 border-t border-slate-100 grid grid-cols-2 gap-4">
+                     <div>
+                        <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Asset</p>
+                        <p className="text-[10px] font-bold text-[#1E293B] uppercase truncate">{lead.loan_type?.replace('-', ' ')}</p>
+                     </div>
+                     <div>
+                        <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 text-right">Amount</p>
+                        <p className="text-[10px] font-black text-[#0EA5E9] text-right">₹{(lead.loan_amount_required/100000).toFixed(1)}L</p>
+                     </div>
                   </div>
-
-                  <div className={(isDark ? 'border-white/5' : 'border-slate-100') + " grid grid-cols-2 gap-4 md:gap-6 pt-5 md:pt-6 border-t relative z-10"}>
-                    <div>
-                      <p className="text-slate-500 text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1 md:mb-1.5 opacity-60">Asset</p>
-                      <p className={(isDark ? 'text-white' : 'text-slate-800') + " font-black text-[10px] md:text-sm truncate uppercase tracking-tight"}>{lead.loan_type?.replace('_', ' ')}</p>
-                    </div>
-                    <div>
-                      <p className="text-slate-500 text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1 md:mb-1.5 opacity-60">Amount</p>
-                      <p className="text-blue-500 font-black text-[10px] md:text-sm italic">₹{(lead.loan_amount_required/100000).toFixed(1)}L</p>
-                    </div>
-                    <div className="mt-1">
-                      <p className="text-slate-500 text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1 md:mb-1.5 opacity-60">Mobile</p>
-                      <p className={(isDark ? 'text-slate-300' : 'text-slate-700') + " font-bold text-[10px] md:text-sm tracking-tighter"}>{lead.mobile}</p>
-                    </div>
-                    <div className="mt-1">
-                      <p className="text-slate-500 text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1 md:mb-1.5 opacity-60">Branch</p>
-                      <p className={(isDark ? 'text-slate-300' : 'text-slate-700') + " font-bold text-[10px] md:text-sm flex items-center gap-1.5"}>
-                         {lead.location_city}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-            {filteredLeads.length === 0 && !loading && (
-              <div className={(isDark ? 'bg-white/2 border-white/5' : 'bg-slate-100/50 border-slate-200') + " col-span-full py-20 md:py-32 text-center flex flex-col items-center justify-center rounded-[32px] md:rounded-[40px] border border-dashed"}>
-                <div className={(isDark ? 'bg-white/5' : 'bg-white shadow-sm') + " w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mb-6"}>
-                  <Search className="w-8 h-8 md:w-10 md:h-10 text-slate-400" />
-                </div>
-                <h3 className={(isDark ? 'text-white' : 'text-slate-900') + " text-xl md:text-2xl font-black mb-2"}>No matching entries</h3>
-                <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px] md:text-[10px]">Adjust filters or search keywords</p>
-              </div>
-            )}
-          </div>
+               </motion.div>
+             ))}
+           </AnimatePresence>
+        </div>
+        {filteredLeads.length === 0 && (
+           <div className="py-32 text-center bg-white border border-slate-100 rounded-[40px] border-dashed">
+              <p className="text-slate-400 text-xs font-black uppercase tracking-widest">No node data detected.</p>
+           </div>
         )}
       </div>
     </div>
   );
 };
 
-const StatCard = ({ title, value, icon, color, delay, isDark }) => {
-  const containerClasses = isDark ? 'bg-white/5 border-white/5 shadow-22xl shadow-black/40' : 'bg-white border-slate-200 shadow-xl shadow-slate-200/30';
-  const accentClasses = isDark ? "bg-" + color + "-500/10" : "bg-" + color + "-50";
-  const iconClasses = isDark ? "bg-" + color + "-500/10 border-" + color + "-500/20 text-" + color + "-400" : "bg-" + color + "-50 border-" + color + "-100 text-" + color + "-600";
-
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }} 
-      animate={{ opacity: 1, y: 0 }} 
-      transition={{ delay }}
-      className={containerClasses + " p-4 md:p-8 rounded-2xl md:rounded-[40px] border relative overflow-hidden group active:scale-95 transition-all"}
-    >
-      <div className={"absolute top-0 right-0 w-24 md:w-32 h-24 md:h-32 " + accentClasses + " blur-2xl md:blur-3xl rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700"} />
-      <div className="flex justify-between items-start mb-3 md:mb-6 relative z-10">
-        <div className={iconClasses + " p-2.5 md:p-4 rounded-xl md:rounded-2xl border shadow-sm"}>
-          {React.cloneElement(icon, { className: "w-5 h-5 md:w-6 md:h-6" })}
-        </div>
-      </div>
-      <div className="relative z-10 text-center md:text-left">
-        <p className="text-slate-500 text-[8px] md:text-[10px] font-black uppercase tracking-widest mb-1 md:mb-2 italic">{title}</p>
-        <h3 className={(isDark ? 'text-white' : 'text-slate-900') + " text-lg sm:text-2xl md:text-4xl font-black tracking-tighter leading-none"}>{value}</h3>
-      </div>
-    </motion.div>
-  );
-};
+const StatCard = ({ title, value, sub, color }) => (
+  <div className="bg-white border border-slate-100 p-8 rounded-[40px] shadow-sm group hover:shadow-xl transition-all">
+     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 italic">{title}</p>
+     <h3 className="text-3xl font-black text-[#1E293B] tracking-tighter leading-none mb-1">{value}</h3>
+     <p className={`text-[9px] font-black uppercase tracking-widest ${color === 'emerald' ? 'text-emerald-500' : color==='blue' ? 'text-blue-500' : color==='rose' ? 'text-rose-500' : 'text-slate-400'}`}>{sub}</p>
+  </div>
+);
 
 export default AgentDashboard;

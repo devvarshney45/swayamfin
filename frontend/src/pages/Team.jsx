@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Linkedin, Mail } from 'lucide-react';
 
 const Team = () => {
   const leaders = [
@@ -8,84 +7,95 @@ const Team = () => {
       name: "Vikkrant Prasad",
       role: "Chief Executive Officer",
       bio: "Former investment banker and co-founder of Swayamfin. Expert in structured finance and MSME growth strategies.",
-      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400"
     },
     {
       name: "Nupur Prasad",
       role: "Admin & HR Head",
       bio: "10+ years of experience in microfinance operations, LAP processing, and strategic supply chain team management.",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400"
     },
     {
       name: "Sudhanshu Shekhar",
       role: "Chief Experience Officer (CXO)",
       bio: "Former CFO at Humana Financial. Leads our client experience and digital transformation initiatives.",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400"
     },
     {
       name: "Madhu Priya Prasad",
       role: "Head of Partnerships",
       bio: "Strategic specialist in investment banking and NBFC tie-ups. Drives our lending ecosystem expansion.",
-      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400"
     }
   ];
 
   return (
-    <div className="bg-slate-50 min-h-screen pt-24 pb-20">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-20">
-          <motion.h1 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6"
-          >
-            Meet the Minds <span className="text-primary-blue">Behind Swayamfin</span>
-          </motion.h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Our leadership team brings together decades of experience from investment banking, microfinance, and digital lending.
-          </p>
+    <div className="bg-[#F8FAFC] min-h-screen pt-32 pb-40 font-plus-jakarta-sans overflow-hidden">
+      
+      {/* Background Decor */}
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#0EA5E9]/5 blur-[160px] rounded-full translate-x-1/2 -translate-y-1/2" />
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        
+        {/* Header */}
+        <div className="text-center mb-24 space-y-6">
+           <motion.div 
+             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+             className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-[#0EA5E9]/10 border border-[#0EA5E9]/20 text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em]"
+           >
+             Institutional Leadership
+           </motion.div>
+
+           <motion.h1 
+             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+             className="text-5xl md:text-8xl font-black text-[#1E293B] leading-none tracking-tighter uppercase"
+           >
+             The Minds <br /> <span className="text-[#0EA5E9] italic">Behind Hub.</span>
+           </motion.h1>
+
+           <motion.p 
+             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+             className="text-slate-500 text-lg md:text-2xl max-w-4xl mx-auto font-medium italic leading-relaxed"
+           >
+             "Our leadership team synchronizes decades of institutional banking intelligence to drive MSME growth through digital transformation."
+           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        {/* Leaders Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {leaders.map((member, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="group bg-white rounded-[32px] overflow-hidden shadow-fintech border border-slate-100 flex flex-col items-center p-8 text-center"
+              className="group bg-white rounded-[60px] p-12 md:p-16 border border-slate-100 shadow-sm hover:shadow-2xl hover:border-[#0EA5E9]/30 transition-all flex flex-col md:flex-row gap-10 items-center relative overflow-hidden"
             >
-              <div className="relative mb-6">
-                <div className="w-32 h-32 rounded-3xl overflow-hidden ring-4 ring-primary-blue/5 shadow-lg group-hover:scale-105 transition-transform duration-300">
-                  <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
-                </div>
-                <div className="absolute -bottom-2 -right-2 bg-primary-blue text-white p-2 rounded-xl shadow-lg">
-                  <Linkedin className="w-4 h-4" />
-                </div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#0EA5E9]/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-all duration-700" />
+              
+              <div className="w-40 h-40 bg-[#1E293B] rounded-[48px] flex items-center justify-center font-black text-white text-6xl italic group-hover:bg-[#0EA5E9] transition-all rotate-3 group-hover:rotate-0">
+                 {member.name.charAt(0)}
               </div>
               
-              <h3 className="text-xl font-bold text-slate-900 mb-1">{member.name}</h3>
-              <p className="text-primary-blue font-bold text-sm mb-4 uppercase tracking-wider">{member.role}</p>
-              <p className="text-slate-500 text-sm leading-relaxed italic">"{member.bio}"</p>
-              
-              <div className="mt-6 flex items-center gap-4 text-slate-400 group-hover:text-primary-blue transition-colors">
-                 <Mail className="w-5 h-5 cursor-pointer hover:scale-110 transition-transform" />
-                 <Linkedin className="w-5 h-5 cursor-pointer hover:scale-110 transition-transform" />
+              <div className="flex-1 text-center md:text-left space-y-4 relative z-10">
+                 <h3 className="text-3xl font-black text-[#1E293B] uppercase tracking-tighter leading-none">{member.name}</h3>
+                 <p className="text-[#0EA5E9] font-black text-[10px] uppercase tracking-[0.3em] italic">{member.role}</p>
+                 <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest leading-relaxed mt-4 italic opacity-80">"{member.bio}"</p>
               </div>
             </motion.div>
           ))}
         </div>
 
-        <div className="mt-32 bg-primary-darkBlue rounded-[40px] p-12 text-center text-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary-blue opacity-10 rounded-full -translate-y-1/2 translate-x-1/2" />
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 relative z-10">Interested in joining our mission?</h2>
-          <p className="text-blue-100 mb-8 max-w-xl mx-auto italic relative z-10">
-            We are always looking for passionate professionals to join our growing team across India.
-          </p>
-          <a href="mailto:info@swayamfin.com" className="inline-block bg-white text-primary-darkBlue font-bold px-10 py-4 rounded-2xl shadow-xl hover:bg-primary-lightBlue hover:scale-105 transition-all relative z-10">
-            Send Your CV
-          </a>
+        {/* CTA Section */}
+        <div className="mt-32 bg-[#1E293B] rounded-[64px] p-16 md:p-24 text-center text-white relative overflow-hidden">
+           <div className="absolute top-0 right-0 w-96 h-96 bg-[#0EA5E9]/10 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2" />
+           <div className="relative z-10 space-y-8">
+              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none">Join the <span className="text-[#0EA5E9] italic">Mission.</span></h2>
+              <p className="text-blue-100/60 text-lg md:text-xl font-medium max-w-2xl mx-auto italic">
+                 "We are continuously integrating specialized personnel into our regional hubs across India."
+              </p>
+              <div className="pt-6">
+                 <a href="mailto:info@swayamfin.com" className="inline-block bg-white text-[#1E293B] font-black px-12 py-5 rounded-2xl shadow-2xl hover:bg-[#0EA5E9] hover:text-white transition-all uppercase tracking-[0.3em] text-[10px]">
+                    Transmit Curriculum Vitae
+                 </a>
+              </div>
+           </div>
         </div>
       </div>
     </div>

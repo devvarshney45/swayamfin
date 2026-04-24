@@ -19,6 +19,24 @@ exports.getBranchUsers = async (req, res) => {
   }
 };
 
+exports.getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).populate('branch_id').select('-password_hash');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    
+    // BSM can only view users in their own branch
+    if (req.user.role === 'bsm' && user.branch_id?._id.toString() !== req.user.branch_id?.toString()) {
+      return res.status(403).json({ success: false, message: 'Not authorized to view personnel from other nodes' });
+    }
+
+    res.json({ success: true, data: user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
 exports.createUser = async (req, res) => {
   try {
     const { full_name, email, password_hash, branch_id, phone, employee_code, role } = req.body;

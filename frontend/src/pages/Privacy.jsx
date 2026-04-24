@@ -1,80 +1,98 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Lock, Eye, FileLock2 } from 'lucide-react';
 
 const Privacy = () => {
   return (
-    <div className="bg-white min-h-screen pt-24 pb-20">
-      <div className="max-w-4xl mx-auto px-4">
+    <div className="bg-[#F8FAFC] min-h-screen pt-32 pb-40 font-plus-jakarta-sans overflow-hidden">
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
         
-        <div className="text-center mb-16">
-          <motion.div 
-             initial={{ scale: 0.9, opacity: 0 }}
-             animate={{ scale: 1, opacity: 1 }}
-             className="inline-flex items-center gap-2 bg-blue-50 text-primary-blue px-4 py-2 rounded-full text-sm font-bold mb-6"
-          >
-            <Shield className="w-4 h-4" />
-            Last Updated: April 2025
-          </motion.div>
-          <h1 className="text-4xl font-extrabold text-slate-900 mb-6">Privacy Policy</h1>
-          <p className="text-slate-500 font-medium">Your data security and privacy rights under the Digital Personal Data Protection (DPDP) Act 2023.</p>
+        {/* Header */}
+        <div className="text-center mb-24 space-y-6">
+           <motion.div 
+             initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+             className="inline-flex items-center gap-2 bg-[#0EA5E9]/10 text-[#0EA5E9] px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em] border border-[#0EA5E9]/10"
+           >
+             Data Protection Node
+           </motion.div>
+           <h1 className="text-4xl md:text-6xl font-black text-[#1E293B] mb-6 uppercase tracking-tighter leading-none">
+              Privacy <span className="text-[#0EA5E9] italic">Protocol.</span>
+           </h1>
+           <p className="text-slate-500 font-medium italic text-lg md:text-xl max-w-2xl mx-auto leading-relaxed opacity-80">
+              "Ensuring sovereign data rights and institutional security under the Digital Personal Data Protection (DPDP) Act 2023."
+           </p>
         </div>
 
-        <div className="prose prose-slate max-w-none space-y-10 text-slate-600 leading-relaxed">
+        <div className="space-y-12">
           
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3 underline decoration-primary-blue/30 decoration-4">
-               <Lock className="w-6 h-6 text-primary-blue" />
-               1. Information We Collect
+          {/* Section 1 */}
+          <section className="bg-white p-12 md:p-16 rounded-[60px] shadow-sm border border-slate-100 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#0EA5E9]/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-all duration-700" />
+            <h2 className="text-2xl font-black text-[#1E293B] mb-8 uppercase tracking-tight border-b border-slate-50 pb-6 flex justify-between items-center">
+               <span>P01: Information Taxonomy</span>
+               <span className="text-[10px] text-[#0EA5E9]">Collection Layer</span>
             </h2>
-            <p>At Swayamfin (Green Miles Mobility Pvt. Ltd.), we collect information necessary to process your loan application facilitated by our partners. This includes:</p>
-            <ul className="list-disc pl-6 space-y-2 mt-4">
-              <li><strong>Personal Identity:</strong> Full Name, Aadhaar/PAN details (for KYC).</li>
-              <li><strong>Contact Information:</strong> Mobile number, email, and current address.</li>
-              <li><strong>Business Data:</strong> GST returns, bank statements, and business incorporation documents.</li>
-              <li><strong>Digital Identifiers:</strong> IP address, device type, and UTM parameters to track ad performance.</li>
+            <div className="space-y-6">
+               <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest leading-relaxed italic">
+                  "At Swayamfin (Green Miles Mobility Pvt. Ltd.), we ingest information necessary to synchronize your loan application with our institutional partners."
+               </p>
+               <ul className="space-y-4">
+                  {[
+                    'Personal Identity: Full Name, Aadhaar/PAN descriptors (KYC Node).',
+                    'Contact Parameters: Mobile link, email hub, and residential coordinates.',
+                    'Operational Data: GST returns, fiscal statements, and enterprise documentation.',
+                    'Digital Fingerprints: IP node, device profile, and UTM performance tracking.'
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-4 text-[10px] font-black text-slate-500 uppercase tracking-widest italic opacity-80">
+                      <div className="w-1.5 h-1.5 bg-[#0EA5E9] rounded-full" />
+                      {item}
+                    </li>
+                  ))}
+               </ul>
+            </div>
+          </section>
+
+          {/* Section 2 */}
+          <section className="bg-[#F8FAFC] p-12 md:p-16 rounded-[60px] border border-slate-200">
+            <h2 className="text-2xl font-black text-[#1E293B] mb-8 uppercase tracking-tight border-b border-slate-200 pb-6 flex justify-between items-center">
+               <span>P02: Utilization Matrix</span>
+               <span className="text-[10px] text-[#0EA5E9]">Processing Grid</span>
+            </h2>
+            <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest leading-relaxed mb-10 italic">
+               "Your data is processed strictly for the following mission-critical objectives under explicit link-consent:"
+            </p>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               {[
+                 'Assessment of asset eligibility.',
+                 'Synchronization with regulated NBFC/HFC hubs.',
+                 'Cycle communication and follow-up logic.',
+                 'Sovereign regulatory reporting (RBI/AML).'
+               ].map((item, i) => (
+                 <div key={i} className="bg-white p-6 rounded-3xl border border-slate-200 text-[10px] font-black text-[#1E293B] uppercase tracking-widest italic">
+                    {item}
+                 </div>
+               ))}
             </ul>
           </section>
 
-          <section className="bg-slate-50 p-8 rounded-[32px] border border-slate-100">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-               <Eye className="w-6 h-6 text-primary-blue" />
-               2. How We Use Your Data
+          {/* Section 3 */}
+          <section className="bg-white p-12 md:p-16 rounded-[60px] shadow-sm border border-slate-100">
+            <h2 className="text-2xl font-black text-[#1E293B] mb-8 uppercase tracking-tight border-b border-slate-50 pb-6 flex justify-between items-center">
+               <span>P03: Retention Protocol</span>
+               <span className="text-[10px] text-[#0EA5E9]">Data Life-Cycle</span>
             </h2>
-            <p>Your data is used strictly for the following purpose under your explicit consent:</p>
-            <ul className="list-disc pl-6 space-y-2 mt-4">
-              <li>Assessment of loan eligibility.</li>
-              <li>Sharing with our regulated NBFC/HFC partners for sanction.</li>
-              <li>Communicating loan status, follow-ups, and repayments.</li>
-              <li>Compliance with RBI reporting and anti-money laundering laws.</li>
-            </ul>
+            <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest leading-relaxed italic">
+               "External data monetization is prohibited. Information is exclusively shared with regulated lending nodes (e.g., DMI Housing Finance), bound by institutional privacy codes. Retention follows the duration of the asset contract or statutory mandate."
+            </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3 underline decoration-primary-blue/30 decoration-4">
-               <FileLock2 className="w-6 h-6 text-primary-blue" />
-               3. Data Sharing & Retention
-            </h2>
-            <p>We do not sell your personal data to third-party marketers. Your information is only shared with our regulated lending partners (e.g., DMI Housing Finance) who are also bound by RBI's data privacy codes. We retain your data for as long as necessary to fulfill the loan contract or as mandated by statutory laws.</p>
-          </section>
-
-          <section className="border-t-2 border-slate-100 pt-10">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">4. Your Rights (DPDP Act 2023)</h2>
-            <p>Under the DPDP Act, you have the right to:</p>
-            <ul className="list-disc pl-6 space-y-2 mt-4">
-              <li>Request a summary of personal data being processed.</li>
-              <li>Request correction or erasure of your data.</li>
-              <li>Withdraw your consent at any time (though this may terminate active loan applications).</li>
-              <li>Grievance redressal regarding data handling.</li>
-            </ul>
-          </section>
-
-          <div className="bg-primary-darkBlue text-white p-8 rounded-3xl mt-12 shadow-xl">
-             <p className="font-bold mb-2 italic">Contact Data Officer</p>
-             <p className="text-blue-100 text-sm">For any data-related queries, email us at: <span className="font-bold underline">privacy@swayamfin.com</span></p>
+          {/* Contact Footer */}
+          <div className="bg-[#1E293B] text-white p-16 rounded-[64px] shadow-2xl space-y-4 text-center relative overflow-hidden">
+             <div className="absolute top-0 right-0 w-64 h-64 bg-[#0EA5E9]/10 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2" />
+             <p className="text-[10px] font-black uppercase tracking-[0.4em] italic opacity-60">Security Personnel Liaison</p>
+             <p className="text-sm md:text-lg font-medium">For data-related inquiries, establish link via: <span className="text-[#0EA5E9] font-black hover:underline cursor-pointer">privacy@swayamfin.com</span></p>
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
   );

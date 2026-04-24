@@ -1,34 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { ShieldCheck, ArrowRight, CheckCircle2, AlertCircle, TrendingUp, ChevronDown, Zap, Globe, Shield, Cpu, Activity, Layout } from 'lucide-react';
-import { getUTMParams } from '../utils/helpers';
-import { useTheme } from '../context/ThemeContext';
+import { ShieldCheck, ChevronRight, Activity } from 'lucide-react';
+import LeadCaptureModal from './common/LeadCaptureModal';
 
 // Modular Imports
 import TrustBar from './home/TrustBar';
 import ServicesSection from './home/ServicesSection';
 import USPsSection from './home/USPsSection';
 import Timeline from './home/Timeline';
-import PartnerNBFCs from './home/PartnerNBFCs';
 import EligibilityCalculator from './home/EligibilityCalculator';
 import CTASection from './home/CTASection';
 
 const Hero = () => {
-  const { isDark } = useTheme();
   const { t, i18n } = useTranslation();
-  const [formData, setFormData] = useState({
-    fullName: '', mobile: '', email: '', loanType: 'msme_structured', amount: '', city: ''
-  });
-  const [submitStatus, setSubmitStatus] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [touched, setTouched] = useState({ mobile: false, amount: false });
   const [activeSlide, setActiveSlide] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Form State
+  const [formData, setFormData] = useState({
+    fullName: '',
+    mobile: '',
+    email: '',
+    loanType: 'msme_structured',
+    amount: '',
+    city: ''
+  });
+  const [submitStatus, setSubmitStatus] = useState('idle'); // idle, submitting, success, duplicate, error
 
   const slides = [
-    { title: t('hero_title_1'), sub: t('hero_sub_1'), icon: <Zap /> },
-    { title: t('hero_title_2'), sub: t('hero_sub_2'), icon: <Globe /> },
-    { title: t('hero_title_3'), sub: t('hero_sub_3'), icon: <Shield /> }
+    { title: t('hero_title_2'), sub: t('hero_sub_2') },
+    { title: t('hero_title_1'), sub: t('hero_sub_1') },
+    { title: t('hero_title_3'), sub: t('hero_sub_3') }
   ];
 
   useEffect(() => {
@@ -40,280 +43,214 @@ const Hero = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.mobile.length !== 10) return;
     setSubmitStatus('submitting');
+    
     try {
-      const payload = {
-        applicant_name: formData.fullName,
-        mobile: formData.mobile,
-        email: formData.email,
-        loan_type: formData.loanType,
-        loan_amount_required: Number(formData.amount),
-        location_city: formData.city,
-        ...getUTMParams()
-      };
-
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/leads`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/leads`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          applicant_name: formData.fullName,
+          mobile: formData.mobile,
+          email: formData.email,
+          loan_type: formData.loanType,
+          loan_amount_required: Number(formData.amount),
+          location_city: formData.city,
+          source: 'website'
+        })
       });
-      const data = await response.json();
+
       if (response.ok) {
         setSubmitStatus('success');
-        setFormData({ fullName: '', mobile: '', email: '', loanType: 'msme_structured', amount: '', city: '' });
-        setTouched({ mobile: false, amount: false });
+        setTimeout(() => {
+          setSubmitStatus('idle');
+          setFormData({ fullName: '', mobile: '', email: '', loanType: 'msme_structured', amount: '', city: '' });
+        }, 3000);
       } else if (response.status === 409) {
         setSubmitStatus('duplicate');
       } else {
         setSubmitStatus('error');
-        setErrorMessage(data.message || 'Server Error. Try again.');
       }
-    } catch (error) {
+    } catch (err) {
       setSubmitStatus('error');
-      setErrorMessage('Network error. Check your connection.');
     }
   };
 
-  return (
-    <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} font-dmsans transition-colors duration-700 overflow-x-hidden`}>
-      {/* --- HERO SECTION --- */}
-      <section className="relative min-h-screen flex items-center pt-40 pb-16 md:pt-48 md:pb-24">
+  const isHindi = i18n.language === 'hi';
 
-        {/* Background */}
+  return (
+    <div className={`bg-white transition-colors duration-500 overflow-x-hidden ${isHindi ? 'hindi-hero' : ''}`}>
+      <section className="relative min-h-screen flex items-center pt-32 pb-20 md:pt-40 md:pb-24">
+        
+        {/* Abstract Background */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <div className={`absolute top-0 right-0 w-[600px] h-[600px] ${isDark ? 'bg-blue-600/10' : 'bg-blue-500/5'} blur-[140px] rounded-full translate-x-1/3 -translate-y-1/3`} />
-          <div className={`absolute bottom-0 left-0 w-[400px] h-[400px] ${isDark ? 'bg-primary-gold/5' : 'bg-primary-gold/3'} blur-[120px] rounded-full -translate-x-1/4`} />
-          <div className={`absolute inset-0 ${isDark ? 'opacity-20' : 'opacity-5'}`}
-            style={{ backgroundImage: 'radial-gradient(circle at 1.5px 1.5px, #475569 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#0EA5E9]/5 blur-[140px] rounded-full translate-x-1/3 -translate-y-1/3" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#0EA5E9]/3 blur-[120px] rounded-full -translate-x-1/4" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-
-            {/* Left Content Column */}
-            <div className="space-y-6 lg:space-y-8 text-center lg:text-left">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 relative z-10 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            
+            {/* Content Column */}
+            <div className="lg:col-span-7 space-y-10 text-center lg:text-left">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-600/10 border border-blue-500/20 backdrop-blur-md"
+                className="inline-flex items-center gap-3 px-6 py-2.5 bg-[#0EA5E9]/10 border border-[#0EA5E9]/20 rounded-full"
               >
-                <Activity className="w-3.5 h-3.5 text-primary-gold animate-pulse" />
-                <span className="text-primary-gold text-[10px] font-black uppercase tracking-[0.4em]">{t('hero_badge')}</span>
+                <Activity className="w-3 h-3 text-[#0EA5E9]" />
+                <span className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em]">RBI Compliant Fintech Partner</span>
               </motion.div>
 
-              {/* Animated Title */}
-              <div className="min-h-[200px] sm:min-h-[220px] md:min-h-[260px] overflow-hidden">
+              <div className="min-h-[260px] sm:min-h-[300px] md:min-h-[340px]">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeSlide}
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -30 }}
-                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                    className="space-y-5"
-                  >
-                    <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-black ${isDark ? 'text-white' : 'text-[#020617]'} leading-[1.0] tracking-tight font-playfair`}>
+                    transition={{ duration: 0.7 }}
+                    className="space-y-8"
+                   >
+                    <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-[#1E293B] uppercase ${isHindi ? 'leading-tight tracking-normal' : 'leading-[0.9] tracking-tighter'}`}>
                       {slides[activeSlide].title.split(' ').map((word, i) => (
-                        <span key={i} className={i % 2 === 1 ? 'text-blue-600 italic' : ''}>{word} </span>
+                        <span key={i} className={i % 2 === 1 ? 'text-[#0EA5E9] italic' : ''}>{word} </span>
                       ))}
                     </h1>
-                    <p className={`text-base sm:text-lg md:text-xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium max-w-xl mx-auto lg:mx-0 leading-relaxed italic border-l-4 border-primary-gold/40 pl-5`}>
+                    <p className={`text-lg sm:text-2xl text-slate-500 font-medium max-w-xl mx-auto lg:mx-0 border-l-4 border-[#0EA5E9]/20 pl-6 italic opacity-80 ${isHindi ? 'leading-normal' : 'leading-tight'}`}>
                       {slides[activeSlide].sub}
                     </p>
                   </motion.div>
                 </AnimatePresence>
               </div>
 
-              {/* Slide Indicators */}
-              <div className="flex gap-2 justify-center lg:justify-start">
-                {slides.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveSlide(i)}
-                    className={`h-1.5 rounded-full transition-all duration-500 ${i === activeSlide ? 'w-8 bg-blue-600' : 'w-3 bg-white/20'}`}
-                  />
-                ))}
-              </div>
-
-              {/* Stats Row */}
-              <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-4 border-t border-white/10">
+              {/* Stats Grid */}
+              <div className="grid grid-cols-3 gap-8 pt-10 border-t border-slate-100 max-w-2xl mx-auto lg:mx-0">
                 {[
-                  { val: '₹125Cr+', label: 'Disbursed', icon: <TrendingUp className="w-4 h-4 text-emerald-500" /> },
-                  { val: '750+', label: 'Clients', icon: <Cpu className="w-4 h-4 text-primary-gold" /> },
-                  { val: '4 Hubs', label: 'Operations', icon: <Globe className="w-4 h-4 text-blue-500" /> },
+                  { val: '₹125Cr+', label: isHindi ? 'वितरित' : 'Disbursed', icon: '📈' },
+                  { val: '750+', label: isHindi ? 'ग्राहक' : 'Clients', icon: '⚙️' },
+                  { val: '4 Hubs', label: isHindi ? 'संचालन' : 'Operations', icon: '🌐' },
                 ].map((stat, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 + (i * 0.1) }}
-                    className="flex flex-col gap-1"
-                  >
+                  <div key={i} className="space-y-2">
                     <div className="flex items-center gap-2">
-                      {stat.icon}
-                      <span className={`text-xl sm:text-2xl md:text-3xl font-black ${isDark ? 'text-white' : 'text-[#020617]'} tracking-tight`}>{stat.val}</span>
+                       <span className="text-xs opacity-60">{stat.icon}</span>
+                       <p className="text-2xl sm:text-4xl font-black text-[#1E293B] tracking-tighter">{stat.val}</p>
                     </div>
-                    <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest opacity-60">{stat.label}</span>
-                  </motion.div>
+                    <p className={`text-[10px] font-black text-slate-400 italic ${isHindi ? 'tracking-normal' : 'uppercase tracking-[0.3em]'}`}>{stat.label}</p>
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* Right Form Column */}
+            {/* Form Column */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="relative w-full"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="lg:col-span-5 relative"
             >
-              <div className={`relative ${isDark ? 'bg-[#0B1221]/80 border-white/10' : 'bg-white border-slate-200'} shadow-2xl p-6 sm:p-8 rounded-3xl border backdrop-blur-xl`}>
-                {/* Security Badge */}
-                <div className={`absolute -top-5 -right-3 ${isDark ? 'bg-[#0F172A] border-white/10' : 'bg-white border-slate-100'} border rounded-2xl p-3 shadow-xl`}>
-                  <ShieldCheck className="w-6 h-6 text-primary-gold" />
+              <div className="bg-white p-8 md:p-12 rounded-[50px] shadow-22xl border border-slate-100 relative overflow-hidden">
+                <div className="absolute top-6 right-6 w-12 h-12 bg-white border border-slate-100 rounded-2xl shadow-xl flex items-center justify-center z-20">
+                   <ShieldCheck className="w-6 h-6 text-primary-gold" />
                 </div>
 
-                <div className="mb-6">
-                  <h3 className={`text-xl sm:text-2xl font-black ${isDark ? 'text-white' : 'text-[#020617]'} uppercase tracking-tight`}>
-                    Partner <span className="text-blue-600 italic font-playfair">Uplink</span>
-                  </h3>
-                  <div className="flex items-center gap-3 mt-1.5">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.4em]">Secure Application Terminal</p>
-                  </div>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <InputField
-                    label="Full Name"
-                    placeholder="Legal Name"
-                    value={formData.fullName}
-                    onChange={v => setFormData({...formData, fullName: v})}
-                    isDark={isDark}
-                  />
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <InputField
-                      label="Mobile"
-                      placeholder="+91 XXXXXXXXXX"
-                      type="tel"
-                      value={formData.mobile}
-                      onChange={v => setFormData({...formData, mobile: v.replace(/\D/g, '').slice(0,10)})}
-                      error={touched.mobile && formData.mobile.length > 0 && formData.mobile.length !== 10}
-                      isDark={isDark}
-                    />
-                    <InputField
-                      label="Email"
-                      placeholder="Email Address"
-                      value={formData.email}
-                      onChange={v => setFormData({...formData, email: v})}
-                      isDark={isDark}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Loan Type</label>
-                      <select
-                        className={`w-full px-4 py-3 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-[#020617]'} rounded-xl border outline-none focus:border-blue-600 font-bold text-sm transition-all`}
-                        value={formData.loanType}
-                        onChange={e => setFormData({...formData, loanType: e.target.value})}
-                      >
-                        <option value="home_loan">{t('home_loan')}</option>
-                        <option value="msme_structured">{t('msme_loan')}</option>
-                        <option value="lap">{t('lap')}</option>
-                        <option value="supply_chain">{t('supply_chain')}</option>
-                      </select>
+                <div className="relative z-10 space-y-8">
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-black text-[#1E293B] tracking-tighter uppercase leading-none">Partner <span className="text-blue-600 italic">Uplink</span></h2>
+                    <div className="flex items-center gap-2">
+                       <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Secure Application Terminal</p>
                     </div>
-                    <InputField
-                      label="Amount (₹)"
-                      placeholder="e.g. 500000"
-                      type="number"
-                      value={formData.amount}
-                      onChange={v => setFormData({...formData, amount: v ? Number(v) : ''})}
-                      error={touched.amount && (formData.amount > 0 && formData.amount < 100000)}
-                      isDark={isDark}
-                    />
                   </div>
 
-                  <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Branch Hub</label>
-                    <select
-                      required
-                      className={`w-full px-4 py-3 ${isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-[#020617]'} rounded-xl border outline-none focus:border-blue-600 font-bold text-sm transition-all`}
-                      value={formData.city}
-                      onChange={e => setFormData({...formData, city: e.target.value})}
-                    >
-                      <option value="" disabled>Select Your City</option>
-                      {['Agra', 'Mathura', 'Hathras', 'Kosi'].map(city => (
-                        <option key={city} value={city}>{city}</option>
-                      ))}
-                    </select>
-                  </div>
+                  {submitStatus === 'success' ? (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-20 text-center space-y-6">
+                       <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-inner font-black text-4xl">✓</div>
+                       <h3 className="text-2xl font-black text-[#1E293B] uppercase tracking-tighter">Transmission Logged</h3>
+                       <p className="text-slate-500 text-xs font-bold uppercase tracking-widest italic leading-relaxed">Our institutional node will initiate contact <br /> within 30 minutes.</p>
+                    </motion.div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
+                        <input required className="input-standard w-full h-14 rounded-2xl px-6 bg-slate-50 border-slate-100 text-sm focus:bg-white transition-all" placeholder="Legal Name" value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})}    />
+                      </div>
 
-                  <button
-                    type="submit"
-                    disabled={submitStatus === 'submitting'}
-                    className="w-full bg-[#020617] text-white py-4 rounded-2xl font-black uppercase tracking-wider text-sm shadow-xl overflow-hidden relative group/btn border border-white/5 hover:bg-blue-600 transition-all duration-500 flex items-center justify-center gap-3"
-                  >
-                    {submitStatus === 'submitting' ? 'Processing...' : 'Apply Now'}
-                    <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-                  </button>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Mobile</label>
+                          <input required type="tel" maxLength="10" className="input-standard w-full h-14 rounded-2xl px-6 bg-slate-50 border-slate-100 text-sm focus:bg-white transition-all" placeholder="+91 XXXXXXXXXX" value={formData.mobile} onChange={e => setFormData({...formData, mobile: e.target.value.replace(/\D/g, '')})} />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Email</label>
+                          <input type="email" className="input-standard w-full h-14 rounded-2xl px-6 bg-slate-50 border-slate-100 text-sm focus:bg-white transition-all" placeholder="Email Address" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                        </div>
+                      </div>
 
-                  <AnimatePresence mode="wait">
-                    {submitStatus === 'success' && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 bg-emerald-500/10 text-emerald-400 rounded-2xl text-xs font-bold text-center border border-emerald-500/20 flex items-center justify-center gap-2">
-                        <CheckCircle2 className="w-4 h-4" /> Application Submitted Successfully!
-                      </motion.div>
-                    )}
-                    {submitStatus === 'duplicate' && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 bg-amber-500/10 text-amber-400 rounded-2xl text-xs font-bold text-center border border-amber-500/20 flex items-center justify-center gap-2">
-                        <AlertCircle className="w-4 h-4" /> This mobile number is already registered.
-                      </motion.div>
-                    )}
-                    {submitStatus === 'error' && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 bg-red-500/10 text-red-400 rounded-2xl text-xs font-bold text-center border border-red-500/20 flex items-center justify-center gap-2">
-                        <AlertCircle className="w-4 h-4" /> {errorMessage}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </form>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Loan Type</label>
+                          <select className="input-standard w-full h-14 rounded-2xl px-6 bg-slate-50 border-slate-100 text-sm focus:bg-white transition-all appearance-none cursor-pointer" value={formData.loanType} onChange={e => setFormData({...formData, loanType: e.target.value})}>
+                            <option value="msme_structured">MSME Structured Loan</option>
+                            <option value="home_loan">Home Loan</option>
+                            <option value="lap">LAP</option>
+                            <option value="supply_chain">Supply Chain</option>
+                            <option value="micro_lap">Micro LAP</option>
+                          </select>
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Amount (₹)</label>
+                          <input required type="number" className="input-standard w-full h-14 rounded-2xl px-6 bg-slate-50 border-slate-100 text-sm focus:bg-white transition-all" placeholder="e.g. 500000" value={formData.amount} onChange={e => setFormData({...formData, amount: e.target.value})} />
+                        </div>
+                      </div>
 
-                <div className="mt-5 flex items-center justify-center gap-2 opacity-40">
-                  <Layout className="w-3 h-3" />
-                  <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">RBI Compliant • Data Protected</p>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Branch Hub</label>
+                        <select required className="input-standard w-full h-14 rounded-2xl px-6 bg-slate-50 border-slate-100 text-sm focus:bg-white transition-all appearance-none cursor-pointer" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})}>
+                          <option value="">Select Your City</option>
+                          <option value="Agra">Agra Node</option>
+                          <option value="Mathura">Mathura Node</option>
+                          <option value="Hathras">Hathras Node</option>
+                          <option value="Kosi">Kosi Node</option>
+                        </select>
+                      </div>
+
+                      <button 
+                        type="submit" disabled={submitStatus === 'submitting'}
+                        className="w-full h-16 bg-[#1E293B] hover:bg-blue-600 text-white rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
+                      >
+                        {submitStatus === 'submitting' ? 'Processing Node...' : 'Apply Now'} <ChevronRight className="w-4 h-4" />
+                      </button>
+
+                      {submitStatus === 'duplicate' && <p className="text-[9px] text-amber-600 text-center font-bold uppercase tracking-widest italic italic">Coordinate Conflict: Transmission Already Logged.</p>}
+                      {submitStatus === 'error' && <p className="text-[9px] text-red-600 text-center font-bold uppercase tracking-widest italic">Link Fault: Server Unreachable.</p>}
+
+                      <div className="text-center">
+                         <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest italic">🛡️ RBI Compliant • Data Protected</p>
+                      </div>
+                    </form>
+                  )}
                 </div>
               </div>
+              {/* Accents around form */}
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#0EA5E9]/10 rounded-full blur-3xl animate-pulse -z-10" />
+              <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-slate-200/50 rounded-full blur-2xl -z-10" />
             </motion.div>
+
           </div>
         </div>
       </section>
 
-      {/* --- PAGE MODULES --- */}
       <TrustBar />
-      <PartnerNBFCs />
       <ServicesSection />
       <USPsSection />
       <Timeline />
       <EligibilityCalculator />
       <CTASection />
+
+      <LeadCaptureModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };
-
-// Reusable Input Field
-const InputField = ({ label, placeholder, value, onChange, type = 'text', error, isDark }) => (
-  <div className="space-y-1.5">
-    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{label}</label>
-    <input
-      required
-      type={type}
-      placeholder={placeholder}
-      className={`w-full px-4 py-3 ${isDark ? 'bg-white/5 border-white/10 text-white placeholder:text-slate-600' : 'bg-slate-50 border-slate-200 text-[#020617]'} rounded-xl border outline-none focus:border-blue-600 font-bold text-sm transition-all ${error ? 'border-red-500/60' : ''}`}
-      value={value}
-      onChange={e => onChange(e.target.value)}
-    />
-    {error && <span className="text-[9px] text-red-500 font-bold ml-1">Invalid format</span>}
-  </div>
-);
 
 export default Hero;

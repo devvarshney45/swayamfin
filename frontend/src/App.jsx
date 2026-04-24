@@ -1,13 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Link } from 'react-router-dom';
 import Hero from './components/Hero';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import AgentDashboard from './pages/AgentDashboard';
-import MSMELoans from './pages/MSMELoans';
-import SupplyChain from './pages/SupplyChain';
-import LAP from './pages/LAP';
-import Housing from './pages/Housing';
 import Login from './pages/Login';
 import About from './pages/About';
 import Team from './pages/Team';
@@ -22,6 +18,7 @@ import Grievance from './pages/Grievance';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminLeads from './pages/admin/AdminLeads';
 import AdminAgents from './pages/admin/AdminAgents';
+import AdminAgentDetails from './pages/admin/AdminAgentDetails';
 import BsmDashboard from './pages/bsm/BsmDashboard';
 import AdLandingPage from './pages/AdLandingPage';
 import BranchDetails from './pages/BranchDetails';
@@ -31,14 +28,16 @@ import NewLead from './pages/agent/NewLead';
 import Blog from './pages/Blog';
 import ScrollToTop from './components/common/ScrollToTop';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 const AppContent = () => {
   const location = useLocation();
   const isLandingPage = location.pathname.startsWith('/lp/');
 
   return (
-    <div className="flex flex-col min-h-screen font-inter">
+    <div className="flex flex-col min-h-screen">
       <ScrollToTop />
       {!isLandingPage && <Navbar />}
       <main className="flex-grow">
@@ -50,15 +49,13 @@ const AppContent = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/become-a-partner" element={<Partner />} />
           
-          {/* Services Hub & Individual Pages */}
-          <Route path="/services" element={<MSMELoans />} /> {/* Temporary hub redirect */}
+          <Route path="/services" element={<ServiceDetails />} />
           <Route path="/services/:slug" element={<ServiceDetails />} />
-          <Route path="/msme-loans" element={<ServiceDetails />} /> {/* Legacy support */}
+          <Route path="/msme-loans" element={<ServiceDetails />} />
           <Route path="/lap" element={<ServiceDetails />} />
           <Route path="/housing" element={<ServiceDetails />} />
           <Route path="/supply-chain" element={<ServiceDetails />} />
 
-          {/* Branches Listing & City Pages */}
           <Route path="/branches" element={<Branches />} />
           <Route path="/branches/:slug" element={<BranchDetails />} />
           <Route path="/blog" element={<Blog />} />
@@ -69,68 +66,99 @@ const AppContent = () => {
           <Route path="/grievance" element={<Grievance />} />
           <Route path="/agent/login" element={<Login />} />
           <Route path="/lp/:slug" element={<AdLandingPage />} />
+          
+          {/* Protected Portal Routes inside ErrorBoundary */}
           <Route 
             path="/agent/dashboard" 
             element={
-              <ProtectedRoute allowedRoles={['sales_person']}>
-                <AgentDashboard />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute allowedRoles={['sales_person']}>
+                  <AgentDashboard />
+                </ProtectedRoute>
+              </ErrorBoundary>
             } 
           />
           <Route 
             path="/agent/lead/new" 
             element={
-              <ProtectedRoute allowedRoles={['sales_person', 'admin']}>
-                <NewLead />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute allowedRoles={['sales_person', 'admin']}>
+                  <NewLead />
+                </ProtectedRoute>
+              </ErrorBoundary>
             } 
           />
           <Route 
             path="/agent/lead/:id" 
             element={
-              <ProtectedRoute allowedRoles={['sales_person', 'bsm', 'admin']}>
-                <LeadDetails />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute allowedRoles={['sales_person', 'bsm', 'admin']}>
+                  <LeadDetails />
+                </ProtectedRoute>
+              </ErrorBoundary>
             } 
           />
           
-          {/* BSM PORTAL */}
           <Route 
             path="/bsm/dashboard" 
             element={
-              <ProtectedRoute allowedRoles={['bsm']}>
-                <BsmDashboard />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute allowedRoles={['bsm']}>
+                  <BsmDashboard />
+                </ProtectedRoute>
+              </ErrorBoundary>
             } 
           />
 
-
-
-          {/* ADMIN PORTAL */}
           <Route 
             path="/admin/dashboard" 
             element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminDashboard />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              </ErrorBoundary>
             } 
           />
           <Route 
             path="/admin/leads" 
             element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminLeads />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminLeads />
+                </ProtectedRoute>
+              </ErrorBoundary>
             } 
           />
           <Route 
             path="/admin/agents" 
             element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminAgents />
-              </ProtectedRoute>
+              <ErrorBoundary>
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminAgents />
+                </ProtectedRoute>
+              </ErrorBoundary>
             } 
           />
+          <Route 
+            path="/admin/agents/:id" 
+            element={
+              <ErrorBoundary>
+                <ProtectedRoute allowedRoles={['admin', 'bsm']}>
+                  <AdminAgentDetails />
+                </ProtectedRoute>
+              </ErrorBoundary>
+            } 
+          />
+
+          {/* Catch-all route */}
+          <Route path="*" element={
+            <div className="flex flex-col items-center justify-center min-h-[60vh] p-10">
+              <h1 className="text-6xl font-black text-slate-900 mb-4">404</h1>
+              <p className="text-slate-500 mb-8 font-bold uppercase tracking-widest">Page Deployment Failed</p>
+              <Link to="/" className="btn-primary">Return Foundation</Link>
+            </div>
+          } />
         </Routes>
       </main>
       {!isLandingPage && <Footer />}
@@ -138,16 +166,14 @@ const AppContent = () => {
   );
 };
 
-import { ThemeProvider } from './context/ThemeContext';
-
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <ThemeProvider>
+      <ThemeProvider>
+        <AuthProvider>
           <AppContent />
-        </ThemeProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </Router>
   );
 }

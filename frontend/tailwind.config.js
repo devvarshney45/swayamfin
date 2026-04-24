@@ -7,29 +7,26 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          navy: '#0D1B3E',
-          secondaryNavy: '#1A2F5A',
-          gold: '#C8932A',
-          lightGold: '#FDF3E3',
-          blue: '#0EA5E9', // Keeping for legacy/accents
-          darkBlue: '#0369A1',
-        },
-        success: {
-          green: '#16A34A',
-        },
-        offWhite: '#F9F7F2',
-      },
-      boxShadow: {
-        'fintech': '0 4px 24px rgba(14, 165, 233, 0.10)',
-      },
-      borderRadius: {
-        'fintech': '16px',
+        primary: '#0EA5E9',
+        'primary-dark': '#0369A1',
+        'primary-light': '#E0F2FE',
+        'primary-gold': '#D4AF37',
+        dark: '#1E293B',
+        success: '#16A34A',
       },
       fontFamily: {
-        playfair: ['"Playfair Display"', 'serif'],
+        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+        plus: ['"Plus Jakarta Sans"', 'sans-serif'],
+        'plus-jakarta-sans': ['"Plus Jakarta Sans"', 'sans-serif'],
         dmsans: ['"DM Sans"', 'sans-serif'],
-        sans: ['"DM Sans"', 'sans-serif'],
+        playfair: ['"Playfair Display"', 'serif'],
+      },
+      boxShadow: {
+        'premium': '0 4px 24px rgba(14, 165, 233, 0.08)',
+        '22xl': '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
+      },
+      borderRadius: {
+        'premium': '16px',
       }
     },
   },
