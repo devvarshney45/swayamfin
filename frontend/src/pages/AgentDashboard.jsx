@@ -141,6 +141,12 @@ const AgentDashboard = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
+              <button
+                onClick={handleLogout}
+                className="h-20 px-8 rounded-[28px] bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 font-black text-[10px] uppercase tracking-widest transition-all"
+              >
+                Exit Portal
+              </button>
               <Link to="/agent/lead/new" className="btn-primary h-20 px-12 rounded-[28px] flex items-center justify-center text-[10px] uppercase tracking-widest shadow-2xl">
                  Generate New Case
               </Link>
