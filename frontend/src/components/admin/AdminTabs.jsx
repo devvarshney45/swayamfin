@@ -19,15 +19,15 @@ const AdminTabs = () => {
   };
 
   return (
-    <div className="flex items-center justify-between border-b border-slate-100 mb-10 overflow-x-auto no-scrollbar pb-1">
-      <div className="flex gap-4">
+    <div className="flex items-center justify-between border-b border-slate-100 mb-10 overflow-x-auto no-scrollbar pb-1 gap-3">
+      <div className="flex gap-2 sm:gap-4">
         {tabs.map((tab) => {
           const isActive = location.pathname === tab.path;
           return (
             <Link
               key={tab.path}
               to={tab.path}
-              className={`px-8 py-5 text-[10px] font-black uppercase tracking-[0.25em] transition-all border-b-2 whitespace-nowrap ${
+              className={`px-4 sm:px-8 py-4 sm:py-5 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] transition-all border-b-2 whitespace-nowrap ${
                 isActive 
                   ? 'text-[#0EA5E9] border-[#0EA5E9]' 
                   : 'text-slate-400 border-transparent hover:text-slate-900 hover:border-slate-200'
@@ -41,9 +41,9 @@ const AdminTabs = () => {
 
       <button 
         onClick={handleLogout}
-        className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.25em] text-rose-500 hover:bg-rose-50 rounded-lg transition-all"
+        className="shrink-0 px-4 sm:px-8 py-3 sm:py-5 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-rose-500 hover:bg-rose-50 rounded-lg transition-all"
       >
-        Quit Session
+        Exit Portal
       </button>
     </div>
   );

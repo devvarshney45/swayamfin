@@ -15,7 +15,7 @@ const getDocumentUrl = (fileUrl) => {
 const LeadDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   
   const [activeTab, setActiveTab] = useState('Personal Details');
   const [lead, setLead] = useState(null);
@@ -181,6 +181,14 @@ const LeadDetails = () => {
   return (
     <div className="bg-[#F8FAFC] min-h-screen pt-32 pb-40">
       <div className="max-w-7xl mx-auto px-6">
+        <div className="flex items-center justify-end mb-6">
+          <button
+            onClick={() => { logout(); navigate('/agent/login'); }}
+            className="px-4 py-2 rounded-xl bg-white border border-slate-200 text-[9px] font-black uppercase tracking-widest text-rose-500 hover:bg-rose-50 transition-all"
+          >
+            Exit Portal
+          </button>
+        </div>
         
         {/* Header Bridge */}
         <div className="bg-white border border-slate-100 p-6 md:p-14 rounded-[40px] md:rounded-[48px] shadow-sm mb-12 relative overflow-hidden group">

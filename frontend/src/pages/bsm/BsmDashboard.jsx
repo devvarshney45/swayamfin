@@ -83,8 +83,8 @@ const BsmDashboard = () => {
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 pt-24 pb-20 relative">
       {/* Header Banner */}
       <div className="bg-white border-b border-slate-100 pt-16 pb-20 relative z-10 rounded-b-[60px] shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <div className="flex items-center gap-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+            <div className="flex items-center gap-4 md:gap-6 w-full sm:w-auto">
                <div className="w-16 h-16 bg-[#0EA5E9] rounded-[24px] flex items-center justify-center text-white font-black text-2xl shadow-xl">
                   {authUser?.branch?.name?.charAt(0) || 'H'}
                </div>
@@ -97,9 +97,9 @@ const BsmDashboard = () => {
             </div>
             <button 
               onClick={() => { logout(); navigate('/agent/login'); }}
-              className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors"
+              className="self-end sm:self-auto px-4 py-2 rounded-xl bg-white border border-slate-200 text-[9px] font-black text-slate-500 uppercase tracking-widest hover:text-rose-500 hover:bg-rose-50 transition-colors"
             >
-              Terminate Session
+              Exit Portal
             </button>
         </div>
       </div>

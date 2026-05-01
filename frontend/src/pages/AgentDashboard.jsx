@@ -97,8 +97,8 @@ const AgentDashboard = () => {
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 pb-20 relative">
       {/* Header Overlay */}
       <div className="bg-white/90 border-b border-slate-100 fixed top-0 left-0 right-0 z-50 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+            <div className="flex items-center gap-3 md:gap-4 w-full sm:w-auto">
                <div className="w-12 h-12 bg-[#0EA5E9] rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg">
                   {user?.full_name?.charAt(0) || 'A'}
                </div>
@@ -107,7 +107,7 @@ const AgentDashboard = () => {
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1 italic">{user?.full_name}</p>
                </div>
             </div>
-            <button onClick={handleLogout} className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors">Terminate Session</button>
+            <button onClick={handleLogout} className="self-end sm:self-auto px-4 py-2 rounded-xl bg-white border border-slate-200 text-[9px] font-black text-slate-500 uppercase tracking-widest hover:text-rose-500 hover:bg-rose-50 transition-colors">Exit Portal</button>
         </div>
       </div>
 

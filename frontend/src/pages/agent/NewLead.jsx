@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 const NewLead = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState('');
   const [formData, setFormData] = useState({
@@ -44,10 +46,17 @@ const NewLead = () => {
   return (
     <div className="bg-[#F8FAFC] min-h-screen pt-32 pb-40">
       <div className="max-w-3xl mx-auto px-6">
-        
-        <button onClick={() => navigate(-1)} className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-[#0EA5E9] mb-12 flex items-center gap-2 transition-all">
-           ← Dashboard Repository
-        </button>
+        <div className="mb-12 flex items-center justify-between gap-4">
+          <button onClick={() => navigate(-1)} className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-[#0EA5E9] flex items-center gap-2 transition-all">
+             ← Dashboard Repository
+          </button>
+          <button
+            onClick={() => { logout(); navigate('/agent/login'); }}
+            className="px-4 py-2 rounded-xl bg-white border border-slate-200 text-[9px] font-black uppercase tracking-widest text-rose-500 hover:bg-rose-50 transition-all"
+          >
+            Exit Portal
+          </button>
+        </div>
 
         <motion.div 
            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
