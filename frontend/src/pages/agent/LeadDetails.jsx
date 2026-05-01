@@ -25,6 +25,7 @@ const LeadDetails = () => {
 
   const [personalDetails, setPersonalDetails] = useState({});
   const [documents, setDocuments] = useState([]);
+  const [uploadError, setUploadError] = useState('');
   const [remarks, setRemarks] = useState([]);
   const [newRemarkText, setNewRemarkText] = useState('');
   const [newRemarkType, setNewRemarkType] = useState('note');
@@ -116,6 +117,15 @@ const LeadDetails = () => {
   const handleDocUpload = async (e, docType) => {
     const file = e.target.files[0];
     if (!file) return;
+    setUploadError('');
+
+    const allowedMimeTypes = new Set(['application/pdf', 'image/jpeg', 'image/jpg', 'image/png']);
+    if (!allowedMimeTypes.has(file.type)) {
+      setUploadError('Only PDF/JPG/PNG files are supported.');
+      e.target.value = '';
+      return;
+    }
+
     const formData = new FormData();
     formData.append('file', file);
     formData.append('doc_type', docType);
@@ -128,7 +138,24 @@ const LeadDetails = () => {
         }
       });
       fetchData();
-    } catch(err) { console.error(err); }
+      e.target.value = '';
+    } catch(err) {
+      console.error(err);
+      setUploadError(err?.response?.data?.message || 'Document upload failed.');
+    }
+  };
+
+  const getUploadedDoc = (docType) => {
+    const candidates = documents
+      .filter((doc) => {
+        if (docType === 'aadhaar_card') {
+          return doc.doc_type === 'aadhaar_card' || doc.doc_type === 'aadhaar_front' || doc.doc_type === 'aadhaar_back';
+        }
+        return doc.doc_type === docType;
+      })
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    return candidates[0];
   };
 
   if (loading) return (
@@ -226,14 +253,20 @@ const LeadDetails = () => {
               )}
 
               {activeTab === 'Documents' && (
-                <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <motion.div initial={{opacity:0, y:10}} animate={{opacity:1, y:0}} className="space-y-8">
+                   <div className="bg-white border border-slate-100 p-6 md:p-8 rounded-[24px] shadow-sm">
+                     <h3 className="text-xl font-black text-[#1E293B] uppercase tracking-tight">Upload Required Documents</h3>
+                     <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-2">Supported files: PDF / JPG / PNG</p>
+                     {uploadError && <p className="mt-3 text-[11px] text-red-600 font-semibold">{uploadError}</p>}
+                   </div>
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                    {[
-                     {id: 'pan_card', label: 'Tax Identification (PAN)', required: true},
-                     {id: 'aadhaar_front', label: 'Sovereign Identity (Front)', required: true},
-                     {id: 'aadhaar_back', label: 'Sovereign Identity (Back)', required: true},
-                     {id: 'bank_statement', label: 'Fiscal History (6 Mos)', required: false},
+                     {id: 'income_certificate', label: 'Income Certificate', required: true},
+                     {id: 'aadhaar_card', label: 'Aadhaar Card', required: true},
+                     {id: 'pan_card', label: 'PAN Card', required: true},
+                     {id: 'bank_statement', label: 'Bank Statement', required: true},
                    ].map((docConfig) => {
-                     const uploadedDoc = documents.find(d => d.doc_type === docConfig.id);
+                     const uploadedDoc = getUploadedDoc(docConfig.id);
                      return (
                        <div key={docConfig.id} className="bg-white border border-slate-100 p-6 md:p-10 rounded-[32px] md:rounded-[48px] shadow-sm flex flex-col justify-between h-[320px] group transition-all hover:shadow-2xl">
                           <div>
@@ -247,17 +280,18 @@ const LeadDetails = () => {
                           </div>
                           <div className="mt-8">
                              {uploadedDoc ? (
-                               <a href={getDocumentUrl(uploadedDoc.file_url)} target="_blank" rel="noreferrer" className="w-full btn-secondary py-4 text-[9px] uppercase tracking-widest flex items-center justify-center">Watch Document</a>
+                               <a href={getDocumentUrl(uploadedDoc.file_url)} target="_blank" rel="noreferrer" className="w-full btn-secondary py-4 text-[9px] uppercase tracking-widest flex items-center justify-center">Watch Uploaded</a>
                              ) : (
                                <label className="cursor-pointer block">
-                                  <div className="w-full btn-primary py-4 text-[9px] uppercase tracking-widest flex items-center justify-center">Initialize Transmission</div>
-                                  <input type="file" className="hidden" onChange={(e) => handleDocUpload(e, docConfig.id)} />
+                                  <div className="w-full btn-primary py-4 text-[9px] uppercase tracking-widest flex items-center justify-center">Upload Document</div>
+                                  <input type="file" accept=".pdf,.jpg,.jpeg,.png" className="hidden" onChange={(e) => handleDocUpload(e, docConfig.id)} />
                                </label>
                              )}
                           </div>
                        </div>
                      );
                    })}
+                   </div>
                 </motion.div>
               )}
 

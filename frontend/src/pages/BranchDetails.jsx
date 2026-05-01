@@ -53,6 +53,8 @@ const BranchDetails = () => {
   const { slug } = useParams();
   const branch = branchData[slug] || branchData['agra'];
   const [success, setSuccess] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState('idle'); // idle, submitting, duplicate, error
+  const [mobileError, setMobileError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '', 
@@ -69,7 +71,12 @@ const BranchDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.mobile.length !== 10) return;
+    setMobileError('');
+    setSubmitStatus('idle');
+    if (formData.mobile.length !== 10) {
+      setMobileError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
     setIsSubmitting(true);
     
     try {
@@ -89,9 +96,14 @@ const BranchDetails = () => {
       if (response.ok) {
         setSuccess(true);
         setFormData({ fullName: '', mobile: '', loanType: 'msme_structured', amount: '', city: branch.city });
+      } else if (response.status === 409) {
+        setSubmitStatus('duplicate');
+      } else {
+        setSubmitStatus('error');
       }
     } catch (err) {
       console.error(err);
+      setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
     }
@@ -232,6 +244,9 @@ const BranchDetails = () => {
                          >
                             {isSubmitting ? 'Syncing...' : 'Initiate Session'}
                          </button>
+                         {submitStatus === 'duplicate' && <p className="text-[10px] text-amber-500 font-black uppercase tracking-widest text-center">Duplicate lead already submitted within 24 hours.</p>}
+                         {submitStatus === 'error' && <p className="text-[10px] text-red-500 font-black uppercase tracking-widest text-center">Submission failed. Please try again.</p>}
+                         {mobileError && <p className="text-[10px] text-red-500 font-black uppercase tracking-widest text-center">{mobileError}</p>}
 
                          <div className="p-6 bg-white/5 rounded-[24px] border border-white/5 flex gap-4 items-start">
                             <span className="text-[#0EA5E9] font-black text-lg">!</span>
@@ -240,7 +255,6 @@ const BranchDetails = () => {
                       </form>
                     )}
                   </AnimatePresence>
->
                </div>
             </motion.div>
           </div>

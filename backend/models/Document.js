@@ -5,7 +5,8 @@ const documentSchema = new mongoose.Schema({
   doc_type: { 
     type: String, 
     enum: [
-      'pan_card', 'aadhaar_front', 'aadhaar_back', 'voter_id', 
+      'income_certificate', 'aadhaar_card', 'pan_card', 'bank_statement',
+      'aadhaar_front', 'aadhaar_back', 'voter_id', 
       'gst_certificate', 'bank_statement', 'itr', 'business_proof',
       'property_documents', 'passport_photo', 'others'
     ], 

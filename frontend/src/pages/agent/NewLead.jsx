@@ -8,6 +8,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 const NewLead = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState('');
   const [formData, setFormData] = useState({
     applicant_name: '',
     mobile: '',
@@ -18,6 +19,11 @@ const NewLead = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormError('');
+    if (formData.mobile.length !== 10) {
+      setFormError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
     setLoading(true);
     try {
       const token = localStorage.getItem('swayamfin_token');
@@ -29,7 +35,7 @@ const NewLead = () => {
       }
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || 'Transaction failed. Verify node status.');
+      setFormError(err.response?.data?.message || 'Transaction failed. Verify node status.');
     } finally {
       setLoading(false);
     }
@@ -125,6 +131,7 @@ const NewLead = () => {
                     >
                        {loading ? 'Transmitting Node...' : 'Initialize Asset Case'}
                     </button>
+                    {formError && <p className="text-center text-[10px] font-black text-red-600 uppercase tracking-widest mt-4">{formError}</p>}
                     <p className="text-center text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-6 italic">Secure transmission via institutional API</p>
                  </div>
               </form>

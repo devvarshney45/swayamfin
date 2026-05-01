@@ -27,6 +27,7 @@ const Hero = () => {
     city: ''
   });
   const [submitStatus, setSubmitStatus] = useState('idle'); // idle, submitting, success, duplicate, error
+  const [mobileError, setMobileError] = useState('');
 
   const slides = [
     { title: t('hero_title_2'), sub: t('hero_sub_2') },
@@ -43,7 +44,11 @@ const Hero = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.mobile.length !== 10) return;
+    setMobileError('');
+    if (formData.mobile.length !== 10) {
+      setMobileError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
     setSubmitStatus('submitting');
     
     try {
@@ -224,6 +229,7 @@ const Hero = () => {
 
                       {submitStatus === 'duplicate' && <p className="text-[9px] text-amber-600 text-center font-bold uppercase tracking-widest italic italic">Coordinate Conflict: Transmission Already Logged.</p>}
                       {submitStatus === 'error' && <p className="text-[9px] text-red-600 text-center font-bold uppercase tracking-widest italic">Link Fault: Server Unreachable.</p>}
+                      {mobileError && <p className="text-[9px] text-red-600 text-center font-bold uppercase tracking-widest italic">{mobileError}</p>}
 
                       <div className="text-center">
                          <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest italic">🛡️ RBI Compliant • Data Protected</p>

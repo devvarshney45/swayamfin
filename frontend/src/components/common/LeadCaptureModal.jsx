@@ -11,10 +11,15 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
     city: ''
   });
   const [status, setStatus] = useState('idle'); // idle, submitting, success, duplicate, error
+  const [mobileError, setMobileError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.mobile.length !== 10) return;
+    setMobileError('');
+    if (formData.mobile.length !== 10) {
+      setMobileError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
     
     setStatus('submitting');
     
@@ -178,6 +183,7 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
 
                   {status === 'duplicate' && <p className="text-[10px] text-amber-600 text-center font-bold">Duplicate entry detected.</p>}
                   {status === 'error' && <p className="text-[10px] text-red-600 text-center font-bold">Transmission failed. Try again.</p>}
+                  {mobileError && <p className="text-[10px] text-red-600 text-center font-bold">{mobileError}</p>}
                 </form>
               </>
             )}

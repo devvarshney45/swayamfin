@@ -14,9 +14,32 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
+const allowedMimeTypes = new Set([
+  'application/pdf',
+  'image/jpeg',
+  'image/jpg',
+  'image/png'
+]);
 
-router.post('/:id/documents', protect, upload.single('file'), uploadDocument);
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  fileFilter: (req, file, cb) => {
+    if (!allowedMimeTypes.has(file.mimetype)) {
+      return cb(new Error('Only PDF/JPG/PNG files are allowed'));
+    }
+    cb(null, true);
+  }
+});
+
+router.post('/:id/documents', protect, (req, res, next) => {
+  upload.single('file')(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({ message: err.message || 'Invalid file upload' });
+    }
+    next();
+  });
+}, uploadDocument);
 router.get('/:id/documents', protect, getDocuments);
 router.delete('/:id/documents/:docId', protect, deleteDocument);
 
