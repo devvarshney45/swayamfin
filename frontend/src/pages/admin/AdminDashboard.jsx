@@ -89,7 +89,10 @@ const AdminDashboard = () => {
                  Revenue <span className="text-[#0EA5E9] italic">Command.</span>
               </h1>
            </div>
-           <div className="flex gap-4">
+          <div className="flex flex-wrap gap-3">
+             <Link to="/admin/agents" className="bg-white border border-slate-200 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all text-[10px] font-black uppercase tracking-widest text-[#0EA5E9]">
+               Manage Team
+             </Link>
               <button onClick={fetchStats} className="bg-white border border-slate-200 p-4 rounded-xl hover:bg-slate-50 transition-all text-xs font-bold uppercase tracking-widest text-slate-400">Sync Data</button>
            </div>
         </div>
@@ -101,7 +104,7 @@ const AdminDashboard = () => {
           </Link>
           <KPICard title="Disbursement" value={`₹${(stats.totalDisbursed/10000000).toFixed(2)}Cr`} sub="Cumulative" color="emerald" />
           <Link to="/admin/agents" className="contents">
-            <KPICard title="Core Team" value={stats.activeAgents} sub="Active Agents" />
+            <KPICard title="Team Members" value={stats.activeAgents} sub="Active Agents" />
           </Link>
           <KPICard title="Yield (Win%)" value={`${stats.conversionRate}%`} sub="Target 25%" color="rose" />
         </div>
