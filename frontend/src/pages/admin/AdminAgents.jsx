@@ -80,9 +80,6 @@ const AdminAgents = () => {
       const headers = { Authorization: `Bearer ${token}` };
       
       const payload = { ...formData };
-      if (payload.role === 'admin' || payload.role === 'hr') {
-        payload.branch_id = null;
-      }
       if (!payload.employee_code || !String(payload.employee_code).trim()) {
         delete payload.employee_code;
       }
@@ -266,7 +263,6 @@ const AdminAgents = () => {
                        
                        <SelectGroup label="Role" value={formData.role} onChange={(v) => {
                          const next = { ...formData, role: v };
-                         if (v === 'admin' || v === 'hr') next.branch_id = '';
                          if (v === '') next.branch_id = '';
                          setFormData(next);
                        }} options={[
@@ -281,9 +277,8 @@ const AdminAgents = () => {
                          label="Deployment Hub"
                          value={formData.branch_id}
                          onChange={v => setFormData({...formData, branch_id: v})}
-                         disabled={!formData.role || formData.role === 'admin' || formData.role === 'hr'}
                          options={[
-                           {v: '', l: formData.role === 'admin' || formData.role === 'hr' ? 'Not required (central)' : !formData.role ? 'Select Role first' : 'Select Hub Node'},
+                           {v: '', l: 'Optional (Central Hub)'},
                            ...branches.map(b => ({v: b._id, l: b.name}))
                          ]}
                        />

@@ -47,11 +47,8 @@ exports.createUser = async (req, res) => {
     }
 
     if (!branch_id || branch_id === '') branch_id = null;
-    if (role === 'admin' || role === 'hr') branch_id = null;
-
-    if ((role === 'bsm' || role === 'sales_person') && !branch_id) {
-      return res.status(400).json({ success: false, message: 'Deployment hub is required for this role' });
-    }
+    // Removed: force null for admin/hr
+    // Removed: required check for sales_person/bsm
 
     if (!employee_code || String(employee_code).trim() === '') {
       employee_code = undefined;
