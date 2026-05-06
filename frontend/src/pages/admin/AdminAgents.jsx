@@ -59,7 +59,7 @@ const AdminAgents = () => {
       password_hash: '',
       phone: user.phone || '',
       employee_code: user.employee_code || '',
-      branch_id: user.branch_id?.name || '',
+      branch_id: user.branch_id?._id || '',
       role: user.role || 'sales_person'
     });
     setShowModal(true);
@@ -82,9 +82,6 @@ const AdminAgents = () => {
       const payload = { ...formData };
       if (payload.branch_id === '') {
         payload.branch_id = null;
-      } else {
-        const branch = branches.find(b => b.name === payload.branch_id);
-        payload.branch_id = branch ? branch._id : null;
       }
       if (!payload.employee_code || !String(payload.employee_code).trim()) {
         delete payload.employee_code;
@@ -283,10 +280,7 @@ const AdminAgents = () => {
                          onChange={v => setFormData({...formData, branch_id: v})}
                          options={[
                            {v: '', l: 'Optional (Central Hub)'},
-                           {v: 'Agra', l: 'Agra'},
-                           {v: 'Mathura', l: 'Mathura'},
-                           {v: 'Hathras', l: 'Hathras'},
-                           {v: 'Kosi', l: 'Kosi'}
+                           ...branches.map(b => ({ v: b._id, l: b.name }))
                          ]}
                        />
 
