@@ -59,7 +59,7 @@ const AdminAgents = () => {
       password_hash: '',
       phone: user.phone || '',
       employee_code: user.employee_code || '',
-      branch_id: user.branch_id?._id || '',
+      branch_id: user.branch_id?.name || '',
       role: user.role || 'sales_person'
     });
     setShowModal(true);
@@ -80,6 +80,12 @@ const AdminAgents = () => {
       const headers = { Authorization: `Bearer ${token}` };
       
       const payload = { ...formData };
+      if (payload.branch_id === '') {
+        payload.branch_id = null;
+      } else {
+        const branch = branches.find(b => b.name === payload.branch_id);
+        payload.branch_id = branch ? branch._id : null;
+      }
       if (!payload.employee_code || !String(payload.employee_code).trim()) {
         delete payload.employee_code;
       }
@@ -224,7 +230,7 @@ const AdminAgents = () => {
                    <Link to={`/admin/agents/${u._id}`} className="group/link">
                       <h3 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight truncate group-hover/link:text-[#0EA5E9] transition-all">{u.full_name}</h3>
                    </Link>
-                   <p className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-widest mt-2">{u.branch_id?.name || 'Central Hub'}</p>
+                   <p className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-widest mt-2">{u.branch || 'Central Hub'}</p>
                 </div>
               </div>
 
@@ -262,9 +268,7 @@ const AdminAgents = () => {
                        <InputGroup label="Employee ID / Code" value={formData.employee_code} onChange={v => setFormData({...formData, employee_code: v})} />
                        
                        <SelectGroup label="Role" value={formData.role} onChange={(v) => {
-                         const next = { ...formData, role: v };
-                         if (v === '') next.branch_id = '';
-                         setFormData(next);
+                         setFormData({ ...formData, role: v });
                        }} options={[
                          {v: '', l: 'Select Role'},
                          {v: 'sales_person', l: 'Sales Person'},
@@ -279,7 +283,10 @@ const AdminAgents = () => {
                          onChange={v => setFormData({...formData, branch_id: v})}
                          options={[
                            {v: '', l: 'Optional (Central Hub)'},
-                           ...branches.map(b => ({v: b._id, l: b.name}))
+                           {v: 'Agra', l: 'Agra'},
+                           {v: 'Mathura', l: 'Mathura'},
+                           {v: 'Hathras', l: 'Hathras'},
+                           {v: 'Kosi', l: 'Kosi'}
                          ]}
                        />
 

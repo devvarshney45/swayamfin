@@ -47,8 +47,6 @@ exports.createUser = async (req, res) => {
     }
 
     if (!branch_id || branch_id === '') branch_id = null;
-    // Removed: force null for admin/hr
-    // Removed: required check for sales_person/bsm
 
     if (!employee_code || String(employee_code).trim() === '') {
       employee_code = undefined;
@@ -112,9 +110,7 @@ exports.updateUser = async (req, res) => {
 
     let nextBranch = branch_id;
     if (nextBranch === '' || nextBranch === null) nextBranch = null;
-    if (user.role === 'admin' || user.role === 'hr') {
-      user.branch_id = null;
-    } else if (nextBranch !== undefined) {
+    if (nextBranch !== undefined) {
       user.branch_id = nextBranch;
     }
 
