@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Branch = require('../models/Branch');
 
 exports.getUsers = async (req, res) => {
   try {
@@ -46,7 +47,15 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid or missing role' });
     }
 
-    if (!branch_id || branch_id === '') branch_id = null;
+    if (!branch_id || branch_id === '') {
+      branch_id = null;
+    } else {
+      const branchById = await Branch.findById(branch_id);
+      if (!branchById) {
+        const branchByName = await Branch.findOne({ name: branch_id });
+        branch_id = branchByName ? branchByName._id : branch_id;
+      }
+    }
 
     if (!employee_code || String(employee_code).trim() === '') {
       employee_code = undefined;
@@ -109,7 +118,15 @@ exports.updateUser = async (req, res) => {
     }
 
     let nextBranch = branch_id;
-    if (nextBranch === '' || nextBranch === null) nextBranch = null;
+    if (nextBranch === '' || nextBranch === null) {
+      nextBranch = null;
+    } else {
+      const branchById = await Branch.findById(nextBranch);
+      if (!branchById) {
+        const branchByName = await Branch.findOne({ name: nextBranch });
+        nextBranch = branchByName ? branchByName._id : nextBranch;
+      }
+    }
     if (nextBranch !== undefined) {
       user.branch_id = nextBranch;
     }

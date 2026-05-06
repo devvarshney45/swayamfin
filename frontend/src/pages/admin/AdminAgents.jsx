@@ -22,6 +22,20 @@ const AdminAgents = () => {
     branch_id: '', 
     role: '' 
   });
+
+  const staticBranchOptions = [
+    { v: 'Agra', l: 'Agra' },
+    { v: 'Mathura', l: 'Mathura' },
+    { v: 'Hathras', l: 'Hathras' },
+    { v: 'Kosi', l: 'Kosi' }
+  ];
+
+  const branchOptions = [
+    { v: '', l: 'Optional (Central Hub)' },
+    ...(branches.length > 0
+      ? branches.map(b => ({ v: b._id, l: b.name }))
+      : staticBranchOptions)
+  ];
   const [notification, setNotification] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -83,6 +97,17 @@ const AdminAgents = () => {
       if (payload.branch_id === '') {
         payload.branch_id = null;
       }
+
+      if (payload.branch_id && branches.length > 0) {
+        const branchById = branches.find(b => b._id === payload.branch_id);
+        const branchByName = branches.find(b => b.name === payload.branch_id);
+        if (branchById) {
+          payload.branch_id = branchById._id;
+        } else if (branchByName) {
+          payload.branch_id = branchByName._id;
+        }
+      }
+
       if (!payload.employee_code || !String(payload.employee_code).trim()) {
         delete payload.employee_code;
       }
@@ -278,10 +303,7 @@ const AdminAgents = () => {
                          label="Deployment Hub"
                          value={formData.branch_id}
                          onChange={v => setFormData({...formData, branch_id: v})}
-                         options={[
-                           {v: '', l: 'Optional (Central Hub)'},
-                           ...branches.map(b => ({ v: b._id, l: b.name }))
-                         ]}
+                         options={branchOptions}
                        />
 
                        <div className="md:col-span-2">
