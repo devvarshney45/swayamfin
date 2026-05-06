@@ -67,11 +67,21 @@ const AdminAgents = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!editMode && (!formData.password_hash || !String(formData.password_hash).trim())) {
+      setNotification({ type: 'error', message: 'Master security key is required for new users.' });
+      return;
+    }
     try {
       const token = localStorage.getItem('swayamfin_token');
       const headers = { Authorization: `Bearer ${token}` };
       
       const payload = { ...formData };
+      if (payload.role === 'admin') {
+        payload.branch_id = null;
+      }
+      if (!payload.employee_code || !String(payload.employee_code).trim()) {
+        delete payload.employee_code;
+      }
       if (editMode && !payload.password_hash) {
         delete payload.password_hash;
       }
@@ -251,16 +261,26 @@ const AdminAgents = () => {
                        <InputGroup label="Communication Link" value={formData.phone} onChange={v => setFormData({...formData, phone: v})} />
                        <InputGroup label="Employee ID / Code" value={formData.employee_code} onChange={v => setFormData({...formData, employee_code: v})} />
                        
-                       <SelectGroup label="Strategic Role" value={formData.role} onChange={v => setFormData({...formData, role: v})} options={[
+                       <SelectGroup label="Strategic Role" value={formData.role} onChange={(v) => {
+                         const next = { ...formData, role: v };
+                         if (v === 'admin') next.branch_id = '';
+                         setFormData(next);
+                       }} options={[
                          {v: 'sales_person', l: 'Strategic Partner'},
                          {v: 'bsm', l: 'Hub Manager'},
                          {v: 'admin', l: 'Global Admin'}
                        ]} />
                        
-                       <SelectGroup label="Deployment Hub" value={formData.branch_id} onChange={v => setFormData({...formData, branch_id: v})} options={[
-                         {v: '', l: 'Select Hub Node'},
-                         ...branches.map(b => ({v: b._id, l: b.name}))
-                       ]} />
+                       <SelectGroup
+                         label="Deployment Hub"
+                         value={formData.branch_id}
+                         onChange={v => setFormData({...formData, branch_id: v})}
+                         disabled={formData.role === 'admin'}
+                         options={[
+                           {v: '', l: formData.role === 'admin' ? 'Not required (central)' : 'Select Hub Node'},
+                           ...branches.map(b => ({v: b._id, l: b.name}))
+                         ]}
+                       />
 
                        <div className="md:col-span-2">
                           <InputGroup label={editMode ? 'Security Overwrite (Blank to retain)' : 'Master Security Key'} value={formData.password_hash} onChange={v => setFormData({...formData, password_hash: v})} type="password" />
@@ -289,10 +309,10 @@ const InputGroup = ({ label, value, onChange, type = 'text' }) => (
   </div>
 );
 
-const SelectGroup = ({ label, value, onChange, options }) => (
+const SelectGroup = ({ label, value, onChange, options, disabled = false }) => (
   <div className="space-y-2">
     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{label}</label>
-    <select className="input-standard w-full h-14 rounded-2xl px-6 text-sm appearance-none cursor-pointer" value={value} onChange={e => onChange(e.target.value)}>
+    <select disabled={disabled} className="input-standard w-full h-14 rounded-2xl px-6 text-sm appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" value={value} onChange={e => onChange(e.target.value)}>
       {options.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
     </select>
   </div>

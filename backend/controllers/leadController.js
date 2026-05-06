@@ -1,7 +1,11 @@
+const fs = require('fs');
+const path = require('path');
 const Lead = require('../models/Lead');
 const Branch = require('../models/Branch');
 const User = require('../models/User');
 const Remark = require('../models/Remark');
+const Document = require('../models/Document');
+const Message = require('../models/Message');
 const notificationService = require('../utils/notificationService');
 
 exports.createLead = async (req, res) => {
@@ -149,13 +153,67 @@ exports.updateLead = async (req, res) => {
     if (req.user.role === 'sales_person' && lead.assigned_to?.toString() !== req.user.id) {
         return res.status(403).json({ message: 'Not authorized' });
     }
+    if (req.user.role === 'bsm' && lead.branch_id?.toString() !== req.user.branch_id?.toString()) {
+        return res.status(403).json({ message: 'Not authorized' });
+    }
 
-    // Merge updates
-    Object.assign(lead, req.body);
+    const data = { ...req.body };
+    delete data.lead_number;
+
+    Object.assign(lead, data);
+    if (data.status) {
+      const statusToStage = {
+        New: 'new',
+        Contacted: 'contacted',
+        'In Progress': 'in_progress',
+        'Document Submitted': 'docs_submitted',
+        Sanctioned: 'sanctioned',
+        Disbursed: 'disbursed',
+        'Closed - Won': 'closed',
+        'Dead Lead': 'dead',
+        'On Hold': 'on_hold',
+      };
+      if (statusToStage[data.status]) lead.stage = statusToStage[data.status];
+    }
     await lead.save();
 
     res.json({ success: true, data: lead });
   } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.deleteLead = async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Only administrators can delete leads' });
+    }
+
+    const lead = await Lead.findById(req.params.id);
+    if (!lead) return res.status(404).json({ message: 'Lead not found' });
+
+    const uploadsRoot = path.join(__dirname, '../uploads');
+    const docs = await Document.find({ lead_id: lead._id });
+    for (const doc of docs) {
+      if (doc.file_url && doc.file_url.startsWith('/uploads/')) {
+        const fname = path.basename(doc.file_url);
+        const abs = path.join(uploadsRoot, fname);
+        try {
+          if (fs.existsSync(abs)) fs.unlinkSync(abs);
+        } catch (e) {
+          console.error('deleteLead unlink', e);
+        }
+      }
+    }
+
+    await Document.deleteMany({ lead_id: lead._id });
+    await Remark.deleteMany({ lead_id: lead._id });
+    await Message.deleteMany({ lead_id: lead._id });
+    await Lead.findByIdAndDelete(lead._id);
+
+    res.json({ success: true, message: 'Lead removed' });
+  } catch (err) {
+    console.error('deleteLead', err);
     res.status(500).json({ message: 'Server error' });
   }
 };

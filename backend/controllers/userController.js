@@ -39,22 +39,106 @@ exports.getUserById = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   try {
-    const { full_name, email, password_hash, branch_id, phone, employee_code, role } = req.body;
-    const user = await User.create({ 
-      full_name, email, password_hash, branch_id, phone, employee_code, role 
+    let { full_name, email, password_hash, branch_id, phone, employee_code, role } = req.body;
+
+    const allowedRoles = ['sales_person', 'bsm', 'admin', 'hr'];
+    if (!role || !allowedRoles.includes(role)) {
+      return res.status(400).json({ success: false, message: 'Invalid or missing role' });
+    }
+
+    if (!branch_id || branch_id === '') branch_id = null;
+    if (role === 'admin' || role === 'hr') branch_id = null;
+
+    if ((role === 'bsm' || role === 'sales_person') && !branch_id) {
+      return res.status(400).json({ success: false, message: 'Deployment hub is required for this role' });
+    }
+
+    if (!employee_code || String(employee_code).trim() === '') {
+      employee_code = undefined;
+    }
+
+    if (!password_hash || !String(password_hash).trim()) {
+      return res.status(400).json({ success: false, message: 'Password is required' });
+    }
+
+    const user = await User.create({
+      full_name,
+      email,
+      password_hash,
+      branch_id,
+      phone,
+      employee_code,
+      role,
     });
-    res.status(201).json({ success: true, data: user });
+    const safe = user.toObject();
+    delete safe.password_hash;
+    res.status(201).json({ success: true, data: safe });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
+    console.error('createUser', error);
+    if (error.code === 11000) {
+      return res.status(400).json({ success: false, message: 'Email or employee code already exists' });
+    }
+    res.status(500).json({ success: false, message: error.message || 'Server Error' });
   }
 };
 
 exports.updateUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json({ success: true, data: user });
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const {
+      full_name,
+      email,
+      phone,
+      employee_code,
+      role,
+      branch_id,
+      password_hash,
+      is_active,
+    } = req.body;
+
+    if (full_name !== undefined) user.full_name = full_name;
+    if (email !== undefined) user.email = email;
+    if (phone !== undefined) user.phone = phone;
+    if (is_active !== undefined) user.is_active = is_active;
+
+    if (role !== undefined) {
+      const allowedRoles = ['sales_person', 'bsm', 'admin', 'hr'];
+      if (!allowedRoles.includes(role)) {
+        return res.status(400).json({ success: false, message: 'Invalid role' });
+      }
+      user.role = role;
+    }
+
+    let nextBranch = branch_id;
+    if (nextBranch === '' || nextBranch === null) nextBranch = null;
+    if (user.role === 'admin' || user.role === 'hr') {
+      user.branch_id = null;
+    } else if (nextBranch !== undefined) {
+      user.branch_id = nextBranch;
+    }
+
+    if (employee_code !== undefined) {
+      user.employee_code = String(employee_code).trim() === '' ? undefined : employee_code;
+    }
+
+    if (password_hash && String(password_hash).trim()) {
+      user.password_hash = password_hash;
+    }
+
+    await user.save();
+    const safe = user.toObject();
+    delete safe.password_hash;
+    res.json({ success: true, data: safe });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server Error' });
+    console.error('updateUser', error);
+    if (error.code === 11000) {
+      return res.status(400).json({ success: false, message: 'Email or employee code already exists' });
+    }
+    res.status(500).json({ success: false, message: error.message || 'Server Error' });
   }
 };
 

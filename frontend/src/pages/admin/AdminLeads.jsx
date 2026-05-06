@@ -6,6 +6,25 @@ import AdminTabs from '../../components/admin/AdminTabs';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
+const LOAN_TYPE_OPTIONS = [
+  { v: 'home_loan', l: 'Housing' },
+  { v: 'micro_lap', l: 'Micro LAP' },
+  { v: 'supply_chain', l: 'Supply chain' },
+  { v: 'msme_structured', l: 'MSME structured' },
+  { v: 'lap', l: 'LAP' },
+  { v: 'hybrid', l: 'Hybrid' },
+  { v: 'microfinance', l: 'Microfinance' },
+  { v: 'structured', l: 'Structured' },
+  { v: 'secured', l: 'Secured' },
+  { v: 'unsecured', l: 'Unsecured' },
+  { v: 'machinery_loan', l: 'Machinery loan' },
+];
+
+const STATUS_OPTIONS = [
+  'New', 'Contacted', 'In Progress', 'Document Submitted',
+  'Sanctioned', 'Disbursed', 'Closed - Won', 'Dead Lead', 'On Hold',
+];
+
 const getDocumentUrl = (fileUrl) => {
   if (!fileUrl) return '#';
   if (/^https?:\/\//i.test(fileUrl)) return fileUrl;
@@ -24,6 +43,11 @@ const AdminLeads = () => {
   const [docLoading, setDocLoading] = useState(false);
   const [docError, setDocError] = useState('');
   const [leadDocs, setLeadDocs] = useState([]);
+  const [editLead, setEditLead] = useState(null);
+  const [editForm, setEditForm] = useState({});
+  const [editSaving, setEditSaving] = useState(false);
+  const [editError, setEditError] = useState('');
+  const [actionNote, setActionNote] = useState(null);
 
   useEffect(() => {
     fetchLeads();
@@ -73,6 +97,69 @@ const AdminLeads = () => {
     
     return matchesSearch && matchesStatus && matchesType;
   });
+
+  const openEdit = (lead, e) => {
+    e.stopPropagation();
+    setEditError('');
+    setEditLead(lead);
+    setEditForm({
+      applicant_name: lead.applicant_name || '',
+      mobile: lead.mobile || '',
+      email: lead.email || '',
+      location_city: lead.location_city || '',
+      loan_type: lead.loan_type || 'home_loan',
+      loan_amount_required: lead.loan_amount_required != null ? String(lead.loan_amount_required) : '',
+      status: lead.status || 'New',
+    });
+  };
+
+  const saveEdit = async (e) => {
+    e.preventDefault();
+    if (!editLead) return;
+    setEditSaving(true);
+    setEditError('');
+    try {
+      const token = localStorage.getItem('swayamfin_token');
+      await axios.put(
+        `${API_URL}/api/leads/${editLead._id}`,
+        {
+          applicant_name: editForm.applicant_name,
+          mobile: editForm.mobile,
+          email: editForm.email || undefined,
+          location_city: editForm.location_city,
+          loan_type: editForm.loan_type,
+          loan_amount_required: Number(editForm.loan_amount_required),
+          status: editForm.status,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setEditLead(null);
+      setActionNote({ type: 'success', message: 'Lead updated.' });
+      fetchLeads();
+      setTimeout(() => setActionNote(null), 3000);
+    } catch (err) {
+      setEditError(err.response?.data?.message || 'Update failed.');
+    } finally {
+      setEditSaving(false);
+    }
+  };
+
+  const deleteLead = async (lead, e) => {
+    e.stopPropagation();
+    if (!window.confirm(`Permanently delete lead ${lead.lead_number} for ${lead.applicant_name}?`)) return;
+    try {
+      const token = localStorage.getItem('swayamfin_token');
+      await axios.delete(`${API_URL}/api/leads/${lead._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setActionNote({ type: 'success', message: 'Lead removed.' });
+      fetchLeads();
+      setTimeout(() => setActionNote(null), 3000);
+    } catch (err) {
+      setActionNote({ type: 'error', message: err.response?.data?.message || 'Delete failed.' });
+      setTimeout(() => setActionNote(null), 5000);
+    }
+  };
 
   const openDocuments = async (lead, e) => {
     e.stopPropagation();
@@ -127,10 +214,27 @@ const AdminLeads = () => {
                  Global <span className="text-[#0EA5E9] italic">Repository.</span>
               </h1>
            </div>
-           <button className="bg-white border border-slate-200 px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-[#1E293B] hover:bg-slate-50 transition-all shadow-sm">
+           <button type="button" className="bg-white border border-slate-200 px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-[#1E293B] hover:bg-slate-50 transition-all shadow-sm">
               Export {filteredLeads.length} Node Data
            </button>
         </div>
+
+        <AnimatePresence>
+          {actionNote && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className={`mb-8 p-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border ${
+                actionNote.type === 'success'
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                  : 'bg-rose-50 text-rose-600 border-rose-100'
+              }`}
+            >
+              {actionNote.message}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Filters */}
         <div className="bg-white border border-slate-100 p-6 md:p-8 rounded-[32px] md:rounded-[40px] shadow-sm mb-12 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -214,14 +318,29 @@ const AdminLeads = () => {
                                </span>
                             </td>
                             <td className="px-10 py-6 text-right">
-                               <div className="flex items-center justify-end gap-2">
+                               <div className="flex flex-wrap items-center justify-end gap-2">
                                  <button
+                                   type="button"
+                                   onClick={(e) => openEdit(lead, e)}
+                                   className="px-3 py-2 rounded-lg border border-slate-200 text-[9px] font-black uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all"
+                                 >
+                                   Edit
+                                 </button>
+                                 <button
+                                   type="button"
+                                   onClick={(e) => deleteLead(lead, e)}
+                                   className="px-3 py-2 rounded-lg border border-rose-200 text-[9px] font-black uppercase tracking-widest text-rose-600 hover:bg-rose-50 transition-all"
+                                 >
+                                   Delete
+                                 </button>
+                                 <button
+                                   type="button"
                                    onClick={(e) => openDocuments(lead, e)}
                                    className="px-3 py-2 rounded-lg border border-[#0EA5E9]/30 text-[9px] font-black uppercase tracking-widest text-[#0EA5E9] hover:bg-[#0EA5E9] hover:text-white transition-all"
                                  >
                                    View Docs
                                  </button>
-                                 <span className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-widest">Intercept →</span>
+                                 <span className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-widest hidden sm:inline">Intercept →</span>
                                </div>
                             </td>
                          </motion.tr>
@@ -236,6 +355,133 @@ const AdminLeads = () => {
         </div>
 
       </div>
+
+      <AnimatePresence>
+        {editLead && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[130] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setEditLead(null)}
+          >
+            <motion.form
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 20, opacity: 0 }}
+              className="w-full max-w-lg bg-white rounded-[28px] border border-slate-100 shadow-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto"
+              onClick={(ev) => ev.stopPropagation()}
+              onSubmit={saveEdit}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-xl font-black text-[#1E293B] uppercase tracking-tight">Edit lead</h3>
+                  <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-1">
+                    {editLead.lead_number}
+                  </p>
+                </div>
+                <button type="button" onClick={() => setEditLead(null)} className="text-slate-400 hover:text-slate-600 font-black">
+                  ✕
+                </button>
+              </div>
+
+              {editError && <p className="text-sm text-red-600 mb-4">{editError}</p>}
+
+              <div className="space-y-4">
+                <div>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Name</label>
+                  <input
+                    required
+                    className="input-standard w-full h-12 rounded-xl px-4 mt-1 text-sm"
+                    value={editForm.applicant_name}
+                    onChange={(ev) => setEditForm({ ...editForm, applicant_name: ev.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mobile</label>
+                  <input
+                    required
+                    maxLength={10}
+                    className="input-standard w-full h-12 rounded-xl px-4 mt-1 text-sm"
+                    value={editForm.mobile}
+                    onChange={(ev) => setEditForm({ ...editForm, mobile: ev.target.value.replace(/\D/g, '') })}
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Email</label>
+                  <input
+                    type="email"
+                    className="input-standard w-full h-12 rounded-xl px-4 mt-1 text-sm"
+                    value={editForm.email}
+                    onChange={(ev) => setEditForm({ ...editForm, email: ev.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">City</label>
+                  <input
+                    required
+                    className="input-standard w-full h-12 rounded-xl px-4 mt-1 text-sm"
+                    value={editForm.location_city}
+                    onChange={(ev) => setEditForm({ ...editForm, location_city: ev.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loan type</label>
+                  <select
+                    className="input-standard w-full h-12 rounded-xl px-4 mt-1 text-sm"
+                    value={editForm.loan_type}
+                    onChange={(ev) => setEditForm({ ...editForm, loan_type: ev.target.value })}
+                  >
+                    {LOAN_TYPE_OPTIONS.map((o) => (
+                      <option key={o.v} value={o.v}>{o.l}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Amount (₹)</label>
+                  <input
+                    required
+                    type="number"
+                    min="0"
+                    className="input-standard w-full h-12 rounded-xl px-4 mt-1 text-sm"
+                    value={editForm.loan_amount_required}
+                    onChange={(ev) => setEditForm({ ...editForm, loan_amount_required: ev.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</label>
+                  <select
+                    className="input-standard w-full h-12 rounded-xl px-4 mt-1 text-sm"
+                    value={editForm.status}
+                    onChange={(ev) => setEditForm({ ...editForm, status: ev.target.value })}
+                  >
+                    {STATUS_OPTIONS.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-8">
+                <button
+                  type="button"
+                  onClick={() => setEditLead(null)}
+                  className="flex-1 py-3 rounded-xl bg-slate-50 text-slate-500 text-[10px] font-black uppercase tracking-widest"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={editSaving}
+                  className="flex-[2] py-3 rounded-xl btn-primary text-[10px] font-black uppercase tracking-widest disabled:opacity-50"
+                >
+                  {editSaving ? 'Saving…' : 'Save'}
+                </button>
+              </div>
+            </motion.form>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {docLead && (
