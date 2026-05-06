@@ -20,7 +20,7 @@ const AdminAgents = () => {
     phone: '',
     employee_code: '',
     branch_id: '', 
-    role: 'sales_person' 
+    role: '' 
   });
   const [notification, setNotification] = useState(null);
   const [editMode, setEditMode] = useState(false);
@@ -67,6 +67,10 @@ const AdminAgents = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.role) {
+      setNotification({ type: 'error', message: 'Please select a role before continuing.' });
+      return;
+    }
     if (!editMode && (!formData.password_hash || !String(formData.password_hash).trim())) {
       setNotification({ type: 'error', message: 'Master security key is required for new users.' });
       return;
@@ -76,7 +80,7 @@ const AdminAgents = () => {
       const headers = { Authorization: `Bearer ${token}` };
       
       const payload = { ...formData };
-      if (payload.role === 'admin') {
+      if (payload.role === 'admin' || payload.role === 'hr') {
         payload.branch_id = null;
       }
       if (!payload.employee_code || !String(payload.employee_code).trim()) {
@@ -178,13 +182,13 @@ const AdminAgents = () => {
                 onClick={() => {
                   setEditMode(false);
                   setFormData({ 
-                    full_name: '', email: '', password_hash: '', phone: '', employee_code: '', branch_id: '', role: 'sales_person' 
+                    full_name: '', email: '', password_hash: '', phone: '', employee_code: '', branch_id: '', role: '' 
                   });
                   setShowModal(true);
                 }}
                 className="btn-primary px-8 py-4 rounded-2xl text-[10px] uppercase tracking-widest shadow-2xl"
               >
-                Onboard New Node
+                Add Team Member
               </button>
            </div>
         </div>
@@ -251,33 +255,35 @@ const AdminAgents = () => {
                  
                  <div className="relative z-10 space-y-12">
                     <div className="text-center md:text-left">
-                       <h2 className="text-4xl font-black text-[#1E293B] uppercase tracking-tighter leading-none">{editMode ? 'Modify Clearance' : 'Onboard Node'}</h2>
-                       <p className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em] mt-2 italic">Infrastructure Credentials</p>
+                          <h2 className="text-4xl font-black text-[#1E293B] uppercase tracking-tighter leading-none">{editMode ? 'Modify Clearance' : 'Add Team Member'}</h2>
+                          <p className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em] mt-2 italic">Create Sales Person, BSM, or Admin Access</p>
                     </div>
-
                     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
                        <InputGroup label="Full Legal Name" value={formData.full_name} onChange={v => setFormData({...formData, full_name: v})} />
                        <InputGroup label="Officer Email" value={formData.email} onChange={v => setFormData({...formData, email: v})} type="email" />
                        <InputGroup label="Communication Link" value={formData.phone} onChange={v => setFormData({...formData, phone: v})} />
                        <InputGroup label="Employee ID / Code" value={formData.employee_code} onChange={v => setFormData({...formData, employee_code: v})} />
                        
-                       <SelectGroup label="Strategic Role" value={formData.role} onChange={(v) => {
+                       <SelectGroup label="Role" value={formData.role} onChange={(v) => {
                          const next = { ...formData, role: v };
-                         if (v === 'admin') next.branch_id = '';
+                         if (v === 'admin' || v === 'hr') next.branch_id = '';
+                         if (v === '') next.branch_id = '';
                          setFormData(next);
                        }} options={[
-                         {v: 'sales_person', l: 'Strategic Partner'},
-                         {v: 'bsm', l: 'Hub Manager'},
-                         {v: 'admin', l: 'Global Admin'}
+                         {v: '', l: 'Select Role'},
+                         {v: 'sales_person', l: 'Sales Person'},
+                         {v: 'bsm', l: 'Branch Manager (BSM)'},
+                         {v: 'admin', l: 'Administrator'},
+                         {v: 'hr', l: 'HR'}
                        ]} />
                        
                        <SelectGroup
                          label="Deployment Hub"
                          value={formData.branch_id}
                          onChange={v => setFormData({...formData, branch_id: v})}
-                         disabled={formData.role === 'admin'}
+                         disabled={!formData.role || formData.role === 'admin' || formData.role === 'hr'}
                          options={[
-                           {v: '', l: formData.role === 'admin' ? 'Not required (central)' : 'Select Hub Node'},
+                           {v: '', l: formData.role === 'admin' || formData.role === 'hr' ? 'Not required (central)' : !formData.role ? 'Select Role first' : 'Select Hub Node'},
                            ...branches.map(b => ({v: b._id, l: b.name}))
                          ]}
                        />
