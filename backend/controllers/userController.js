@@ -1,5 +1,18 @@
+const mongoose = require('mongoose');
 const User = require('../models/User');
 const Branch = require('../models/Branch');
+
+const resolveBranchId = async (branchIdOrName) => {
+  if (!branchIdOrName || branchIdOrName === '') return null;
+  if (mongoose.Types.ObjectId.isValid(branchIdOrName)) {
+    return branchIdOrName;
+  }
+
+  const branch = await Branch.findOne({
+    name: new RegExp(`^${branchIdOrName.trim()}$`, 'i')
+  });
+  return branch ? branch._id : null;
+};
 
 exports.getUsers = async (req, res) => {
   try {
@@ -47,15 +60,7 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid or missing role' });
     }
 
-    if (!branch_id || branch_id === '') {
-      branch_id = null;
-    } else {
-      const branchById = await Branch.findById(branch_id);
-      if (!branchById) {
-        const branchByName = await Branch.findOne({ name: branch_id });
-        branch_id = branchByName ? branchByName._id : branch_id;
-      }
-    }
+    branch_id = await resolveBranchId(branch_id);
 
     if (!employee_code || String(employee_code).trim() === '') {
       employee_code = undefined;
@@ -117,16 +122,7 @@ exports.updateUser = async (req, res) => {
       user.role = role;
     }
 
-    let nextBranch = branch_id;
-    if (nextBranch === '' || nextBranch === null) {
-      nextBranch = null;
-    } else {
-      const branchById = await Branch.findById(nextBranch);
-      if (!branchById) {
-        const branchByName = await Branch.findOne({ name: nextBranch });
-        nextBranch = branchByName ? branchByName._id : nextBranch;
-      }
-    }
+    let nextBranch = await resolveBranchId(branch_id);
     if (nextBranch !== undefined) {
       user.branch_id = nextBranch;
     }
