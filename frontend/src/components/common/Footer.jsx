@@ -95,7 +95,7 @@ const Footer = () => {
                 Swayamfin does not lend directly. All credit decisions are at the sole discretion of the respective partner lender.
               </p>
               <div className="flex flex-wrap justify-center gap-x-12 gap-y-4 not-italic uppercase tracking-[0.3em]">
-                <span>© {currentYear} Green Miles Mobility</span>
+                <span>© {currentYear} SWAYAMFIN FINANCIAL SERVICES PVT LTD</span>
                 <span>CIN: U66190DL2019PTC359196</span>
                 <Link to="/privacy-policy" className="hover:text-[#0EA5E9]">Privacy Policy</Link>
                 <Link to="/terms" className="hover:text-[#0EA5E9]">Terms of Service</Link>
