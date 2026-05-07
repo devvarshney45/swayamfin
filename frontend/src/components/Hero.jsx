@@ -213,10 +213,10 @@ const Hero = () => {
                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Branch Hub</label>
                         <select required className="input-standard w-full h-14 rounded-2xl px-6 bg-slate-50 border-slate-100 text-sm focus:bg-white transition-all appearance-none cursor-pointer" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})}>
                           <option value="">Select Your City</option>
-                          <option value="Agra">Agra Node</option>
-                          <option value="Mathura">Mathura Node</option>
-                          <option value="Hathras">Hathras Node</option>
-                          <option value="Kosi">Kosi Node</option>
+                          <option value="Agra">Agra</option>
+                          <option value="Mathura">Mathura</option>
+                          <option value="Hathras">Hathras</option>
+                          <option value="Kosi">Kosi</option>
                         </select>
                       </div>
 

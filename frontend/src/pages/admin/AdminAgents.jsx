@@ -39,6 +39,7 @@ const AdminAgents = () => {
   const [notification, setNotification] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -85,10 +86,19 @@ const AdminAgents = () => {
       setNotification({ type: 'error', message: 'Please select a role before continuing.' });
       return;
     }
+    
+    // Sales Person & BSM MUST have branch
     if ((formData.role === 'sales_person' || formData.role === 'bsm') && !formData.branch_id) {
-      setNotification({ type: 'error', message: 'Branch selection is required for this role.' });
+      setNotification({ type: 'error', message: 'Branch is required for this role.' });
       return;
     }
+    
+    // Admin & HR branch_id must be null
+    if ((formData.role === 'admin' || formData.role === 'hr') && formData.branch_id) {
+      setNotification({ type: 'error', message: 'Admin/HR cannot be assigned to a branch.' });
+      return;
+    }
+    
     if (!editMode && (!formData.password_hash || !String(formData.password_hash).trim())) {
       setNotification({ type: 'error', message: 'Master security key is required for new users.' });
       return;
@@ -98,24 +108,21 @@ const AdminAgents = () => {
       const headers = { Authorization: `Bearer ${token}` };
       
       const payload = { ...formData };
-      if (payload.branch_id === '') {
+      
+      // Admin/HR must have branch_id as null
+      if (formData.role === 'admin' || formData.role === 'hr') {
         payload.branch_id = null;
       }
-
-      if (payload.branch_id && branches.length > 0) {
-        const branchById = branches.find(b => b._id === payload.branch_id);
-        const branchByName = branches.find(b => b.name === payload.branch_id);
-        if (branchById) {
-          payload.branch_id = branchById._id;
-        } else if (branchByName) {
-          payload.branch_id = branchByName._id;
-        }
+      // Sales Person/BSM must have valid branch_id
+      else if ((formData.role === 'sales_person' || formData.role === 'bsm') && !payload.branch_id) {
+        payload.branch_id = null;
       }
 
       if (!payload.employee_code || !String(payload.employee_code).trim()) {
         delete payload.employee_code;
       }
-      if (editMode && !payload.password_hash) {
+      // In edit mode: if password provided, keep it; if not provided, delete to keep existing
+      if (editMode && (!payload.password_hash || !String(payload.password_hash).trim())) {
         delete payload.password_hash;
       }
 
@@ -256,7 +263,7 @@ const AdminAgents = () => {
                    <Link to={`/admin/agents/${u._id}`} className="group/link">
                       <h3 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight truncate group-hover/link:text-[#0EA5E9] transition-all">{u.full_name}</h3>
                    </Link>
-                   <p className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-widest mt-2">{u.branch || 'Central Hub'}</p>
+                   <p className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-widest mt-2">{u.branch_id?.name || 'Central Hub'}</p>
                 </div>
               </div>
 
@@ -311,7 +318,31 @@ const AdminAgents = () => {
                        />
 
                        <div className="md:col-span-2">
-                          <InputGroup label={editMode ? 'Security Overwrite (Blank to retain)' : 'Master Security Key'} value={formData.password_hash} onChange={v => setFormData({...formData, password_hash: v})} type="password" />
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                              {editMode ? 'Security Overwrite (Leave blank to keep existing)' : 'Master Security Key'}
+                            </label>
+                            <div className="relative">
+                              <input
+                                type={showPassword ? 'text' : 'password'}
+                                className="input-standard w-full h-14 rounded-2xl px-6 pr-28 text-sm"
+                                placeholder={editMode ? 'Enter new password to change' : 'Enter password for new user'}
+                                value={formData.password_hash}
+                                onChange={e => setFormData({...formData, password_hash: e.target.value})}
+                                required={!editMode}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword(prev => !prev)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] uppercase tracking-[0.2em] font-black text-slate-500"
+                              >
+                                {showPassword ? 'HIDE' : 'SHOW'}
+                              </button>
+                            </div>
+                            {editMode && !formData.password_hash && (
+                              <p className="text-[10px] text-slate-500 italic">Existing password is already set. Enter a new password only if you want to change it.</p>
+                            )}
+                          </div>
                        </div>
 
                        <div className="md:col-span-2 pt-6 flex gap-4">

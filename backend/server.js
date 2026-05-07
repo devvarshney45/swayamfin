@@ -46,6 +46,10 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'API is running' });
 });
 
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Backend API Running' });
+});
+
 // Start Server
 app.listen(PORT, () => {
     console.log(`Backend Server running on http://localhost:${PORT}`);

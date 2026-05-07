@@ -131,8 +131,9 @@ exports.updateUser = async (req, res) => {
       user.employee_code = String(employee_code).trim() === '' ? undefined : employee_code;
     }
 
-    if (password_hash && String(password_hash).trim()) {
+    if (password_hash !== undefined && String(password_hash).trim()) {
       user.password_hash = password_hash;
+      user.markModified('password_hash');
     }
 
     await user.save();
