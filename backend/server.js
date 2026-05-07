@@ -2,6 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
 const fs = require('fs');
 
@@ -18,13 +23,38 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Middleware
-app.use(cors());
+// Security middleware
+app.use(helmet());
+app.use(mongoSanitize());
+app.use(xss());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan('combined'));
+
+const allowedOrigins = [process.env.FRONTEND_URL || 'http://localhost:3000'];
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy: origin not allowed'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  credentials: true,
+}));
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many requests from this IP, please try again later.',
+});
+app.use(apiLimiter);
 
 // Connect to MongoDB Database mapped from .env
-mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/swayamfin')
+mongoose.connect(process.env.MONGO_URI || process.env.DB_URL || 'mongodb://127.0.0.1:27017/swayamfin')
   .then(() => console.log('MongoDB successfully securely connected!'))
   .catch((err) => console.log('MongoDB connection error:', err));
 
@@ -48,6 +78,18 @@ app.get('/api/health', (req, res) => {
 
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'Backend API Running' });
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || 'Internal Server Error'
+  });
 });
 
 // Start Server

@@ -1,12 +1,53 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
+const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const { createLead, getLeads, getLeadById, updateLead, updateStatus, reassignLead, deleteLead, sendOtp, verifyOtpAndCreateLead } = require('../controllers/leadController');
 const { protect, bsmOnly, adminOnly } = require('../middleware/authMiddleware');
 
+const validateRequest = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ success: false, errors: errors.array() });
+  }
+  next();
+};
+
+const otpRateLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => req.body.mobile || req.ip,
+  message: 'Too many OTP requests for this number, please try again later.',
+});
+
+const mobileValidation = body('mobile')
+  .trim()
+  .isLength({ min: 10, max: 10 })
+  .withMessage('Mobile must be exactly 10 digits')
+  .isNumeric()
+  .withMessage('Mobile must contain only digits');
+
+const otpValidation = body('otp')
+  .trim()
+  .isLength({ min: 6, max: 6 })
+  .withMessage('OTP must be 6 digits')
+  .isNumeric()
+  .withMessage('OTP must contain only digits');
+
+const leadDataValidation = [
+  body('leadData.applicant_name').notEmpty().withMessage('Applicant name is required'),
+  body('leadData.loan_type').notEmpty().withMessage('Loan type is required'),
+  body('leadData.location_city').notEmpty().withMessage('Location city is required'),
+  body('leadData.loan_amount_required').isNumeric().withMessage('Loan amount must be numeric'),
+  body('leadData.email').optional().isEmail().withMessage('Email must be valid'),
+];
+
 router.post('/', createLead); // Public for Landing Page & Private for Agents (Internal assignment handled in controller)
 router.post('/website', createLead); // Webhook
-router.post('/send-otp', sendOtp);
-router.post('/verify-otp', verifyOtpAndCreateLead);
+router.post('/send-otp', otpRateLimiter, [mobileValidation, validateRequest], sendOtp);
+router.post('/verify-otp', [mobileValidation, otpValidation, ...leadDataValidation, validateRequest], verifyOtpAndCreateLead);
 router.get('/', protect, getLeads);
 router.get('/:id', protect, getLeadById);
 router.put('/:id', protect, updateLead);

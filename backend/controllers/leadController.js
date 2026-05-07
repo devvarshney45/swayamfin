@@ -10,6 +10,32 @@ const notificationService = require('../utils/notificationService');
 const axios = require('axios');
 
 const otpStore = new Map();
+const OTP_MAX_REQUESTS = 5;
+const OTP_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const OTP_COOLDOWN_MS = 60 * 1000; // 60 seconds
+const OTP_EXPIRE_MS = 5 * 60 * 1000; // 5 minutes
+const OTP_BLOCK_MS = 15 * 60 * 1000; // 15 minutes
+const MAX_WRONG_ATTEMPTS = 5;
+
+const getOtpRecord = (mobile) => otpStore.get(mobile) || {
+  requests: [],
+  attempts: 0,
+  blockedUntil: null,
+  lastSentAt: null,
+  otp: null,
+  expires: null,
+};
+
+const saveOtpRecord = (mobile, record) => {
+  otpStore.set(mobile, record);
+  return record;
+};
+
+const cleanupOtpRecord = (mobile) => {
+  otpStore.delete(mobile);
+};
+
+const isBlocked = (record) => record.blockedUntil && Date.now() < record.blockedUntil;
 
 exports.createLead = async (req, res) => {
   try {
@@ -315,11 +341,43 @@ exports.sendOtp = async (req, res) => {
       return res.status(400).json({ message: 'Valid 10-digit mobile number required' });
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    otpStore.set(mobile, { otp, expires: Date.now() + 5 * 60 * 1000 }); // 5 minutes
+    const now = Date.now();
+    const record = getOtpRecord(mobile);
 
-    // Send SMS via STPL API
-    try {
+    if (isBlocked(record)) {
+      return res.status(429).json({ message: 'OTP requests temporarily blocked due to repeated invalid submissions. Try again later.' });
+    }
+
+    record.requests = (record.requests || []).filter(ts => now - ts < OTP_WINDOW_MS);
+    if (record.requests.length >= OTP_MAX_REQUESTS) {
+      record.blockedUntil = now + OTP_BLOCK_MS;
+      saveOtpRecord(mobile, record);
+      return res.status(429).json({ message: 'Too many OTP requests. Please try again after 15 minutes.' });
+    }
+
+    if (record.lastSentAt && now - record.lastSentAt < OTP_COOLDOWN_MS) {
+      const waitSeconds = Math.ceil((OTP_COOLDOWN_MS - (now - record.lastSentAt)) / 1000);
+      return res.status(429).json({ message: `Please wait ${waitSeconds} seconds before requesting a new OTP.` });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const newRecord = {
+      ...record,
+      otp,
+      expires: now + OTP_EXPIRE_MS,
+      lastSentAt: now,
+      attempts: record.attempts || 0,
+      blockedUntil: record.blockedUntil || null,
+      requests: [...record.requests, now],
+    };
+    saveOtpRecord(mobile, newRecord);
+
+    const sendSms = async () => {
+      if (!process.env.STPL_API_KEY) {
+        console.log(`OTP for mobile ${mobile}: ${otp}`);
+        return;
+      }
+
       const response = await axios.post('https://api.smartping.live/send-sms', {
         template_id: '1707176164062515244',
         mobile: `91${mobile}`,
@@ -331,16 +389,17 @@ exports.sendOtp = async (req, res) => {
         }
       });
 
-      if (response.status === 200) {
-        console.log(`OTP sent successfully to ${mobile}`);
-      } else {
-        console.error('Failed to send OTP via STPL:', response.data);
-        return res.status(500).json({ message: 'Failed to send OTP' });
+      if (response.status !== 200) {
+        throw new Error(`STPL API returned ${response.status}`);
       }
+    };
+
+    try {
+      await sendSms();
+      console.log(`OTP sent successfully to ${mobile}`);
     } catch (apiError) {
       console.error('STPL API Error:', apiError.response?.data || apiError.message);
-      // For local testing, log OTP if API fails
-      console.log(`OTP for mobile ${mobile}: ${otp} (API failed, using console)`);
+      console.log(`OTP for mobile ${mobile}: ${otp} (logged locally for testing)`);
     }
 
     res.status(200).json({ message: 'OTP sent successfully' });
@@ -357,14 +416,28 @@ exports.verifyOtpAndCreateLead = async (req, res) => {
       return res.status(400).json({ message: 'Mobile, OTP, and lead data required' });
     }
 
-    const stored = otpStore.get(mobile);
-    if (!stored || stored.otp !== otp || Date.now() > stored.expires) {
-      return res.status(400).json({ message: 'Invalid or expired OTP' });
+    const record = getOtpRecord(mobile);
+    if (isBlocked(record)) {
+      return res.status(429).json({ message: 'OTP verification temporarily blocked. Try again later.' });
     }
 
-    otpStore.delete(mobile);
+    const now = Date.now();
+    if (!record.otp || now > record.expires) {
+      cleanupOtpRecord(mobile);
+      return res.status(400).json({ message: 'OTP expired or invalid' });
+    }
 
-    // Now create the lead using the same logic as createLead
+    if (record.otp !== otp) {
+      record.attempts = (record.attempts || 0) + 1;
+      if (record.attempts >= MAX_WRONG_ATTEMPTS) {
+        record.blockedUntil = now + OTP_BLOCK_MS;
+      }
+      saveOtpRecord(mobile, record);
+      return res.status(400).json({ message: 'Invalid OTP' });
+    }
+
+    cleanupOtpRecord(mobile);
+
     const { 
       source, applicant_name, alternate_mobile, email, 
       location_city, pincode, loan_type, loan_amount_required 
@@ -374,8 +447,7 @@ exports.verifyOtpAndCreateLead = async (req, res) => {
       return res.status(400).json({ message: 'Please provide all required fields: name, mobile, city, loan type, and amount.' });
     }
 
-    // Deduplication check
-    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
     const existingLead = await Lead.findOne({
       mobile,
       createdAt: { $gte: oneDayAgo },
@@ -385,7 +457,6 @@ exports.verifyOtpAndCreateLead = async (req, res) => {
       return res.status(409).json({ message: 'A lead with this mobile number was already submitted within the last 24 hours.' });
     }
 
-    // Branch Mapping & Round Robin
     let assigned_to = null;
     let branch_id = null;
 
@@ -393,7 +464,6 @@ exports.verifyOtpAndCreateLead = async (req, res) => {
     
     if (branch) {
       branch_id = branch._id;
-      // Find active sales_person with oldest assignment
       const nextAgent = await User.findOne({ 
         branch_id: branch._id, 
         role: 'sales_person',
@@ -407,7 +477,6 @@ exports.verifyOtpAndCreateLead = async (req, res) => {
       }
     }
 
-    // Generate Lead Number
     const year = new Date().getFullYear();
     const branchCode = branch ? branch.code : 'ADM';
     const count = await Lead.countDocuments({ 
@@ -431,13 +500,10 @@ exports.verifyOtpAndCreateLead = async (req, res) => {
       assigned_to,
     });
 
-    // Send WhatsApp Notification if agent assigned
     if (assigned_to) {
       const agent = await User.findById(assigned_to);
       if (agent) {
         await notificationService.sendWhatsAppAssignment(agent, newLead);
-        
-        // Log Initial Assignment
         await Remark.create({
           lead_id: newLead._id,
           user_id: assigned_to,
@@ -447,7 +513,6 @@ exports.verifyOtpAndCreateLead = async (req, res) => {
       }
     }
 
-    // Send Welcome WhatsApp to Customer
     await notificationService.sendCustomerWelcome(newLead);
 
     res.status(201).json({ success: true, data: newLead });
