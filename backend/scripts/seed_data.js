@@ -34,7 +34,7 @@ async function seed() {
           phone: '0000000000',
           password_hash: 'bsm123', // Will be hashed by pre-save
           role: 'bsm',
-          branch: bData.name,
+          branch_id: branch._id,
           employee_code: `BSM-${bData.code}`
         });
         console.log(`Created BSM: ${bsm.full_name} (${bsm.email})`);

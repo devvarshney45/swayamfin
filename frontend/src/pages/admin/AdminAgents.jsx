@@ -85,6 +85,10 @@ const AdminAgents = () => {
       setNotification({ type: 'error', message: 'Please select a role before continuing.' });
       return;
     }
+    if ((formData.role === 'sales_person' || formData.role === 'bsm') && !formData.branch_id) {
+      setNotification({ type: 'error', message: 'Branch selection is required for this role.' });
+      return;
+    }
     if (!editMode && (!formData.password_hash || !String(formData.password_hash).trim())) {
       setNotification({ type: 'error', message: 'Master security key is required for new users.' });
       return;
@@ -290,7 +294,7 @@ const AdminAgents = () => {
                        <InputGroup label="Employee ID / Code" value={formData.employee_code} onChange={v => setFormData({...formData, employee_code: v})} />
                        
                        <SelectGroup label="Role" value={formData.role} onChange={(v) => {
-                         setFormData({ ...formData, role: v });
+                         setFormData({ ...formData, role: v, branch_id: '' });
                        }} options={[
                          {v: '', l: 'Select Role'},
                          {v: 'sales_person', l: 'Sales Person'},
