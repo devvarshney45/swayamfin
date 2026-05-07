@@ -8,6 +8,8 @@ const Document = require('../models/Document');
 const Message = require('../models/Message');
 const notificationService = require('../utils/notificationService');
 
+const otpStore = new Map();
+
 exports.createLead = async (req, res) => {
   try {
     const { 
@@ -301,6 +303,135 @@ exports.reassignLead = async (req, res) => {
 
     res.json({ success: true, data: lead });
   } catch(err) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+exports.sendOtp = async (req, res) => {
+  try {
+    const { mobile } = req.body;
+    if (!mobile || mobile.length !== 10) {
+      return res.status(400).json({ message: 'Valid 10-digit mobile number required' });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    otpStore.set(mobile, { otp, expires: Date.now() + 5 * 60 * 1000 }); // 5 minutes
+
+    // Mock SMS send - log OTP for local testing
+    console.log(`OTP for mobile ${mobile}: ${otp}`);
+
+    // TODO: Integrate with STPL API using template ID 1707176164062515244
+
+    res.status(200).json({ message: 'OTP sent successfully' });
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+    res.status(500).json({ message: 'Failed to send OTP' });
+  }
+};
+
+exports.verifyOtpAndCreateLead = async (req, res) => {
+  try {
+    const { mobile, otp, leadData } = req.body;
+    if (!mobile || !otp || !leadData) {
+      return res.status(400).json({ message: 'Mobile, OTP, and lead data required' });
+    }
+
+    const stored = otpStore.get(mobile);
+    if (!stored || stored.otp !== otp || Date.now() > stored.expires) {
+      return res.status(400).json({ message: 'Invalid or expired OTP' });
+    }
+
+    otpStore.delete(mobile);
+
+    // Now create the lead using the same logic as createLead
+    const { 
+      source, applicant_name, alternate_mobile, email, 
+      location_city, pincode, loan_type, loan_amount_required 
+    } = leadData;
+
+    if (!applicant_name || !mobile || !location_city || !loan_type || !loan_amount_required) {
+      return res.status(400).json({ message: 'Please provide all required fields: name, mobile, city, loan type, and amount.' });
+    }
+
+    // Deduplication check
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const existingLead = await Lead.findOne({
+      mobile,
+      createdAt: { $gte: oneDayAgo },
+    });
+
+    if (existingLead) {
+      return res.status(409).json({ message: 'A lead with this mobile number was already submitted within the last 24 hours.' });
+    }
+
+    // Branch Mapping & Round Robin
+    let assigned_to = null;
+    let branch_id = null;
+
+    const branch = await Branch.findOne({ city: new RegExp(`^${location_city.trim()}$`, 'i'), is_active: true });
+    
+    if (branch) {
+      branch_id = branch._id;
+      // Find active sales_person with oldest assignment
+      const nextAgent = await User.findOne({ 
+        branch_id: branch._id, 
+        role: 'sales_person',
+        is_active: true 
+      }).sort({ lastAssigned: 1 });
+
+      if (nextAgent) {
+        assigned_to = nextAgent._id;
+        nextAgent.lastAssigned = Date.now();
+        await nextAgent.save();
+      }
+    }
+
+    // Generate Lead Number
+    const year = new Date().getFullYear();
+    const branchCode = branch ? branch.code : 'ADM';
+    const count = await Lead.countDocuments({ 
+      createdAt: { $gte: new Date(`${year}-01-01`) },
+      branch_id 
+    });
+    const lead_number = `${branchCode}-${year}-${String(count + 1).padStart(4, '0')}`;
+
+    const newLead = await Lead.create({
+      lead_number,
+      source: source || 'website',
+      applicant_name,
+      mobile,
+      alternate_mobile,
+      email,
+      location_city: location_city.trim(),
+      pincode,
+      loan_type,
+      loan_amount_required,
+      branch_id,
+      assigned_to,
+    });
+
+    // Send WhatsApp Notification if agent assigned
+    if (assigned_to) {
+      const agent = await User.findById(assigned_to);
+      if (agent) {
+        await notificationService.sendWhatsAppAssignment(agent, newLead);
+        
+        // Log Initial Assignment
+        await Remark.create({
+          lead_id: newLead._id,
+          user_id: assigned_to,
+          remark_text: `Lead automatically assigned to ${agent.full_name} via Round-robin.`,
+          remark_type: 'system'
+        });
+      }
+    }
+
+    // Send Welcome WhatsApp to Customer
+    await notificationService.sendCustomerWelcome(newLead);
+
+    res.status(201).json({ success: true, data: newLead });
+  } catch (error) {
+    console.error('Error creating lead after OTP verification:', error);
     res.status(500).json({ message: 'Server Error' });
   }
 };
