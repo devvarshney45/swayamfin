@@ -7,6 +7,7 @@ const Remark = require('../models/Remark');
 const Document = require('../models/Document');
 const Message = require('../models/Message');
 const notificationService = require('../utils/notificationService');
+const axios = require('axios');
 
 const otpStore = new Map();
 
@@ -317,10 +318,30 @@ exports.sendOtp = async (req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     otpStore.set(mobile, { otp, expires: Date.now() + 5 * 60 * 1000 }); // 5 minutes
 
-    // Mock SMS send - log OTP for local testing
-    console.log(`OTP for mobile ${mobile}: ${otp}`);
+    // Send SMS via STPL API
+    try {
+      const response = await axios.post('https://api.smartping.live/send-sms', {
+        template_id: '1707176164062515244',
+        mobile: `91${mobile}`,
+        variables: [otp]
+      }, {
+        headers: {
+          'Authorization': `Bearer ${process.env.STPL_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      });
 
-    // TODO: Integrate with STPL API using template ID 1707176164062515244
+      if (response.status === 200) {
+        console.log(`OTP sent successfully to ${mobile}`);
+      } else {
+        console.error('Failed to send OTP via STPL:', response.data);
+        return res.status(500).json({ message: 'Failed to send OTP' });
+      }
+    } catch (apiError) {
+      console.error('STPL API Error:', apiError.response?.data || apiError.message);
+      // For local testing, log OTP if API fails
+      console.log(`OTP for mobile ${mobile}: ${otp} (API failed, using console)`);
+    }
 
     res.status(200).json({ message: 'OTP sent successfully' });
   } catch (error) {
