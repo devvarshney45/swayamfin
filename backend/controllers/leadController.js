@@ -379,7 +379,8 @@ exports.sendOtp = async (req, res) => {
       const brevoPort = Number(process.env.BREVO_PORT || 587);
       const brevoUser = process.env.BREVO_USER;
       const brevoPass = process.env.BREVO_PASS;
-      const mailFrom = process.env.MAIL_FROM || '"Swayamfin" <noreply@swayamfin.in>';
+      const defaultFrom = `"Swayamfin" <${brevoUser}>`;
+      const mailFrom = process.env.MAIL_FROM?.trim() || defaultFrom;
 
       if (!brevoUser || !brevoPass) {
         throw new Error('Brevo SMTP credentials (BREVO_USER, BREVO_PASS) are not configured in environment variables');
