@@ -375,6 +375,8 @@ exports.sendOtp = async (req, res) => {
 
     const sendEmail = async () => {
       // Brevo SMTP Configuration (Render-friendly)
+      const brevoHost = process.env.BREVO_HOST || 'smtp-relay.brevo.com';
+      const brevoPort = Number(process.env.BREVO_PORT || 587);
       const brevoUser = process.env.BREVO_USER;
       const brevoPass = process.env.BREVO_PASS;
       const mailFrom = process.env.MAIL_FROM || '"Swayamfin" <noreply@swayamfin.in>';
@@ -385,15 +387,16 @@ exports.sendOtp = async (req, res) => {
 
       // Create Brevo transporter
       const transporter = nodemailer.createTransport({
-        host: 'smtp-relay.brevo.com',
-        port: 587,
+        host: brevoHost,
+        port: brevoPort,
         secure: false,
         auth: {
           user: brevoUser,
           pass: brevoPass,
         },
-      });
-
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 10000,
       const mailOptions = {
         from: mailFrom,
         to: email,
