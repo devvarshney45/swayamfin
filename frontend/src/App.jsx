@@ -26,6 +26,9 @@ import ServiceDetails from './pages/ServiceDetails';
 import LeadDetails from './pages/agent/LeadDetails';
 import NewLead from './pages/agent/NewLead';
 import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import BlogAdmin from './pages/BlogAdmin';
+import AdminBlogs from './pages/AdminBlogs';
 import ScrollToTop from './components/common/ScrollToTop';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -59,6 +62,9 @@ const AppContent = () => {
           <Route path="/branches" element={<Branches />} />
           <Route path="/branches/:slug" element={<BranchDetails />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/blog-admin" element={<BlogAdmin />} />
+          <Route path="/admin/blogs" element={<AdminBlogs />} />
 
           <Route path="/compliance" element={<Compliance />} />
           <Route path="/privacy-policy" element={<Privacy />} />
