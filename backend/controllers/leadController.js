@@ -8,16 +8,17 @@ const Document = require('../models/Document');
 const Message = require('../models/Message');
 const notificationService = require('../utils/notificationService');
 const axios = require('axios');
+const nodemailer = require('nodemailer');
 
 const otpStore = new Map();
 const OTP_MAX_REQUESTS = 5;
 const OTP_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 const OTP_COOLDOWN_MS = 60 * 1000; // 60 seconds
-const OTP_EXPIRE_MS = 5 * 60 * 1000; // 5 minutes
+const OTP_EXPIRE_MS = 2 * 60 * 1000; // 2 minutes
 const OTP_BLOCK_MS = 15 * 60 * 1000; // 15 minutes
 const MAX_WRONG_ATTEMPTS = 5;
 
-const getOtpRecord = (mobile) => otpStore.get(mobile) || {
+const getOtpRecord = (email) => otpStore.get(email) || {
   requests: [],
   attempts: 0,
   blockedUntil: null,
@@ -26,13 +27,13 @@ const getOtpRecord = (mobile) => otpStore.get(mobile) || {
   expires: null,
 };
 
-const saveOtpRecord = (mobile, record) => {
-  otpStore.set(mobile, record);
+const saveOtpRecord = (email, record) => {
+  otpStore.set(email, record);
   return record;
 };
 
-const cleanupOtpRecord = (mobile) => {
-  otpStore.delete(mobile);
+const cleanupOtpRecord = (email) => {
+  otpStore.delete(email);
 };
 
 const isBlocked = (record) => record.blockedUntil && Date.now() < record.blockedUntil;
@@ -336,13 +337,13 @@ exports.reassignLead = async (req, res) => {
 
 exports.sendOtp = async (req, res) => {
   try {
-    const { mobile } = req.body;
-    if (!mobile || mobile.length !== 10) {
-      return res.status(400).json({ message: 'Valid 10-digit mobile number required' });
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: 'Valid email is required' });
     }
 
     const now = Date.now();
-    const record = getOtpRecord(mobile);
+    const record = getOtpRecord(email);
 
     if (isBlocked(record)) {
       return res.status(429).json({ message: 'OTP requests temporarily blocked due to repeated invalid submissions. Try again later.' });
@@ -351,7 +352,7 @@ exports.sendOtp = async (req, res) => {
     record.requests = (record.requests || []).filter(ts => now - ts < OTP_WINDOW_MS);
     if (record.requests.length >= OTP_MAX_REQUESTS) {
       record.blockedUntil = now + OTP_BLOCK_MS;
-      saveOtpRecord(mobile, record);
+      saveOtpRecord(email, record);
       return res.status(429).json({ message: 'Too many OTP requests. Please try again after 15 minutes.' });
     }
 
@@ -370,60 +371,78 @@ exports.sendOtp = async (req, res) => {
       blockedUntil: record.blockedUntil || null,
       requests: [...record.requests, now],
     };
-    saveOtpRecord(mobile, newRecord);
+    saveOtpRecord(email, newRecord);
 
-    const sendSms = async () => {
-      if (!process.env.STPL_API_KEY) {
-        console.log(`OTP for mobile ${mobile}: ${otp}`);
-        return;
+    const sendEmail = async () => {
+      let transporter;
+      const emailHost = process.env.EMAIL_HOST || process.env.SMTP_HOST;
+      const emailPort = process.env.EMAIL_PORT || process.env.SMTP_PORT || 587;
+      const emailSecure = (process.env.EMAIL_SECURE === 'true') || (process.env.SMTP_SECURE === 'true');
+      const emailUser = process.env.EMAIL_USER || process.env.SMTP_USER;
+      const emailPass = process.env.EMAIL_PASS || process.env.SMTP_PASS;
+
+      if (emailHost && emailUser && emailPass) {
+        transporter = nodemailer.createTransport({
+          host: emailHost,
+          port: Number(emailPort),
+          secure: emailSecure,
+          auth: {
+            user: emailUser,
+            pass: emailPass,
+          },
+        });
+      } else {
+        const testAccount = await nodemailer.createTestAccount();
+        transporter = nodemailer.createTransport({
+          host: testAccount.smtp.host,
+          port: testAccount.smtp.port,
+          secure: testAccount.smtp.secure,
+          auth: {
+            user: testAccount.user,
+            pass: testAccount.pass,
+          },
+        });
       }
 
-      const response = await axios.post('https://api.smartping.live/send-sms', {
-        template_id: '1707176164062515244',
-        mobile: `91${mobile}`,
-        variables: [otp]
-      }, {
-        headers: {
-          'Authorization': `Bearer ${process.env.STPL_API_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const mailOptions = {
+        from: process.env.EMAIL_FROM || `"Swayamfin" <${emailUser || 'no-reply@local.test'}>`,
+        to: email,
+        subject: 'Your verification code',
+        text: `Your OTP code is ${otp}. It is valid for 2 minutes.`,
+        html: `<p>Your OTP code is <strong>${otp}</strong>. It is valid for <strong>2 minutes</strong>.</p>`,
+      };
 
-      if (response.status !== 200) {
-        throw new Error(`STPL API returned ${response.status}`);
+      const info = await transporter.sendMail(mailOptions);
+      if (!emailHost) {
+        console.log('Nodemailer test message URL:', nodemailer.getTestMessageUrl(info));
       }
     };
 
-    try {
-      await sendSms();
-      console.log(`OTP sent successfully to ${mobile}`);
-    } catch (apiError) {
-      console.error('STPL API Error:', apiError.response?.data || apiError.message);
-      console.log(`OTP for mobile ${mobile}: ${otp} (logged locally for testing)`);
-    }
+    await sendEmail();
+    console.log(`OTP sent successfully to ${email}`);
 
     res.status(200).json({ message: 'OTP sent successfully' });
   } catch (error) {
-    console.error('Error sending OTP:', error);
-    res.status(500).json({ message: 'Failed to send OTP' });
+    console.error('Error sending OTP:', error.stack || error);
+    res.status(500).json({ message: 'Failed to send OTP', error: error.message });
   }
 };
 
 exports.verifyOtpAndCreateLead = async (req, res) => {
   try {
-    const { mobile, otp, leadData } = req.body;
-    if (!mobile || !otp || !leadData) {
-      return res.status(400).json({ message: 'Mobile, OTP, and lead data required' });
+    const { email, otp, leadData } = req.body;
+    if (!email || !otp || !leadData) {
+      return res.status(400).json({ message: 'Email, OTP, and lead data required' });
     }
 
-    const record = getOtpRecord(mobile);
+    const record = getOtpRecord(email);
     if (isBlocked(record)) {
       return res.status(429).json({ message: 'OTP verification temporarily blocked. Try again later.' });
     }
 
     const now = Date.now();
     if (!record.otp || now > record.expires) {
-      cleanupOtpRecord(mobile);
+      cleanupOtpRecord(email);
       return res.status(400).json({ message: 'OTP expired or invalid' });
     }
 
@@ -432,16 +451,19 @@ exports.verifyOtpAndCreateLead = async (req, res) => {
       if (record.attempts >= MAX_WRONG_ATTEMPTS) {
         record.blockedUntil = now + OTP_BLOCK_MS;
       }
-      saveOtpRecord(mobile, record);
+      saveOtpRecord(email, record);
       return res.status(400).json({ message: 'Invalid OTP' });
     }
 
-    cleanupOtpRecord(mobile);
+    cleanupOtpRecord(email);
 
-    const { 
-      source, applicant_name, alternate_mobile, email, 
-      location_city, pincode, loan_type, loan_amount_required 
+    const {
+      source, applicant_name, mobile, alternate_mobile, location_city,
+      pincode, loan_type, loan_amount_required,
+      email: leadEmail,
     } = leadData;
+
+    const finalEmail = leadEmail || email;
 
     if (!applicant_name || !mobile || !location_city || !loan_type || !loan_amount_required) {
       return res.status(400).json({ message: 'Please provide all required fields: name, mobile, city, loan type, and amount.' });
@@ -464,10 +486,10 @@ exports.verifyOtpAndCreateLead = async (req, res) => {
     
     if (branch) {
       branch_id = branch._id;
-      const nextAgent = await User.findOne({ 
-        branch_id: branch._id, 
+      const nextAgent = await User.findOne({
+        branch_id: branch._id,
         role: 'sales_person',
-        is_active: true 
+        is_active: true
       }).sort({ lastAssigned: 1 });
 
       if (nextAgent) {
@@ -479,9 +501,9 @@ exports.verifyOtpAndCreateLead = async (req, res) => {
 
     const year = new Date().getFullYear();
     const branchCode = branch ? branch.code : 'ADM';
-    const count = await Lead.countDocuments({ 
+    const count = await Lead.countDocuments({
       createdAt: { $gte: new Date(`${year}-01-01`) },
-      branch_id 
+      branch_id
     });
     const lead_number = `${branchCode}-${year}-${String(count + 1).padStart(4, '0')}`;
 
@@ -491,7 +513,7 @@ exports.verifyOtpAndCreateLead = async (req, res) => {
       applicant_name,
       mobile,
       alternate_mobile,
-      email,
+      email: finalEmail,
       location_city: location_city.trim(),
       pincode,
       loan_type,

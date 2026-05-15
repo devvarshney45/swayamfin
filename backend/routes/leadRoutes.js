@@ -18,16 +18,14 @@ const otpRateLimiter = rateLimit({
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => req.body.mobile || req.ip,
-  message: 'Too many OTP requests for this number, please try again later.',
+  keyGenerator: (req) => req.ip,
+  message: 'Too many OTP requests from this IP, please try again later.',
 });
 
-const mobileValidation = body('mobile')
+const emailValidation = body('email')
   .trim()
-  .isLength({ min: 10, max: 10 })
-  .withMessage('Mobile must be exactly 10 digits')
-  .isNumeric()
-  .withMessage('Mobile must contain only digits');
+  .isEmail()
+  .withMessage('Valid email is required');
 
 const otpValidation = body('otp')
   .trim()
@@ -38,16 +36,22 @@ const otpValidation = body('otp')
 
 const leadDataValidation = [
   body('leadData.applicant_name').notEmpty().withMessage('Applicant name is required'),
+  body('leadData.mobile')
+    .trim()
+    .isLength({ min: 10, max: 10 })
+    .withMessage('Mobile must be exactly 10 digits')
+    .isNumeric()
+    .withMessage('Mobile must contain only digits'),
   body('leadData.loan_type').notEmpty().withMessage('Loan type is required'),
   body('leadData.location_city').notEmpty().withMessage('Location city is required'),
   body('leadData.loan_amount_required').isNumeric().withMessage('Loan amount must be numeric'),
-  body('leadData.email').optional().isEmail().withMessage('Email must be valid'),
+  body('leadData.email').trim().isEmail().withMessage('Email must be valid'),
 ];
 
 router.post('/', createLead); // Public for Landing Page & Private for Agents (Internal assignment handled in controller)
 router.post('/website', createLead); // Webhook
-router.post('/send-otp', otpRateLimiter, [mobileValidation, validateRequest], sendOtp);
-router.post('/verify-otp', [mobileValidation, otpValidation, ...leadDataValidation, validateRequest], verifyOtpAndCreateLead);
+router.post('/send-otp', otpRateLimiter, [emailValidation, validateRequest], sendOtp);
+router.post('/verify-otp', [emailValidation, otpValidation, ...leadDataValidation, validateRequest], verifyOtpAndCreateLead);
 router.get('/', protect, getLeads);
 router.get('/:id', protect, getLeadById);
 router.put('/:id', protect, updateLead);
