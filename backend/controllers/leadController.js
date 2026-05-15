@@ -374,38 +374,28 @@ exports.sendOtp = async (req, res) => {
     saveOtpRecord(email, newRecord);
 
     const sendEmail = async () => {
-      let transporter;
-      const emailHost = process.env.EMAIL_HOST || process.env.SMTP_HOST;
-      const emailPort = process.env.EMAIL_PORT || process.env.SMTP_PORT || 587;
-      const emailSecure = (process.env.EMAIL_SECURE === 'true') || (process.env.SMTP_SECURE === 'true');
-      const emailUser = process.env.EMAIL_USER || process.env.SMTP_USER;
-      const emailPass = process.env.EMAIL_PASS || process.env.SMTP_PASS;
+      // Brevo SMTP Configuration (Render-friendly)
+      const brevoUser = process.env.BREVO_USER;
+      const brevoPass = process.env.BREVO_PASS;
+      const mailFrom = process.env.MAIL_FROM || '"Swayamfin" <noreply@swayamfin.in>';
 
-      if (emailHost && emailUser && emailPass) {
-        transporter = nodemailer.createTransport({
-          host: emailHost,
-          port: Number(emailPort),
-          secure: emailSecure,
-          auth: {
-            user: emailUser,
-            pass: emailPass,
-          },
-        });
-      } else {
-        const testAccount = await nodemailer.createTestAccount();
-        transporter = nodemailer.createTransport({
-          host: testAccount.smtp.host,
-          port: testAccount.smtp.port,
-          secure: testAccount.smtp.secure,
-          auth: {
-            user: testAccount.user,
-            pass: testAccount.pass,
-          },
-        });
+      if (!brevoUser || !brevoPass) {
+        throw new Error('Brevo SMTP credentials (BREVO_USER, BREVO_PASS) are not configured in environment variables');
       }
 
+      // Create Brevo transporter
+      const transporter = nodemailer.createTransport({
+        host: 'smtp-relay.brevo.com',
+        port: 587,
+        secure: false,
+        auth: {
+          user: brevoUser,
+          pass: brevoPass,
+        },
+      });
+
       const mailOptions = {
-        from: process.env.EMAIL_FROM || `"Swayamfin" <${emailUser || 'no-reply@local.test'}>`,
+        from: mailFrom,
         to: email,
         subject: 'Your verification code',
         text: `Your OTP code is ${otp}. It is valid for 2 minutes.`,
@@ -413,9 +403,7 @@ exports.sendOtp = async (req, res) => {
       };
 
       const info = await transporter.sendMail(mailOptions);
-      if (!emailHost) {
-        console.log('Nodemailer test message URL:', nodemailer.getTestMessageUrl(info));
-      }
+      console.log('OTP email sent via Brevo:', info.messageId);
     };
 
     await sendEmail();
