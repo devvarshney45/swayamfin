@@ -1,25 +1,23 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 
-const getAllPosts = () => {
-  const defaultPosts = JSON.parse(require('./Blog').default.replace ? '[]' : '[]');
-  // Instead of importing, read localStorage + known defaults via sibling Blog page
+const getStoredPosts = () => {
   try {
     const STORAGE_KEY = 'swayamfin_blogs';
     const old = localStorage.getItem('swayamfin_local_blogs');
-    if (old && !localStorage.getItem(STORAGE_KEY)) localStorage.setItem(STORAGE_KEY, old);
-    const local = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    const defaults = window.__SWAYAMFIN_DEFAULT_BLOGS || [];
-    return [...local, ...defaults];
+    if (old && !localStorage.getItem(STORAGE_KEY)) {
+      localStorage.setItem(STORAGE_KEY, old);
+    }
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
   } catch (e) {
-    return window.__SWAYAMFIN_DEFAULT_BLOGS || [];
+    return [];
   }
 };
 
 const BlogPost = () => {
   const { slug } = useParams();
-  const all = getAllPosts();
-  const post = all.find(p => p.slug === slug);
+  const posts = getStoredPosts();
+  const post = posts.find((p) => p.slug === slug);
 
   if (!post) {
     return (
@@ -42,7 +40,7 @@ const BlogPost = () => {
           {post.content ? (
             <div dangerouslySetInnerHTML={{ __html: post.content }} />
           ) : (
-            <p className="italic">Full article content is not available for this demo.</p>
+            <p className="italic">Full article content is not available for this blog post.</p>
           )}
         </div>
         <div className="mt-8">
