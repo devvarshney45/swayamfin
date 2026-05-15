@@ -144,6 +144,7 @@ const Navbar = () => {
             </div>
 
             <Link to="/process" className={`text-xs font-bold uppercase tracking-widest hover:text-[#0EA5E9] ${location.pathname === '/process' ? 'text-[#0EA5E9]' : 'text-slate-600'}`}>Process</Link>
+            <Link to="/blog" className={`text-xs font-bold uppercase tracking-widest hover:text-[#0EA5E9] ${location.pathname === '/blog' ? 'text-[#0EA5E9]' : 'text-slate-600'}`}>Blog</Link>
             <Link to="/about" className={`text-xs font-bold uppercase tracking-widest hover:text-[#0EA5E9] ${location.pathname === '/about' ? 'text-[#0EA5E9]' : 'text-slate-600'}`}>About</Link>
           </div>
 
@@ -214,6 +215,7 @@ const Navbar = () => {
                     ))}
                  </div>
                  <Link to="/process" className="block text-xs font-bold uppercase tracking-widest text-slate-600 p-2">Process</Link>
+                 <Link to="/blog" className="block text-xs font-bold uppercase tracking-widest text-slate-600 p-2">Blog</Link>
                  <Link to="/about" className="block text-xs font-bold uppercase tracking-widest text-slate-600 p-2">About</Link>
                  <div className="p-2 border-t border-slate-50 mt-2 pt-4">
                    <a 

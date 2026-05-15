@@ -2,32 +2,35 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-const blogPosts = [
-  {
-    id: 1,
-    title: "How to Improve Your CIBIL Score for Business Loans",
-    category: "MSME Finance",
-    date: "April 10, 2025",
-    excerpt: "Learn the top 5 strategies to boost your creditworthiness and secure lower interest rates for your MSME.",
-    slug: "improve-cibil-score"
-  },
-  {
-    id: 2,
-    title: "Understanding Micro LAP vs Regular LAP",
-    category: "Loan Against Property",
-    date: "April 5, 2025",
-    excerpt: "Which one is right for your micro-business? We break down the eligibility and documentation differences.",
-    slug: "micro-lap-vs-regular-lap"
-  },
-  {
-    id: 3,
-    title: "PMAY Benefits for Affordable Housing in 2025",
-    category: "Housing Finance",
-    date: "March 28, 2025",
-    excerpt: "Everything you need to know about government subsidies for first-time home buyers in Tier 2 cities.",
-    slug: "pmay-benefits-2025"
-  }
+const defaultBlogPosts = [
+  { id: 'gst-rent', title: "GST on rent in India: Residential, commercial, RCM, ITC, and calculation", category: 'Loan on Property', date: '12 May 2026', excerpt: '', slug: 'gst-on-rent', thumbnail: 'https://source.unsplash.com/featured/?taxes' },
+  { id: 'debt-trap', title: "Understanding a debt trap and how to escape it", category: 'Personal Loan', date: '10 May 2026', excerpt: '', slug: 'debt-trap', thumbnail: 'https://source.unsplash.com/featured/?debt' },
+  { id: 'form-26qb', title: "Form 26QB guide: How to download, fill, and file TDS on property transactions", category: 'Loan on Property', date: '08 May 2026', excerpt: '', slug: 'form-26qb', thumbnail: 'https://source.unsplash.com/featured/?forms' },
+  { id: 'multi-asset', title: "Multi-asset funds explained: Why returns are not the same", category: 'Wealth Services', date: '06 May 2026', excerpt: '', slug: 'multi-asset-funds', thumbnail: 'https://source.unsplash.com/featured/?investment' },
+  { id: 'lap-vs-topup', title: "LAP vs top-up home loan – Key differences, benefits & which one to choose", category: 'Loan on Property', date: '04 May 2026', excerpt: '', slug: 'lap-vs-topup', thumbnail: 'https://source.unsplash.com/featured/?home' },
+  { id: 'medical-loan', title: "Personal loan for medical emergencies vs health insurance", category: 'Personal Loan', date: '01 May 2026', excerpt: '', slug: 'medical-loan-vs-insurance', thumbnail: 'https://source.unsplash.com/featured/?medical' },
 ];
+
+// expose defaults for the post detail page lookup
+try{
+  window.__SWAYAMFIN_DEFAULT_BLOGS = defaultBlogPosts;
+}catch(e){}
+
+const STORAGE_KEY = 'swayamfin_blogs';
+
+const loadCombinedPosts = () => {
+  try {
+    // migrate old key if present
+    const old = localStorage.getItem('swayamfin_local_blogs');
+    if (old && !localStorage.getItem(STORAGE_KEY)) {
+      localStorage.setItem(STORAGE_KEY, old);
+    }
+    const local = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    return [...local, ...defaultBlogPosts];
+  } catch (e) {
+    return defaultBlogPosts;
+  }
+};
 
 const Blog = () => {
   return (
@@ -60,33 +63,34 @@ const Blog = () => {
           </div>
         </div>
 
-        {/* Blog Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {blogPosts.map((post, i) => (
+          {/* Blog Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+           {loadCombinedPosts().map((post, i) => (
             <motion.div 
               key={post.id}
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-              className="group bg-white rounded-[56px] p-10 border border-slate-100 shadow-sm hover:shadow-2xl transition-all h-full flex flex-col"
+              className="group bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm hover:shadow-2xl transition-all h-full flex flex-col"
             >
-              <div className="space-y-6 flex-grow">
-                 <div className="flex justify-between items-center">
-                    <span className="bg-[#1E293B] text-white px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest leading-none">
-                       {post.category}
-                    </span>
-                    <span className="text-[9px] text-slate-400 font-black uppercase tracking-widest opacity-60">{post.date}</span>
-                 </div>
-                 <h2 className="text-2xl font-black text-[#1E293B] group-hover:text-[#0EA5E9] transition-all uppercase tracking-tight leading-none h-16">
-                    {post.title}
-                 </h2>
-                 <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest leading-relaxed mt-4 italic">
-                    "{post.excerpt}"
-                 </p>
+              <div className="flex-shrink-0 mb-4">
+                <img src={post.thumbnail} alt={post.title} className="w-full h-40 object-cover rounded-lg" />
               </div>
-              <div className="mt-12 pt-8 border-t border-slate-50">
-                 <Link to={`/blog/${post.slug}`} className="text-[10px] font-black text-[#1E293B] hover:text-[#0EA5E9] uppercase tracking-[0.3em] transition-all flex items-center justify-between">
-                    Retrieve Asset <span>→</span>
-                 </Link>
+              <div className="space-y-3 flex-grow">
+                <div className="flex justify-between items-center">
+                  <span className="bg-[#1E293B] text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest leading-none">
+                    {post.category}
+                  </span>
+                  <span className="text-[9px] text-slate-400 font-medium uppercase tracking-widest opacity-60">{post.date}</span>
+                </div>
+                <h2 className="text-lg md:text-2xl font-black text-[#1E293B] group-hover:text-[#0EA5E9] transition-all tracking-tight leading-snug h-16 overflow-hidden">
+                  {post.title}
+                </h2>
+                {post.excerpt && <p className="text-slate-500 text-sm leading-relaxed mt-2">{post.excerpt}</p>}
+              </div>
+              <div className="mt-6 pt-4 border-t border-slate-50">
+                <Link to={`/blog/${post.slug}`} className="text-[11px] font-black text-[#1E293B] hover:text-[#0EA5E9] uppercase tracking-[0.3em] transition-all flex items-center justify-between">
+                  Read Article <span>→</span>
+                </Link>
               </div>
             </motion.div>
           ))}

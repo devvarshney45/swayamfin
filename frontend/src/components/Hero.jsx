@@ -27,7 +27,12 @@ const Hero = () => {
     city: ''
   });
   const [submitStatus, setSubmitStatus] = useState('idle'); // idle, submitting, success, duplicate, error
-  const [mobileError, setMobileError] = useState('');
+  const [formError, setFormError] = useState('');
+  const [step, setStep] = useState('form'); // form, otp
+  const [otp, setOtp] = useState('');
+  const [otpError, setOtpError] = useState('');
+  const [otpCountdown, setOtpCountdown] = useState(0);
+
 
   const slides = [
     { title: t('hero_title_2'), sub: t('hero_sub_2') },
@@ -44,41 +49,124 @@ const Hero = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMobileError('');
-    if (formData.mobile.length !== 10) {
-      setMobileError('Please enter a valid 10-digit mobile number.');
-      return;
+    setFormError('');
+    setOtpError('');
+
+    if (step === 'form') {
+      if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        setFormError('Please enter a valid email address.');
+        return;
+      }
+      if (formData.mobile.length !== 10) {
+        setFormError('Please enter a valid 10-digit mobile number.');
+        return;
+      }
+
+      setSubmitStatus('submitting');
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/leads/send-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: formData.email })
+        });
+
+        if (response.ok) {
+          setStep('otp');
+          setSubmitStatus('idle');
+          setOtpCountdown(120);
+        } else {
+          const error = await response.json();
+          setSubmitStatus('error');
+          setFormError(error.message || 'Failed to send OTP');
+        }
+      } catch (err) {
+        setSubmitStatus('error');
+        setFormError('Failed to send OTP');
+      }
+    } else if (step === 'otp') {
+      if (otp.length !== 6) {
+        setOtpError('Please enter the 6-digit OTP.');
+        return;
+      }
+
+      setSubmitStatus('submitting');
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/leads/verify-otp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: formData.email,
+            otp,
+            leadData: {
+              applicant_name: formData.fullName,
+              mobile: formData.mobile,
+              email: formData.email,
+              loan_type: formData.loanType,
+              loan_amount_required: Number(formData.amount),
+              location_city: formData.city,
+              source: 'website'
+            }
+          })
+        });
+
+        if (response.ok) {
+          setSubmitStatus('success');
+          setTimeout(() => {
+            setSubmitStatus('idle');
+            setFormData({ fullName: '', mobile: '', email: '', loanType: 'msme_structured', amount: '', city: '' });
+            setOtp('');
+            setStep('form');
+            setOtpCountdown(0);
+          }, 3000);
+        } else if (response.status === 409) {
+          setSubmitStatus('duplicate');
+        } else {
+          const error = await response.json();
+          setSubmitStatus('error');
+          setOtpError(error.message || 'Invalid OTP');
+        }
+      } catch (err) {
+        setSubmitStatus('error');
+        setOtpError('Failed to verify OTP');
+      }
     }
+  };
+
+  useEffect(() => {
+    if (!otpCountdown) return;
+    const timer = setInterval(() => {
+      setOtpCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [otpCountdown]);
+
+  const handleResendOtp = async () => {
+    setFormError('');
     setSubmitStatus('submitting');
-    
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/leads`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/leads/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          applicant_name: formData.fullName,
-          mobile: formData.mobile,
-          email: formData.email,
-          loan_type: formData.loanType,
-          loan_amount_required: Number(formData.amount),
-          location_city: formData.city,
-          source: 'website'
-        })
+        body: JSON.stringify({ email: formData.email })
       });
 
       if (response.ok) {
-        setSubmitStatus('success');
-        setTimeout(() => {
-          setSubmitStatus('idle');
-          setFormData({ fullName: '', mobile: '', email: '', loanType: 'msme_structured', amount: '', city: '' });
-        }, 3000);
-      } else if (response.status === 409) {
-        setSubmitStatus('duplicate');
+        setSubmitStatus('idle');
+        setOtpCountdown(120);
       } else {
+        const error = await response.json();
         setSubmitStatus('error');
+        setFormError(error.message || 'Failed to resend OTP');
       }
     } catch (err) {
       setSubmitStatus('error');
+      setFormError('Failed to resend OTP');
     }
   };
 
@@ -174,7 +262,7 @@ const Hero = () => {
                        <h3 className="text-2xl font-black text-[#1E293B] uppercase tracking-tighter">Transmission Logged</h3>
                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest italic leading-relaxed">Our institutional node will initiate contact <br /> within 30 minutes.</p>
                     </motion.div>
-                  ) : (
+                  ) : step === 'form' ? (
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="space-y-1">
                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
@@ -224,12 +312,55 @@ const Hero = () => {
                         type="submit" disabled={submitStatus === 'submitting'}
                         className="w-full h-16 bg-[#1E293B] hover:bg-blue-600 text-white rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
                       >
-                        {submitStatus === 'submitting' ? 'Processing Node...' : 'Submit Your Information'} <ChevronRight className="w-4 h-4" />
+                        {submitStatus === 'submitting' ? 'Sending OTP...' : 'Send OTP'} <ChevronRight className="w-4 h-4" />
                       </button>
 
                       {submitStatus === 'duplicate' && <p className="text-[9px] text-amber-600 text-center font-bold uppercase tracking-widest italic italic">Coordinate Conflict: Transmission Already Logged.</p>}
-                      {submitStatus === 'error' && <p className="text-[9px] text-red-600 text-center font-bold uppercase tracking-widest italic">Link Fault: Server Unreachable.</p>}
-                      {mobileError && <p className="text-[9px] text-red-600 text-center font-bold uppercase tracking-widest italic">{mobileError}</p>}
+                      {formError && <p className="text-[9px] text-red-600 text-center font-bold uppercase tracking-widest italic">{formError}</p>}
+
+                      <div className="text-center">
+                         <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest italic">🛡️ RBI Compliant • Data Protected</p>
+                      </div>
+                    </form>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div className="text-center space-y-4">
+                        <h3 className="text-xl font-black text-[#1E293B] uppercase tracking-tighter">Verify Your Email</h3>
+                        <p className="text-slate-500 text-sm">Enter the 6-digit OTP sent to {formData.email}</p>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">OTP</label>
+                        <input required type="text" maxLength="6" className="input-standard w-full h-14 rounded-2xl px-6 bg-slate-50 border-slate-100 text-sm focus:bg-white transition-all text-center text-2xl font-mono" placeholder="000000" value={otp} onChange={e => setOtp(e.target.value.replace(/\D/g, ''))} />
+                      </div>
+
+                      <div className="flex items-center justify-between gap-4">
+                        <button 
+                          type="submit" disabled={submitStatus === 'submitting'}
+                          className="flex-1 h-16 bg-[#1E293B] hover:bg-blue-600 text-white rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
+                        >
+                          {submitStatus === 'submitting' ? 'Verifying...' : 'Verify & Submit'} <ChevronRight className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          disabled={otpCountdown > 0 || submitStatus === 'submitting'}
+                          onClick={handleResendOtp}
+                          className="flex-1 h-16 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-2xl font-bold uppercase tracking-[0.2em] text-[10px] transition-all disabled:opacity-50"
+                        >
+                          {otpCountdown > 0 ? `Resend in ${otpCountdown}s` : 'Resend OTP'}
+                        </button>
+                      </div>
+
+                      <button 
+                        type="button" onClick={() => { setStep('form'); setOtp(''); setOtpError(''); setSubmitStatus('idle'); }}
+                        className="w-full h-12 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-2xl font-bold uppercase tracking-[0.2em] text-[10px] transition-all"
+                      >
+                        Back to Form
+                      </button>
+
+                      {submitStatus === 'duplicate' && <p className="text-[9px] text-amber-600 text-center font-bold uppercase tracking-widest italic italic">Coordinate Conflict: Transmission Already Logged.</p>}
+                      {submitStatus === 'error' && <p className="text-[9px] text-red-600 text-center font-bold uppercase tracking-widest italic">{otpError}</p>}
+                      {otpError && <p className="text-[9px] text-red-600 text-center font-bold uppercase tracking-widest italic">{otpError}</p>}
 
                       <div className="text-center">
                          <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest italic">🛡️ RBI Compliant • Data Protected</p>
