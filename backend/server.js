@@ -26,6 +26,7 @@ if (!fs.existsSync(uploadsDir)) {
 
 // Security middleware
 app.disable('x-powered-by');
+app.set('trust proxy', 1); // Trust Render's load balancer proxy
 app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginEmbedderPolicy: false,
