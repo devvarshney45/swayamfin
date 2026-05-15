@@ -6,11 +6,13 @@ const STORAGE_KEY = 'swayamfin_blogs';
 
 const loadStoredPosts = () => {
   try {
-    const old = localStorage.getItem('swayamfin_local_blogs');
-    if (old && !localStorage.getItem(STORAGE_KEY)) {
-      localStorage.setItem(STORAGE_KEY, old);
+    const current = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const old = JSON.parse(localStorage.getItem('swayamfin_local_blogs') || '[]');
+    const merged = [...old, ...current].filter((item, index, array) => array.findIndex(a => a.id === item.id) === index);
+    if (old.length > 0 && current.length === 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
     }
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    return merged;
   } catch (e) {
     return [];
   }
@@ -44,35 +46,36 @@ const Blog = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {posts.length > 0 ? (
             posts.map((post, i) => (
-              <motion.div
-                key={post.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="group bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm hover:shadow-2xl transition-all h-full flex flex-col"
-              >
-                <div className="flex-shrink-0 mb-4">
-                  <img src={post.thumbnail} alt={post.title} className="w-full h-40 object-cover rounded-lg" />
-                </div>
-                <div className="space-y-3 flex-grow">
-                  <div className="flex justify-between items-center">
-                    <span className="bg-[#1E293B] text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest leading-none">
-                      {post.category}
-                    </span>
-                    <span className="text-[9px] text-slate-400 font-medium uppercase tracking-widest opacity-60">{post.date}</span>
+              <Link key={post.id} to={`/blog/${post.slug}`} className="group block bg-white rounded-[24px] border border-slate-100 shadow-sm hover:shadow-2xl transition-all h-full">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="p-6 flex flex-col h-full"
+                >
+                  <div className="flex-shrink-0 mb-4">
+                    <img src={post.thumbnail} alt={post.title} className="w-full h-40 object-cover rounded-lg" />
                   </div>
-                  <h2 className="text-lg md:text-2xl font-black text-[#1E293B] group-hover:text-[#0EA5E9] transition-all tracking-tight leading-snug h-16 overflow-hidden">
-                    {post.title}
-                  </h2>
-                  {post.excerpt && <p className="text-slate-500 text-sm leading-relaxed mt-2">{post.excerpt}</p>}
-                </div>
-                <div className="mt-6 pt-4 border-t border-slate-50">
-                  <Link to={`/blog/${post.slug}`} className="text-[11px] font-black text-[#1E293B] hover:text-[#0EA5E9] uppercase tracking-[0.3em] transition-all flex items-center justify-between">
-                    Read Article <span>→</span>
-                  </Link>
-                </div>
-              </motion.div>
+                  <div className="space-y-3 flex-grow">
+                    <div className="flex justify-between items-center">
+                      <span className="bg-[#1E293B] text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest leading-none">
+                        {post.category}
+                      </span>
+                      <span className="text-[9px] text-slate-400 font-medium uppercase tracking-widest opacity-60">{post.date}</span>
+                    </div>
+                    <h2 className="text-lg md:text-2xl font-black text-[#1E293B] group-hover:text-[#0EA5E9] transition-all tracking-tight leading-snug h-16 overflow-hidden">
+                      {post.title}
+                    </h2>
+                    {post.excerpt && <p className="text-slate-500 text-sm leading-relaxed mt-2">{post.excerpt}</p>}
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-slate-50">
+                    <div className="text-[11px] font-black text-[#1E293B] group-hover:text-[#0EA5E9] uppercase tracking-[0.3em] transition-all flex items-center justify-between">
+                      Read Article <span>→</span>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
             ))
           ) : (
             <div className="col-span-full rounded-[24px] border border-slate-100 bg-white p-16 text-center text-slate-600 shadow-sm">

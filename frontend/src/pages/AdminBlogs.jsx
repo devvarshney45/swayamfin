@@ -11,7 +11,15 @@ const readBlogs = () => {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch (e) { return []; }
 };
 
-const writeBlogs = (arr) => localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+const writeBlogs = (arr) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+  } catch (error) {
+    console.error('Failed to write blogs to storage:', error);
+    alert('Unable to save blogs. Local storage quota exceeded or storage is unavailable.');
+    throw error;
+  }
+};
 
 const AdminBlogs = () => {
   const [authed, setAuthed] = useState(false);

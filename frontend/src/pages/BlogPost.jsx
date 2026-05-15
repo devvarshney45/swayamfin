@@ -4,11 +4,13 @@ import { useParams, Link } from 'react-router-dom';
 const getStoredPosts = () => {
   try {
     const STORAGE_KEY = 'swayamfin_blogs';
-    const old = localStorage.getItem('swayamfin_local_blogs');
-    if (old && !localStorage.getItem(STORAGE_KEY)) {
-      localStorage.setItem(STORAGE_KEY, old);
+    const current = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const old = JSON.parse(localStorage.getItem('swayamfin_local_blogs') || '[]');
+    const merged = [...old, ...current].filter((item, index, array) => array.findIndex(a => a.id === item.id) === index);
+    if (old.length > 0 && current.length === 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
     }
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    return merged;
   } catch (e) {
     return [];
   }
