@@ -18,7 +18,7 @@ const otpRateLimiter = rateLimit({
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => req.ip,
+  skip: (req) => process.env.NODE_ENV === 'development',
   message: 'Too many OTP requests from this IP, please try again later.',
 });
 
