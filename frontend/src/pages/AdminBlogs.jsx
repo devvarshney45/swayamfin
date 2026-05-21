@@ -6,6 +6,7 @@ const ADMIN_PASSWORD = 'swayamfin@admin';
 const CATEGORIES = ['Loan on Property','Personal Loan','Wealth Services','Mutual Funds','Insurance','General'];
 
 const uid = () => `blog_${Date.now()}`;
+const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
 const readBlogs = () => {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch (e) { return []; }
@@ -53,10 +54,10 @@ const AdminBlogs = () => {
     if (!form.title.trim() || !form.tagline.trim() || !form.content.trim()) { alert('Please fill required fields'); return; }
     const all = readBlogs();
     if (editing) {
-      const updated = all.map(b => b.id === editing ? { ...b, ...form, updatedAt: Date.now() } : b);
+      const updated = all.map(b => b.id === editing ? { ...b, ...form, slug: b.slug || slugify(form.title), updatedAt: Date.now() } : b);
       writeBlogs(updated); setBlogs(updated); setEditing(null);
     } else {
-      const item = { id: uid(), createdAt: Date.now(), ...form };
+      const item = { id: uid(), slug: slugify(form.title), createdAt: Date.now(), ...form };
       const updated = [item, ...all]; writeBlogs(updated); setBlogs(updated);
     }
     setForm({ title: '', tagline: '', category: CATEGORIES[0], date: new Date().toISOString().slice(0,10), thumbnail: '', content: '' });

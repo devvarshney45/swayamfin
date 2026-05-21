@@ -26,11 +26,6 @@ const BlogAdmin = () => {
     const f = e.target.files[0];
     setError('');
     if (!f) return;
-    if (f.size > 120000) {
-      setError('Thumbnail is too large. Please upload an image smaller than 120KB.');
-      e.target.value = null;
-      return;
-    }
     const reader = new FileReader();
     reader.onload = () => setForm(prev => ({ ...prev, thumbnail: reader.result }));
     reader.readAsDataURL(f);

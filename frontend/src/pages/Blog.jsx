@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 
 const STORAGE_KEY = 'swayamfin_blogs';
 
+const slugify = (s) => s?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
 const loadStoredPosts = () => {
   try {
     const current = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
@@ -45,9 +47,11 @@ const Blog = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {posts.length > 0 ? (
-            posts.map((post, i) => (
-              <Link key={post.id} to={`/blog/${post.slug}`} className="group block bg-white rounded-[24px] border border-slate-100 shadow-sm hover:shadow-2xl transition-all h-full">
-                <motion.div
+            posts.map((post, i) => {
+              const postSlug = post.slug || slugify(post.title) || post.id;
+              return (
+                <Link key={post.id} to={`/blog/${postSlug}`} className="group block bg-white rounded-[24px] border border-slate-100 shadow-sm hover:shadow-2xl transition-all h-full">
+                  <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -55,7 +59,7 @@ const Blog = () => {
                   className="p-6 flex flex-col h-full"
                 >
                   <div className="flex-shrink-0 mb-4">
-                    <img src={post.thumbnail} alt={post.title} className="w-full h-40 object-cover rounded-lg" />
+                    <img src={post.thumbnail || 'https://source.unsplash.com/640x480/?finance'} alt={post.title} className="w-full h-40 object-cover rounded-lg" />
                   </div>
                   <div className="space-y-3 flex-grow">
                     <div className="flex justify-between items-center">

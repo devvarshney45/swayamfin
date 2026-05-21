@@ -16,10 +16,12 @@ const getStoredPosts = () => {
   }
 };
 
+const slugify = (s) => s?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
 const BlogPost = () => {
   const { slug } = useParams();
   const posts = getStoredPosts();
-  const post = posts.find((p) => p.slug === slug);
+  const post = posts.find((p) => p.slug === slug || p.id === slug || slugify(p.title) === slug);
 
   if (!post) {
     return (
@@ -35,7 +37,7 @@ const BlogPost = () => {
   return (
     <div className="min-h-screen pt-32 pb-20 bg-[#F8FAFC]">
       <div className="max-w-4xl mx-auto px-6">
-        <img src={post.thumbnail} alt={post.title} className="w-full h-64 object-cover rounded-lg mb-8" />
+        <img src={post.thumbnail || 'https://source.unsplash.com/960x640/?finance'} alt={post.title} className="w-full h-64 object-cover rounded-lg mb-8" />
         <div className="text-slate-400 text-sm uppercase tracking-widest mb-2">{post.category} • {post.date}</div>
         <h1 className="text-4xl font-black text-[#1E293B] mb-6">{post.title}</h1>
         <div className="prose max-w-none text-slate-700">
