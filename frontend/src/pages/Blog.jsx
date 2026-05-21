@@ -1,27 +1,52 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
-const STORAGE_KEY = 'swayamfin_blogs';
-
-const slugify = (s) => s?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-
-const loadStoredPosts = () => {
-  try {
-    const current = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    const old = JSON.parse(localStorage.getItem('swayamfin_local_blogs') || '[]');
-    const merged = [...old, ...current].filter((item, index, array) => array.findIndex(a => a.id === item.id) === index);
-    if (old.length > 0 && current.length === 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-    }
-    return merged;
-  } catch (e) {
-    return [];
-  }
-};
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 const Blog = () => {
-  const posts = loadStoredPosts();
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/blogs`);
+        setPosts(response.data.data || []);
+      } catch (err) {
+        console.error('Failed to fetch blogs:', err);
+        setError('Unable to load blogs. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-32 pb-40 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-[#0EA5E9]/20 border-t-[#0EA5E9] rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-500 font-black text-sm uppercase tracking-widest">Loading blogs...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen pt-32 pb-40 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <h2 className="text-2xl font-black text-[#1E293B] mb-2">Unable to Load Blogs</h2>
+          <p className="text-slate-500 text-sm">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#F8FAFC] min-h-screen pt-32 pb-40 font-plus-jakarta-sans overflow-hidden">
@@ -47,10 +72,8 @@ const Blog = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {posts.length > 0 ? (
-            posts.map((post, i) => {
-              const postSlug = post.slug || slugify(post.title) || post.id;
-              return (
-                <Link key={post.id} to={`/blog/${postSlug}`} className="group block bg-white rounded-[24px] border border-slate-100 shadow-sm hover:shadow-2xl transition-all h-full">
+            posts.map((post, i) => (
+              <Link key={post._id} to={`/blog/${post.slug}`} className="group block bg-white rounded-[24px] border border-slate-100 shadow-sm hover:shadow-2xl transition-all h-full">
                   <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}

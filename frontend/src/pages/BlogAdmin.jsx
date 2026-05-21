@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const STORAGE_KEY = 'swayamfin_blogs';
 const CATEGORIES = ['Loan on Property', 'Personal Loan', 'Wealth Services'];
 const ADMIN_PASSWORD = 'swayamfinadmin';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
@@ -68,7 +69,7 @@ const BlogAdmin = () => {
     reader.readAsDataURL(f);
   };
 
-  const publish = (e) => {
+  const publish = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -78,25 +79,27 @@ const BlogAdmin = () => {
     }
 
     setLoading(true);
-    const slug = slugify(form.title || Date.now().toString());
-    const item = {
-      id: `local-${Date.now()}`,
-      title: form.title,
-      category: form.category,
-      date: form.date,
-      thumbnail: form.thumbnail || '',
-      content: form.content ? form.content.replace(/\n/g, '<br/>') : '',
-      slug,
-    };
     try {
-      const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-      existing.unshift(item);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+      const token = localStorage.getItem('swayamfin_token');
+      const payload = {
+        title: form.title,
+        tagline: form.title.substring(0, 150),
+        category: form.category,
+        date: form.date,
+        thumbnail: form.thumbnail || '',
+        content: form.content
+      };
+
+      await axios.post(`${API_URL}/api/blogs`, payload, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      setForm({ title: '', category: CATEGORIES[0], date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }), thumbnail: '', content: '' });
       setLoading(false);
       navigate('/blog');
     } catch (error) {
-      console.error('Local storage write failed:', error);
-      setError('Unable to save blog: Storage quota exceeded. Please try deleting old blogs or use shorter content.');
+      console.error('Blog upload failed:', error);
+      setError(error?.response?.data?.message || 'Failed to publish blog. Please try again.');
       setLoading(false);
     }
   };
@@ -134,7 +137,6 @@ const BlogAdmin = () => {
             <textarea rows={8} value={form.content} onChange={e => { setForm({...form, content: e.target.value}); setError(''); }} placeholder="Blog content (HTML or plain text)" className="input-standard w-full" />
             <div className="flex items-center gap-4">
               <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Publishing...' : 'Publish'}</button>
-              <button type="button" onClick={()=>{localStorage.removeItem(STORAGE_KEY); alert('Cleared local blogs');}} className="bg-red-500 text-white px-4 py-2 rounded">Clear Local Blogs</button>
             </div>
           </form>
         )}

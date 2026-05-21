@@ -15,6 +15,7 @@ const leadRoutes = require('./routes/leadRoutes');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const branchRoutes = require('./routes/branchRoutes');
+const blogRoutes = require('./routes/blogRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -35,8 +36,8 @@ app.use(helmet({
 app.use(mongoSanitize());
 app.use(xss());
 app.use(hpp());
-app.use(express.json({ limit: '10kb' }));
-app.use(express.urlencoded({ extended: false, limit: '10kb' }));
+app.use(express.json({ limit: '50mb' })); // Increased for blog image uploads
+app.use(express.urlencoded({ extended: false, limit: '50mb' }));
 app.use(morgan('combined'));
 
 const allowedOrigins = [
@@ -82,6 +83,7 @@ app.use('/api/leads', require('./routes/remarkRoutes'));
 app.use('/api/users', userRoutes);
 app.use('/api/branches', branchRoutes);
 app.use('/api/messages', require('./routes/messageRoutes'));
+app.use('/api/blogs', blogRoutes);
 
 // Always serve files from backend/uploads irrespective of process cwd.
 app.use('/uploads', express.static(uploadsDir, {

@@ -1,29 +1,43 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import axios from 'axios';
 
-const getStoredPosts = () => {
-  try {
-    const STORAGE_KEY = 'swayamfin_blogs';
-    const current = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    const old = JSON.parse(localStorage.getItem('swayamfin_local_blogs') || '[]');
-    const merged = [...old, ...current].filter((item, index, array) => array.findIndex(a => a.id === item.id) === index);
-    if (old.length > 0 && current.length === 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-    }
-    return merged;
-  } catch (e) {
-    return [];
-  }
-};
-
-const slugify = (s) => s?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 const BlogPost = () => {
   const { slug } = useParams();
-  const posts = getStoredPosts();
-  const post = posts.find((p) => p.slug === slug || p.id === slug || slugify(p.title) === slug);
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  if (!post) {
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/blogs/${slug}`);
+        setPost(response.data.data);
+      } catch (err) {
+        console.error('Failed to fetch blog:', err);
+        setError('Blog post not found or failed to load.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlog();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-32 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-[#0EA5E9]/20 border-t-[#0EA5E9] rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-500 font-black text-sm uppercase tracking-widest">Loading article...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !post) {
     return (
       <div className="min-h-screen pt-32 flex items-center justify-center">
         <div className="text-center">
