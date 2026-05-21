@@ -5,8 +5,8 @@ const blogController = require('../controllers/blogController');
 // Get all blogs
 router.get('/', blogController.getAllBlogs);
 
-// Get a single blog by ID
-router.get('/:id', blogController.getBlogById);
+// Get a single blog by slug
+router.get('/:slug', blogController.getBlogBySlug);
 
 // Create a new blog
 router.post('/', blogController.createBlog);
