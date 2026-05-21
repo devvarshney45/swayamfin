@@ -81,8 +81,13 @@ const Blog = () => {
                   transition={{ delay: i * 0.1 }}
                   className="p-6 flex flex-col h-full"
                 >
-                  <div className="flex-shrink-0 mb-4 rounded-lg overflow-hidden w-full h-40">
-                    <img src={post.thumbnail || 'https://source.unsplash.com/640x480/?finance'} alt={post.title} className="w-full h-full object-cover" />
+                  <div className="flex-shrink-0 mb-4 rounded-lg overflow-hidden w-full aspect-[4/3] bg-slate-100">
+                    <img
+                      src={post.thumbnail || 'https://source.unsplash.com/640x480/?finance'}
+                      alt={post.title}
+                      className="w-full h-full object-cover object-center"
+                      style={{ display: 'block' }}
+                    />
                   </div>
                   <div className="space-y-3 flex-grow">
                     <div className="flex justify-between items-center">
