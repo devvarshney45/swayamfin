@@ -31,20 +31,22 @@ app.set('trust proxy', 1); // Trust Render's load balancer proxy
 app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginEmbedderPolicy: false,
-  crossOriginResourcePolicy: { policy: 'same-origin' },
+  crossOriginResourcePolicy: false,
 }));
 app.use(mongoSanitize());
 app.use(xss());
 app.use(hpp());
-app.use(express.json({ limit: '50mb' })); // Increased for blog image uploads
-app.use(express.urlencoded({ extended: false, limit: '50mb' }));
+app.use(express.json({ limit: '150mb' })); // Increased for blog image uploads and large base64 payloads
+app.use(express.urlencoded({ extended: true, limit: '150mb' }));
 app.use(morgan('combined'));
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL || 'http://localhost:3000', 
+  process.env.FRONTEND_URL || 'http://localhost:3000',
   'http://localhost:3001',
   'https://www.swayamfin.com',
-  'https://swayamfin.vercel.app'
+  'https://swayamfin.com',
+  'https://swayamfin.vercel.app',
+  'https://swayamfin.onrender.com'
 ];
 
 app.use(cors({
