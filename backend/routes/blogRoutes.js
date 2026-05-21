@@ -1,8 +1,9 @@
-// Get all blogs (admin)
-router.get('/admin/all', blogController.getAllBlogsAdmin);
 const express = require('express');
 const router = express.Router();
 const blogController = require('../controllers/blogController');
+
+// Get all blogs (admin)
+router.get('/admin/all', blogController.getAllBlogsAdmin);
 
 // Get all blogs
 router.get('/', blogController.getAllBlogs);
