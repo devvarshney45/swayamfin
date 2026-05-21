@@ -8,7 +8,30 @@ const CATEGORIES = ['Loan on Property','Personal Loan','Wealth Services','Mutual
 const uid = () => `blog_${Date.now()}`;
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
+const compressImage = (dataUrl, maxWidth = 800, maxHeight = 600, quality = 0.7) => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.src = dataUrl;
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let { width, height } = img;
+      if (width > maxWidth || height > maxHeight) {
+        const ratio = Math.min(maxWidth / width, maxHeight / height);
+        width *= ratio;
+        height *= ratio;
+      }
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => resolve(dataUrl);
+  });
+};
+
 const readBlogs = () => {
+
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch (e) { return []; }
 };
 
@@ -28,6 +51,8 @@ const AdminBlogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({ title: '', tagline: '', category: CATEGORIES[0], date: new Date().toISOString().slice(0,10), thumbnail: '', content: '' });
+  const [saveError, setSaveError] = useState('');
+  const [uploadError, setUploadError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => { if (authed) setBlogs(readBlogs()); }, [authed]);
@@ -39,28 +64,50 @@ const AdminBlogs = () => {
     } else alert('Incorrect password');
   };
 
-  const openAdd = () => { setEditing(null); setForm({ title: '', tagline: '', category: CATEGORIES[0], date: new Date().toISOString().slice(0,10), thumbnail: '', content: '' }); };
+  const openAdd = () => { setEditing(null); setSaveError(''); setUploadError(''); setForm({ title: '', tagline: '', category: CATEGORIES[0], date: new Date().toISOString().slice(0,10), thumbnail: '', content: '' }); };
 
-  const handleFile = (e) => {
+  const handleFile = async (e) => {
     const f = e.target.files[0];
     if (!f) return;
+    setUploadError('');
+    
+    if (f.size > 5242880) { // 5MB limit before compression
+      setUploadError('Image is too large (>5MB). Please choose a smaller image.');
+      e.target.value = '';
+      return;
+    }
+
     const r = new FileReader();
-    r.onload = () => setForm(prev => ({ ...prev, thumbnail: r.result }));
+    r.onload = async () => {
+      try {
+        const compressed = await compressImage(r.result, 800, 600, 0.75);
+        setForm(prev => ({ ...prev, thumbnail: compressed }));
+      } catch (err) {
+        setUploadError('Failed to process image. Please try another file.');
+      }
+    };
+    r.onerror = () => setUploadError('Failed to read image file.');
     r.readAsDataURL(f);
   };
 
   const save = (e) => {
     e.preventDefault();
+    setSaveError('');
     if (!form.title.trim() || !form.tagline.trim() || !form.content.trim()) { alert('Please fill required fields'); return; }
-    const all = readBlogs();
-    if (editing) {
-      const updated = all.map(b => b.id === editing ? { ...b, ...form, slug: b.slug || slugify(form.title), updatedAt: Date.now() } : b);
-      writeBlogs(updated); setBlogs(updated); setEditing(null);
-    } else {
-      const item = { id: uid(), slug: slugify(form.title), createdAt: Date.now(), ...form };
-      const updated = [item, ...all]; writeBlogs(updated); setBlogs(updated);
+    try {
+      const all = readBlogs();
+      if (editing) {
+        const updated = all.map(b => b.id === editing ? { ...b, ...form, slug: b.slug || slugify(form.title), updatedAt: Date.now() } : b);
+        writeBlogs(updated); setBlogs(updated); setEditing(null);
+      } else {
+        const item = { id: uid(), slug: slugify(form.title), createdAt: Date.now(), ...form };
+        const updated = [item, ...all]; writeBlogs(updated); setBlogs(updated);
+      }
+      setForm({ title: '', tagline: '', category: CATEGORIES[0], date: new Date().toISOString().slice(0,10), thumbnail: '', content: '' });
+      setUploadError('');
+    } catch (err) {
+      setSaveError(err.message);
     }
-    setForm({ title: '', tagline: '', category: CATEGORIES[0], date: new Date().toISOString().slice(0,10), thumbnail: '', content: '' });
   };
 
   const startEdit = (b) => { setEditing(b.id); setForm({ title: b.title, tagline: b.tagline || '', category: b.category || CATEGORIES[0], date: b.date || new Date().toISOString().slice(0,10), thumbnail: b.thumbnail || '', content: b.content || '' }); window.scrollTo(0,0); };
@@ -99,6 +146,16 @@ const AdminBlogs = () => {
         {/* form */}
         <div className="bg-white p-6 rounded-lg shadow mb-8">
           <form onSubmit={save} className="space-y-4">
+            {saveError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                {saveError}
+              </div>
+            )}
+            {uploadError && (
+              <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-lg text-sm">
+                {uploadError}
+              </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input placeholder="Blog Title" value={form.title} onChange={e=>setForm({...form,title:e.target.value})} className="input-standard w-full" required />
               <select value={form.category} onChange={e=>setForm({...form,category:e.target.value})} className="input-standard w-full">
@@ -117,7 +174,7 @@ const AdminBlogs = () => {
             <textarea placeholder="Blog content (HTML allowed)" value={form.content} onChange={e=>setForm({...form,content:e.target.value})} rows={8} className="input-standard w-full" required />
             <div className="flex gap-4">
               <button className="btn-primary">{editing ? 'Save Changes' : 'Publish Blog'}</button>
-              <button type="button" onClick={()=>{setForm({ title: '', tagline: '', category: CATEGORIES[0], date: new Date().toISOString().slice(0,10), thumbnail: '', content: '' }); setEditing(null);}} className="bg-slate-200 px-4 py-2 rounded">Cancel</button>
+              <button type="button" onClick={()=>{setForm({ title: '', tagline: '', category: CATEGORIES[0], date: new Date().toISOString().slice(0,10), thumbnail: '', content: '' }); setEditing(null); setSaveError(''); setUploadError('');}} className="bg-slate-200 px-4 py-2 rounded">Cancel</button>
             </div>
           </form>
         </div>

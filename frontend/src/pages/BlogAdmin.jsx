@@ -7,6 +7,28 @@ const ADMIN_PASSWORD = 'swayamfinadmin';
 
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
+const compressImage = (dataUrl, maxWidth = 800, maxHeight = 600, quality = 0.7) => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.src = dataUrl;
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let { width, height } = img;
+      if (width > maxWidth || height > maxHeight) {
+        const ratio = Math.min(maxWidth / width, maxHeight / height);
+        width *= ratio;
+        height *= ratio;
+      }
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = () => resolve(dataUrl);
+  });
+};
+
 const BlogAdmin = () => {
   const [authed, setAuthed] = useState(false);
   const [pass, setPass] = useState('');
@@ -22,12 +44,27 @@ const BlogAdmin = () => {
     else setError('Incorrect password');
   };
 
-  const handleFile = (e) => {
+  const handleFile = async (e) => {
     const f = e.target.files[0];
     setError('');
     if (!f) return;
+    
+    if (f.size > 5242880) { // 5MB limit before compression
+      setError('Image is too large (>5MB). Please choose a smaller image.');
+      e.target.value = '';
+      return;
+    }
+
     const reader = new FileReader();
-    reader.onload = () => setForm(prev => ({ ...prev, thumbnail: reader.result }));
+    reader.onload = async () => {
+      try {
+        const compressed = await compressImage(reader.result, 800, 600, 0.75);
+        setForm(prev => ({ ...prev, thumbnail: compressed }));
+      } catch (err) {
+        setError('Failed to process image. Please try another file.');
+      }
+    };
+    reader.onerror = () => setError('Failed to read image file.');
     reader.readAsDataURL(f);
   };
 
@@ -59,7 +96,7 @@ const BlogAdmin = () => {
       navigate('/blog');
     } catch (error) {
       console.error('Local storage write failed:', error);
-      setError('Unable to save the blog post locally. The content may be too large for browser storage. Please reduce the image size or shorten your content.');
+      setError('Unable to save blog: Storage quota exceeded. Please try deleting old blogs or use shorter content.');
       setLoading(false);
     }
   };
