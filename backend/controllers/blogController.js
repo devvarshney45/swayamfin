@@ -131,3 +131,15 @@ exports.getAllBlogsAdmin = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to fetch blogs' });
   }
 };
+
+// Get all blogs (admin)
+exports.getAllBlogsAdmin = async (req, res) => {
+  try {
+    const blogs = await Blog.find({})
+      .sort({ createdAt: -1 });
+    res.status(200).json({ success: true, data: blogs });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Failed to fetch all blogs (admin)' });
+  }
+};
