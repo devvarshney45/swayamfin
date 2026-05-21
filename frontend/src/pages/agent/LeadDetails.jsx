@@ -332,7 +332,7 @@ const LeadDetails = () => {
                     <div className="bg-white border border-slate-100 p-8 md:p-14 rounded-[40px] md:rounded-[60px] shadow-2xl max-w-xl w-full text-center space-y-10">
                        <h3 className="text-3xl font-black text-[#1E293B] uppercase tracking-tighter">Governance Node</h3>
                        <div className="grid grid-cols-2 gap-4">
-                         {['New', 'Contacted', 'In Progress', 'Document Submitted', 'Sanctioned', 'Disbursed', 'Closed - Won', 'Dead Lead'].map(s => (
+                         {['New', 'Under login stage', 'Under PD', 'Under Technical/legal', 'Under Sanction', 'Under disbursement', 'Disbursed', 'Rejected'].map(s => (
                            <button 
                              key={s} 
                              onClick={() => setLeadStatus(s)}
