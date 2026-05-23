@@ -43,6 +43,8 @@ app.use(morgan('combined'));
 const allowedOrigins = [
   process.env.FRONTEND_URL || 'http://localhost:3000',
   'http://localhost:3001',
+  'http://localhost:3007',
+  'http://localhost:3008',
   'https://www.swayamfin.com',
   'https://swayamfin.com',
   'https://swayamfin.vercel.app',

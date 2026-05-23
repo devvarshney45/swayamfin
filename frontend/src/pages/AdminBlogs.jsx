@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const ADMIN_PASSWORD = 'swayamfin@admin';
 const CATEGORIES = ['Loan on Property','Personal Loan','Wealth Services','Mutual Funds','Insurance','General'];
@@ -202,7 +204,25 @@ const AdminBlogs = () => {
                 {form.thumbnail && <img src={form.thumbnail} alt="thumb" className="w-40 h-24 object-cover mt-2 rounded" />}
               </div>
             </div>
-            <textarea placeholder="Blog content (HTML allowed)" value={form.content} onChange={e => setForm({ ...form, content: e.target.value })} rows={8} className="input-standard w-full" required />
+            <div>
+              <label className="block text-sm font-black mb-2">Blog Content (Use formatting: Headings, Bold, Italic, Links, Lists, etc.)</label>
+              <ReactQuill
+                value={form.content}
+                onChange={value => setForm({ ...form, content: value })}
+                placeholder="Write your blog content with rich formatting..."
+                className="bg-white rounded-lg"
+                theme="snow"
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, 3, 4, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    ['link'],
+                    ['clean']
+                  ]
+                }}
+              />
+            </div>
             <div className="flex gap-4">
               <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Saving...' : (editing ? 'Save Changes' : 'Publish Blog')}</button>
               <button type="button" onClick={() => { setForm({ title: '', tagline: '', category: CATEGORIES[0], date: new Date().toISOString().slice(0,10), thumbnail: '', content: '' }); setEditing(null); setSaveError(''); setUploadError(''); }} className="bg-slate-200 px-4 py-2 rounded">Cancel</button>

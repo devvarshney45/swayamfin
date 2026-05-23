@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -134,7 +136,25 @@ const BlogAdmin = () => {
               <input type="file" accept="image/*" onChange={handleFile} />
               {form.thumbnail && <img src={form.thumbnail} alt="thumb" className="w-40 h-24 object-cover mt-2 rounded" />}
             </div>
-            <textarea rows={8} value={form.content} onChange={e => { setForm({...form, content: e.target.value}); setError(''); }} placeholder="Blog content (HTML or plain text)" className="input-standard w-full" />
+            <div>
+              <label className="block text-sm font-black mb-2">Blog Content</label>
+              <ReactQuill
+                value={form.content}
+                onChange={value => { setForm({ ...form, content: value }); setError(''); }}
+                placeholder="Write your blog content here..."
+                className="bg-white rounded-lg"
+                theme="snow"
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    ['link', 'image'],
+                    ['clean']
+                  ]
+                }}
+              />
+            </div>
             <div className="flex items-center gap-4">
               <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Publishing...' : 'Publish'}</button>
             </div>
