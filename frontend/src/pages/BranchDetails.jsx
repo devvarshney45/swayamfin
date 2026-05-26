@@ -143,7 +143,7 @@ const BranchDetails = () => {
               </h1>
               
               <p className="text-xl text-slate-500 font-medium italic border-l-4 border-[#0EA5E9]/20 pl-6 mb-12">
-                "Orchestrating regional economic liquidity through hyper-localized credit deployment and strategic consultancy."
+                "Bringing smart financial solutions to local businesses across the region."
               </p>
  
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 pt-10 border-t border-slate-100">

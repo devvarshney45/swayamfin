@@ -100,7 +100,7 @@ const AdminDashboard = () => {
         {/* KPIs */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <Link to="/admin/leads" className="contents">
-            <KPICard title="Total Portfolio" value={stats.totalLeads} sub="Live Leads" />
+            <KPICard title="Total Leads" value={stats.totalLeads} sub="Live Leads" />
           </Link>
           <KPICard title="Disbursement" value={`₹${(stats.totalDisbursed/10000000).toFixed(2)}Cr`} sub="Cumulative" color="emerald" />
           <Link to="/admin/agents" className="contents">

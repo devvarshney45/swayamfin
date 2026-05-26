@@ -79,7 +79,7 @@ const EligibilityCalculator = () => {
               <input 
                 type="range"
                 min="100000"
-                max="10000000"
+                max="500000000"
                 step="50000"
                 className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#0EA5E9]"
                 value={amount}
@@ -185,8 +185,7 @@ const EligibilityCalculator = () => {
             </div>
 
             <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
-               <p className="text-[9px] font-bold text-slate-400 italic">Estimated simulation based on chosen parameters.</p>
-               <button className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-widest hover:underline transition-all">Submit Details →</button>
+               {/* Disclaimer and submit button removed as per requirements */}
             </div>
           </div>
         </div>

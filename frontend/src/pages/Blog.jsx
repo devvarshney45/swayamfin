@@ -70,38 +70,33 @@ const Blog = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {posts.length > 0 ? (
             posts.map((post, i) => (
-              <Link key={post._id} to={`/blog/${post.slug}`} className="group block bg-white rounded-[24px] border border-slate-100 shadow-sm hover:shadow-2xl transition-all h-full">
-                  <motion.div
+              <Link key={post._id} to={`/blog/${post.slug}`} className="group block bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-2xl transition-all h-full">
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="p-6 flex flex-col h-full"
+                  transition={{ delay: i * 0.05 }}
+                  className="p-4 flex flex-col h-full"
                 >
-                  <div className="flex-shrink-0 mb-4 rounded-lg overflow-hidden w-full aspect-[4/3] bg-slate-100">
+                  <div className="flex-shrink-0 mb-3 rounded-lg overflow-hidden w-full aspect-[4/3] bg-slate-100">
                     <img
                       src={post.thumbnail || 'https://source.unsplash.com/640x480/?finance'}
                       alt={post.title}
                       className="w-full h-full object-cover object-center"
                       style={{ display: 'block' }}
                     />
+                    <span className="absolute top-3 left-3 bg-[#0EA5E9] text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow">{post.category}</span>
                   </div>
-                  <div className="space-y-3 flex-grow">
-                    <div className="flex justify-between items-center">
-                      <span className="bg-[#1E293B] text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest leading-none">
-                        {post.category}
-                      </span>
-                      <span className="text-[9px] text-slate-400 font-medium uppercase tracking-widest opacity-60">{post.date}</span>
-                    </div>
-                    <h2 className="text-lg md:text-2xl font-black text-[#1E293B] group-hover:text-[#0EA5E9] transition-all tracking-tight leading-snug h-16 overflow-hidden">
-                      {post.title}
-                    </h2>
-                    {post.excerpt && <p className="text-slate-500 text-sm leading-relaxed mt-2">{post.excerpt}</p>}
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[9px] text-slate-400 font-medium uppercase tracking-widest opacity-60">{post.date}</span>
                   </div>
-                  <div className="mt-6 pt-4 border-t border-slate-50">
+                  <h2 className="text-lg font-black text-[#1E293B] group-hover:text-[#0EA5E9] transition-all tracking-tight leading-snug line-clamp-2 min-h-[2.7em] mb-2">
+                    {post.title}
+                  </h2>
+                  <div className="mt-auto pt-3 border-t border-slate-50">
                     <div className="text-[11px] font-black text-[#1E293B] group-hover:text-[#0EA5E9] uppercase tracking-[0.3em] transition-all flex items-center justify-between">
                       Read Article <span>→</span>
                     </div>
@@ -110,7 +105,7 @@ const Blog = () => {
               </Link>
             ))
           ) : (
-            <div className="col-span-full rounded-[24px] border border-slate-100 bg-white p-16 text-center text-slate-600 shadow-sm">
+            <div className="col-span-full rounded-2xl border border-slate-100 bg-white p-16 text-center text-slate-600 shadow-sm">
               <h2 className="text-2xl font-black mb-4">No blog posts available yet.</h2>
               <p className="text-sm leading-relaxed">Create blog entries from the admin portal to publish them here.</p>
             </div>

@@ -25,12 +25,7 @@ const ServicesSection = () => {
         
         {/* Header */}
         <div className="text-center mb-16 space-y-4">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="inline-flex items-center gap-3 px-5 py-2 bg-[#0EA5E9]/10 border border-[#0EA5E9]/20 rounded-full"
-          >
-            <span className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em]">Credit Portfolio</span>
-          </motion.div>
+          {/* Removed CREDIT PORTFOLIO pill */}
           <motion.h2
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             className="text-4xl md:text-6xl font-black text-[#1E293B] tracking-tight uppercase"
@@ -38,7 +33,7 @@ const ServicesSection = () => {
             Our <span className="text-[#0EA5E9] italic">Services</span>
           </motion.h2>
           <p className="text-slate-500 max-w-2xl mx-auto font-medium">
-            Engineered for high-velocity liquidity across diversified financial verticals.
+            Helping businesses access fast, reliable funding through a trusted and streamlined process.
           </p>
         </div>
 

@@ -68,7 +68,7 @@ const About = () => {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
             className={`${isDark ? 'text-slate-400' : 'text-slate-500'} text-lg md:text-2xl max-w-4xl mx-auto font-medium italic leading-relaxed`}
           >
-            "Swayamfin serves as an architectural catalyst in the credit ecosystem, bridging systemic gaps for MSMEs and retail navigators through institutional-grade financial orchestration."
+            "We help MSMEs and retail customers access finance quickly and easily through a trusted, streamlined process."
           </motion.p>
         </div>
       </section>

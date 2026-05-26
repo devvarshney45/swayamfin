@@ -37,7 +37,7 @@ const BlogAdmin = () => {
   const [pass, setPass] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [form, setForm] = useState({ title: '', category: CATEGORIES[0], date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }), thumbnail: '', content: '' });
+  const [form, setForm] = useState({ title: '', category: CATEGORIES[0], date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }), thumbnail: '', content: '', slug: '' });
   const navigate = useNavigate();
 
   const tryAuth = (e) => {
@@ -89,14 +89,15 @@ const BlogAdmin = () => {
         category: form.category,
         date: form.date,
         thumbnail: form.thumbnail || '',
-        content: form.content
+        content: form.content,
+        slug: form.slug || slugify(form.title)
       };
 
       await axios.post(`${API_URL}/api/blogs`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      setForm({ title: '', category: CATEGORIES[0], date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }), thumbnail: '', content: '' });
+      setForm({ title: '', category: CATEGORIES[0], date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }), thumbnail: '', content: '', slug: '' });
       setLoading(false);
       navigate('/blog');
     } catch (error) {
@@ -126,7 +127,8 @@ const BlogAdmin = () => {
                 {error}
               </div>
             )}
-            <input placeholder="Title" value={form.title} onChange={e => { setForm({...form, title: e.target.value}); setError(''); }} className="input-standard w-full" />
+            <input placeholder="Title" value={form.title} onChange={e => { setForm({...form, title: e.target.value, slug: slugify(e.target.value)}); setError(''); }} className="input-standard w-full" />
+            <input placeholder="Slug (URL)" value={form.slug} onChange={e => setForm({...form, slug: slugify(e.target.value)})} className="input-standard w-full" />
             <select value={form.category} onChange={e => { setForm({...form, category: e.target.value}); setError(''); }} className="input-standard w-full">
               {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
