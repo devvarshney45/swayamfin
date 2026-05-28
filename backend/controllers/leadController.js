@@ -42,7 +42,8 @@ exports.createLead = async (req, res) => {
   try {
     const { 
       source, applicant_name, mobile, alternate_mobile, email, 
-      location_city, pincode, loan_type, loan_amount_required 
+      location_city, pincode, loan_type, loan_amount_required,
+      submitted_by
     } = req.body;
 
     if (!applicant_name || !mobile || !location_city || !loan_type || !loan_amount_required) {
@@ -104,6 +105,7 @@ exports.createLead = async (req, res) => {
       loan_amount_required,
       branch_id,
       assigned_to,
+      submitted_by: submitted_by || undefined,
     });
 
     // Send WhatsApp Notification if agent assigned

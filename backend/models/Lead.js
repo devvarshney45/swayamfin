@@ -4,7 +4,7 @@ const leadSchema = new mongoose.Schema({
   lead_number: { type: String, unique: true },
   source: { 
     type: String, 
-    enum: ['website', 'manual', 'referral', 'walk-in', 'phone_inquiry', 'other'], 
+    enum: ['website', 'manual', 'referral', 'walk-in', 'phone_inquiry', 'employee_portal', 'other'], 
     required: true 
   },
   applicant_name: { type: String, required: true },
@@ -43,6 +43,7 @@ const leadSchema = new mongoose.Schema({
   },
   closing_date: { type: Date },
   dead_reason: { type: String },
+  submitted_by: { type: String }, // Employee name who submitted via employee portal
 
   // Personal Form Details (Tab 1)
   father_or_spouse_name: { type: String },

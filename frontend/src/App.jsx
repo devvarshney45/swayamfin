@@ -21,6 +21,7 @@ import AdminAgents from './pages/admin/AdminAgents';
 import AdminAgentDetails from './pages/admin/AdminAgentDetails';
 import BsmDashboard from './pages/bsm/BsmDashboard';
 import AdLandingPage from './pages/AdLandingPage';
+import EmployeePortal from './pages/EmployeePortal';
 import BranchDetails from './pages/BranchDetails';
 import ServiceDetails from './pages/ServiceDetails';
 import LeadDetails from './pages/agent/LeadDetails';
@@ -37,7 +38,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 
 const AppContent = () => {
   const location = useLocation();
-  const isLandingPage = location.pathname.startsWith('/lp/');
+  const isLandingPage = location.pathname.startsWith('/lp/') || location.pathname === '/emp-portal';
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -72,6 +73,7 @@ const AppContent = () => {
           <Route path="/grievance" element={<Grievance />} />
           <Route path="/agent/login" element={<Login />} />
           <Route path="/lp/:slug" element={<AdLandingPage />} />
+          <Route path="/emp-portal" element={<EmployeePortal />} />
           
           {/* Protected Portal Routes inside ErrorBoundary */}
           <Route 
