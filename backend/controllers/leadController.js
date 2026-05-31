@@ -10,7 +10,7 @@ const notificationService = require('../utils/notificationService');
 const axios = require('axios');
 const nodemailer = require('nodemailer');
 
-const otpStore = require('../utils/otpStore');
+const otpStore = new Map();
 const OTP_MAX_REQUESTS = 5;
 const OTP_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 const OTP_COOLDOWN_MS = 60 * 1000; // 60 seconds
