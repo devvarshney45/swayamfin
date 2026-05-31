@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 const Footer = () => {
   const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
-  const brandLogo = '/favicon.svg';
+  const brandLogo = '/favicon.jpeg';
 
   return (
     <footer className="bg-white border-t border-[#F1F5F9] pt-16 pb-24 md:pb-12 overflow-hidden relative">
@@ -80,7 +80,7 @@ const Footer = () => {
               </div>
               <div className="flex gap-4">
                  <span className="text-[#0EA5E9]">TEL:</span>
-                 <span>+91 87009 65592 / 011-44728117</span>
+                 <span>+91 95607 23332 / 011-44728117</span>
               </div>
               <div className="flex gap-4">
                  <span className="text-[#0EA5E9]">MAIL:</span>
@@ -90,9 +90,8 @@ const Footer = () => {
 
            <div className="p-8 bg-slate-50 rounded-[24px] border border-slate-100 text-[10px] text-slate-500 font-bold text-center space-y-6 italic">
               <p className="max-w-4xl mx-auto leading-relaxed opacity-70">
-                Swayamfin is a premium digital platform of Green Miles Mobility Pvt. Ltd. 
-                We facilitate high-velocity financial inclusion on behalf of regulated NBFC and HFC partners. 
-                Swayamfin does not lend directly. All credit decisions are at the sole discretion of the respective partner lender.
+                Swayamfin Financial Services is a digital platform designed to provide easy access to financial services on behalf of regulated NBFC and HFC partners. 
+                We do not lend directly. All credit decisions are at the sole discretion of the respective partner lender.
               </p>
               <div className="flex flex-wrap justify-center gap-x-12 gap-y-4 not-italic uppercase tracking-[0.3em]">
                 <span>© {currentYear} SWAYAMFIN FINANCIAL SERVICES PVT LTD</span>

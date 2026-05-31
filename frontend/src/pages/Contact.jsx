@@ -80,10 +80,10 @@ const Contact = () => {
           <div className="lg:col-span-7 space-y-12">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {[
-                { title: 'Voice Link', detail: '+91 87009 65592', detail2: 'Institutional Line' },
-                { title: 'Digital Node', detail: 'info@swayamfin.com', detail2: '24/7 Monitoring' },
-                { title: 'Direct Msg', detail: 'WhatsApp Protocol', detail2: '+91 87009 65592' },
-                { title: 'Cycle Sync', detail: '09:30 - 18:30 IST', detail2: 'Monday - Saturday' }
+                { title: 'Call Us', detail: '+91 95607 23332', detail2: 'Speak with our team' },
+                { title: 'Email Us', detail: 'info@swayamfin.com', detail2: 'Reach out anytime' },
+                { title: 'Message Us Directly', detail: '+91 95607 23332', detail2: 'WhatsApp Support Line' },
+                { title: 'Operating Hours', detail: '09:00 - 23:00 IST', detail2: 'Monday - Saturday' }
               ].map((item, i) => (
                 <motion.div 
                   key={i} 

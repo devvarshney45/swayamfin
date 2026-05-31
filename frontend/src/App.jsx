@@ -35,6 +35,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import Chatbot from './components/common/Chatbot';
 
 const AppContent = () => {
   const location = useLocation();
@@ -170,6 +171,7 @@ const AppContent = () => {
         </Routes>
       </main>
       {!isLandingPage && <Footer />}
+      <Chatbot />
     </div>
   );
 };

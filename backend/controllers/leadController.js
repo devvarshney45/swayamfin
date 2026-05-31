@@ -10,7 +10,7 @@ const notificationService = require('../utils/notificationService');
 const axios = require('axios');
 const nodemailer = require('nodemailer');
 
-const otpStore = new Map();
+const otpStore = require('../utils/otpStore');
 const OTP_MAX_REQUESTS = 5;
 const OTP_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 const OTP_COOLDOWN_MS = 60 * 1000; // 60 seconds
@@ -43,7 +43,7 @@ exports.createLead = async (req, res) => {
     const { 
       source, applicant_name, mobile, alternate_mobile, email, 
       location_city, pincode, loan_type, loan_amount_required,
-      submitted_by
+      submitted_by, otp_method
     } = req.body;
 
     if (!applicant_name || !mobile || !location_city || !loan_type || !loan_amount_required) {
@@ -106,6 +106,7 @@ exports.createLead = async (req, res) => {
       branch_id,
       assigned_to,
       submitted_by: submitted_by || undefined,
+      otp_method: otp_method || 'email',
     });
 
     // Send WhatsApp Notification if agent assigned

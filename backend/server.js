@@ -43,6 +43,7 @@ app.use(morgan('combined'));
 const allowedOrigins = [
   process.env.FRONTEND_URL || 'http://localhost:3000',
   'http://localhost:3001',
+  'http://localhost:3002',
   'http://localhost:3007',
   'http://localhost:3008',
   'https://www.swayamfin.com',
@@ -88,6 +89,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/branches', branchRoutes);
 app.use('/api/messages', require('./routes/messageRoutes'));
 app.use('/api/blogs', blogRoutes);
+
 
 // Always serve files from backend/uploads irrespective of process cwd.
 app.use('/uploads', express.static(uploadsDir, {
