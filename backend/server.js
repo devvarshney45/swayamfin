@@ -98,6 +98,11 @@ app.use('/uploads', express.static(uploadsDir, {
   maxAge: '1d'
 }));
 
+// Legacy/Broken URL Redirection Rule (Google Search Sitelink Fix)
+app.get(['/financo*', '/*.html'], (req, res) => {
+  res.redirect(301, 'https://www.swayamfin.com/blog');
+});
+
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'API is running' });
 });
