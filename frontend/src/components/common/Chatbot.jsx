@@ -8,7 +8,7 @@ const Chatbot = () => {
     { 
       id: 1, 
       type: 'bot', 
-      text: "Welcome to Swayamfin's Digital Node. I am your Strategic Financial AI. How may I assist you with our institutional credit protocols today?" 
+      text: "Swayamfin ke Digital Node mein aapka swagat hai! Main aapka Strategic Financial AI assistant hoon. Aaj main aapko humare financial products mein kaise madad kar sakta hoon?" 
     }
   ]);
   const [inputText, setInputText] = useState('');
@@ -26,15 +26,15 @@ const Chatbot = () => {
   // Knowledge Base for Swayamfin
   const knowledgeBase = {
     services: [
-      { keywords: ['msme', 'business loan', 'business'], response: "Our MSME Capital Deployment provides specialized growth funding for established businesses with high-velocity turnover. We offer both secured and unsecured variants based on turnover matrix." },
-      { keywords: ['lap', 'property', 'secured'], response: "Loan Against Property (LAP) allows you to leverage your residential or commercial real estate assets to unlock liquidity at institutional-grade interest rates." },
-      { keywords: ['housing', 'home', 'construction'], response: "Our Housing Finance division assists with home acquisition, construction, and plot purchasing through streamlined regulatory pathways." },
-      { keywords: ['supply chain', 'invoice', 'factoring'], response: "Supply Chain Finance optimizes your working capital by accelerating invoice payments, ensuring your operational flow remains uninterrupted." }
+      { keywords: ['msme', 'business loan', 'business'], response: "Hamara MSME Capital Program established businesses ke liye specialized growth funding provide karta hai. Hum secured aur unsecured dono options available hain aapke business turnover ke hisaab se." },
+      { keywords: ['lap', 'property', 'secured'], response: "Loan Against Property (LAP) ke zariye aap apni residential ya commercial property ko leverage karke liquidity unlock kar sakte ho. Hamari interest rates competitive hain!" },
+      { keywords: ['housing', 'home', 'construction'], response: "Hamara Housing Finance division ghar kharidne, construction, aur plot purchase mein madad deta hai. Hum sab paperwork handle karte hain!" },
+      { keywords: ['supply chain', 'invoice', 'factoring'], response: "Supply Chain Finance ke through aap apne working capital ko improve kar sakte ho. Invoice payments faster hoti hain, toh aapka business smooth chalta hai." }
     ],
     general: [
-      { keywords: ['apply', 'how', 'process'], response: "To initiate a transmission, click the 'Start Application' button. You'll need to verify your email, submit documentation, and our institutional node will contact you within 30 minutes." },
-      { keywords: ['contact', 'call', 'number', 'whatsapp'], response: "You can reach our Primary Support Unit at +91 95607 23332 or visit our branch hubs in Agra, Mathura, Hathras, or Kosi." },
-      { keywords: ['who', 'about', 'company'], response: "Swayamfin is a premium digital platform representing regulated NBFC and HFC partners. We engineer digital liquidity through strategic financial protocols." }
+      { keywords: ['apply', 'how', 'process'], response: "Apply karne ke liye 'Start Application' button par click kijiye. Aapko email verify karna hai, documents submit karne hain, aur phir hamara team 30 minutes mein aapse contact karega." },
+      { keywords: ['contact', 'call', 'number', 'whatsapp'], response: "Aap hamse +91 95607 23332 par call ya WhatsApp kar sakte ho. Hamara branches Agra, Mathura, Hathras, aur Kosi mein hain. Hum 24/7 available hain!" },
+      { keywords: ['who', 'about', 'company'], response: "Swayamfin ek leading digital financial platform hai. Hum reliable NBFC aur HFC partners ke saath kaam karte hain. Aapke financial goals achieve karne mein hum aapke saath hain!" }
     ]
   };
 
@@ -49,7 +49,7 @@ const Chatbot = () => {
       }
     }
 
-    return "I've logged your query. Our institutional advisors are better equipped for complex narratives. Would you like me to guide you to the official Application Terminal?";
+    return "Aapka query register ho gaya. Hamara team jald aapse contact karega. Kya main aapko kuch aur help kar sakta hoon?";
   };
 
   const handleSend = async (text = inputText) => {
@@ -70,10 +70,10 @@ const Chatbot = () => {
   };
 
   const quickQueries = [
-    "How to apply?",
+    "Apply kaise karte ho?",
     "Available services",
-    "Contact person",
-    "Is it secure?"
+    "Contact info",
+    "Kya secure hai?"
   ];
 
   return (
@@ -97,7 +97,7 @@ const Chatbot = () => {
                   <h3 className="font-black uppercase tracking-tighter text-lg leading-none">Swayam AI</h3>
                   <div className="flex items-center gap-1.5 mt-1">
                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Secure Uplink Active</span>
+                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Surakshit Uplink Chalti Hai</span>
                   </div>
                 </div>
               </div>
@@ -148,7 +148,7 @@ const Chatbot = () => {
             <div className="p-6 bg-white flex gap-3">
               <input 
                 type="text" 
-                placeholder="Type your message..."
+                placeholder="Apna message type kijiye..."
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
