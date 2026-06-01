@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 const Footer = () => {
   const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
-  const brandLogo = '/swayam_official_logo.jpeg';
+  const brandLogo = '/swayam_logo_v2.jpeg';
 
   return (
     <footer className="bg-white border-t border-[#F1F5F9] pt-16 pb-24 md:pb-12 overflow-hidden relative">
