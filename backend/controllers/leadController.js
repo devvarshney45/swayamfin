@@ -128,6 +128,102 @@ exports.createLead = async (req, res) => {
     // [NEW] Send Welcome WhatsApp to Customer
     await notificationService.sendCustomerWelcome(newLead);
 
+    // Send Confirmation Email to Customer
+    if (email) {
+      try {
+        const brevoHost = process.env.BREVO_HOST || 'smtp-relay.brevo.com';
+        const brevoPort = Number(process.env.BREVO_PORT || 587);
+        const brevoUser = process.env.BREVO_USER;
+        const brevoPass = process.env.BREVO_PASS;
+        const defaultFrom = `"Swayamfin" <${brevoUser}>`;
+        const mailFrom = process.env.MAIL_FROM?.trim() || defaultFrom;
+
+        if (brevoUser && brevoPass) {
+          const transporter = nodemailer.createTransport({
+            host: brevoHost,
+            port: brevoPort,
+            secure: false,
+            auth: {
+              user: brevoUser,
+              pass: brevoPass,
+            },
+            connectionTimeout: 10000,
+            greetingTimeout: 10000,
+            socketTimeout: 10000,
+          });
+
+          const loanTypeDisplay = (loan_type || '').replace(/_/g, ' ').toUpperCase();
+          const amountDisplay = (loan_amount_required || 0).toLocaleString('en-IN', { 
+            style: 'currency', 
+            currency: 'INR',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0 
+          });
+
+          const mailOptions = {
+            from: mailFrom,
+            to: email,
+            subject: 'Lead Submission Confirmation - Swayamfin',
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background: linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%); padding: 30px; text-align: center; color: white; border-radius: 8px 8px 0 0;">
+                  <h2 style="margin: 0; font-size: 24px;">Swayamfin</h2>
+                  <p style="margin: 10px 0 0 0; font-size: 14px;">Fast. Reliable. Trustworthy.</p>
+                </div>
+                <div style="background-color: #f8fafc; padding: 30px; border-radius: 0 0 8px 8px;">
+                  <h3 style="color: #1E293B; margin-top: 0;">Thank you for choosing Swayamfin!</h3>
+                  <p style="color: #475569; line-height: 1.6;">Dear <strong>${applicant_name}</strong>,</p>
+                  <p style="color: #475569; line-height: 1.6;">Your loan application has been successfully submitted. We're excited to help you access the financial solutions you need.</p>
+                  <div style="background-color: white; border-left: 4px solid #0EA5E9; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                    <h4 style="color: #1E293B; margin-top: 0;">Application Details:</h4>
+                    <table style="width: 100%; color: #475569; font-size: 14px;">
+                      <tr>
+                        <td style="padding: 8px 0;"><strong>Lead Number:</strong></td>
+                        <td style="padding: 8px 0; text-align: right; color: #0EA5E9; font-weight: bold;">${lead_number}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0;"><strong>Loan Type:</strong></td>
+                        <td style="padding: 8px 0; text-align: right;">${loanTypeDisplay}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0;"><strong>Loan Amount:</strong></td>
+                        <td style="padding: 8px 0; text-align: right;">${amountDisplay}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0;"><strong>Location:</strong></td>
+                        <td style="padding: 8px 0; text-align: right;">${location_city}</td>
+                      </tr>
+                    </table>
+                  </div>
+                  <p style="color: #475569; line-height: 1.6;">Our team will review your application and get in touch with you shortly. You can expect to hear from us within <strong>24-48 hours</strong>.</p>
+                  <p style="color: #475569; line-height: 1.6; margin-bottom: 20px;">
+                    <strong>What's next?</strong><br>
+                    • Our team will contact you via phone/WhatsApp<br>
+                    • Document verification<br>
+                    • Quick approval & disbursement
+                  </p>
+                  <div style="background-color: #ecf9ff; border: 1px solid #cffafe; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                    <p style="color: #0369A1; margin: 0; font-size: 13px;">
+                      <strong>Need support?</strong> Contact us at <a href="https://wa.me/919560723332" style="color: #0EA5E9; text-decoration: none;">WhatsApp</a> or call our team for immediate assistance.
+                    </p>
+                  </div>
+                  <p style="color: #64748b; font-size: 12px; text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+                    This is an automated message. Please do not reply to this email.
+                  </p>
+                </div>
+              </div>
+            `,
+          };
+
+          const info = await transporter.sendMail(mailOptions);
+          console.log('Lead confirmation email sent:', info.messageId);
+        }
+      } catch (emailError) {
+        console.error('Error sending lead confirmation email:', emailError);
+        // Don't fail the lead creation if email fails - log and continue
+      }
+    }
+
     res.status(201).json({ success: true, data: newLead });
   } catch (error) {
     console.error('Error creating lead:', error);
