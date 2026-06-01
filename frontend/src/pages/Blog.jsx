@@ -54,14 +54,12 @@ const Blog = () => {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12">
           <div className="max-w-3xl space-y-6">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="inline-flex items-center gap-2 bg-[#0EA5E9]/10 text-[#0EA5E9] px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em]">
-              Financial Intelligence Node
-            </motion.div>
+
             <h1 className="text-5xl md:text-7xl font-black text-[#1E293B] uppercase tracking-tighter leading-none">
               Expert <span className="text-[#0EA5E9] italic">Insights.</span>
             </h1>
             <p className="text-lg md:text-xl text-slate-500 font-medium italic leading-relaxed opacity-80">
-              "Empowering your financial trajectory with high-precision analytical resources and market intelligence."
+              "Stay informed with our latest market analysis, wealth management strategies, and industry perspectives."
             </p>
           </div>
           <div className="relative w-full md:w-80">

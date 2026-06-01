@@ -30,7 +30,7 @@ const Footer = () => {
               </div>
             </Link>
             <p className="text-sm text-slate-500 font-medium leading-relaxed italic border-l-4 border-[#0EA5E9]/20 pl-6">
-              "Strategically engineering digital liquidity through institutional-grade protocols and high-velocity credit deployment cycles."
+              "We keep digital money flowing smoothly by using professional-grade tech to move and lend it out really fast."
             </p>
           </div>
 

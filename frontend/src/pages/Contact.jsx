@@ -52,25 +52,19 @@ const Contact = () => {
         
         {/* Header Section */}
         <div className="text-center mb-24 space-y-6">
-           <motion.div 
-             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-             className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-[#0EA5E9]/10 border border-[#0EA5E9]/20 text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em]"
-           >
-             Strategic Liaison Hub
-           </motion.div>
 
            <motion.h1 
              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
              className="text-5xl md:text-8xl font-black text-[#1E293B] leading-none tracking-tighter uppercase"
            >
-             Direct <br /> <span className="text-[#0EA5E9] italic">Uplink.</span>
+              Contact <br /> <span className="text-[#0EA5E9] italic">Us.</span>
            </motion.h1>
 
            <motion.p 
              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
              className="text-slate-500 text-lg md:text-2xl max-w-4xl mx-auto font-medium italic leading-relaxed"
            >
-             "Establish visual and data connection with our institutional advisory via specialized financial intelligence channels."
+              "Reach out to our financial experts through call or chat"
            </motion.p>
         </div>
 

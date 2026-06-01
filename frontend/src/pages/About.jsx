@@ -10,7 +10,8 @@ const teamMembers = [
     role: 'Chief Executive Officer',
     bio: 'Former investment banker, architect of Swayamfin.',
     img: '/team/VikkrantPrasad.png',
-    distFallback: '/dist/assets/VikkrantPrasad.png'
+    distFallback: '/dist/assets/VikkrantPrasad.png',
+    linkedin: 'https://www.linkedin.com/in/vikkrant-prasad-242158a/'
   },
   {
     name: 'Nupur Prasad',
@@ -24,14 +25,16 @@ const teamMembers = [
     role: 'Exp. Governance Officer',
     bio: 'Former CFO at Humana Financial, Domain Expert.',
     img: '/team/SudhanshuShekhar.png',
-    distFallback: '/dist/assets/SudhanshuShekhar.png'
+    distFallback: '/dist/assets/SudhanshuShekhar.png',
+    linkedin: 'https://www.linkedin.com/in/sudhansshu-shekhar-28b1939/'
   },
   {
     name: 'Madhu Priya Prasad',
     role: 'Head of Alliances',
     bio: '10+ years in investment banking and strategic protocol.',
     img: '/team/MadhuPriyaPrasad.png',
-    distFallback: '/dist/assets/MadhuPriyaPrasad.png'
+    distFallback: '/dist/assets/MadhuPriyaPrasad.png',
+    linkedin: 'https://www.linkedin.com/in/astrologer-dr-madhu-priya-indian-astrology-centre-820196191/'
   },
 ];
 
@@ -225,7 +228,7 @@ const About = () => {
                    </div>
                 </div>
                 <div className="space-y-4 px-4">
-                   <h4 className={`font-black ${isDark ? 'text-white' : 'text-slate-900'} text-2xl uppercase tracking-tighter leading-none`}>{member.name}</h4>
+                   <h4 className={`font-black ${isDark ? 'text-white' : 'text-slate-900'} text-2xl uppercase tracking-tighter leading-none`}>{member.linkedin ? <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{member.name}</a> : member.name}</h4>
                    <p className="text-primary text-[10px] font-black uppercase tracking-[0.4em] italic leading-none">{member.role}</p>
                    <p className={`${isDark ? 'text-slate-500' : 'text-slate-400'} text-[11px] leading-relaxed font-bold italic opacity-60 group-hover:opacity-100 transition-opacity`}>"{member.bio}"</p>
                 </div>

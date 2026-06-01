@@ -171,7 +171,36 @@ const Navbar = () => {
             {user ? (
                <Link to={user.role === 'admin' ? '/admin/dashboard' : '/agent/dashboard'} className="btn-primary py-2 px-6 text-[10px]">Dashboard</Link>
             ) : (
-              <Link to="/agent/login" className="text-xs font-bold text-slate-600 uppercase tracking-widest hover:text-[#0EA5E9]">Login</Link>
+              <div 
+                className="relative py-2 group"
+                onMouseEnter={() => setActiveDropdown('login')}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <button className="text-xs font-bold uppercase tracking-widest text-slate-600 hover:text-[#0EA5E9] flex items-center gap-1">
+                  Login <span className="text-[8px]">▼</span>
+                </button>
+                <AnimatePresence>
+                  {activeDropdown === 'login' && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
+                      className="absolute top-full right-0 w-56 bg-white shadow-2xl rounded-xl border border-slate-100 p-4"
+                    >
+                      {[
+                        { name: 'Admin Portal', path: '/agent/login', icon: '🛡️' },
+                        { name: 'Agent Portal', path: '/agent/login', icon: '👤' },
+                        { name: 'Sales Manager', path: '/agent/login', icon: '📊' },
+                        { name: 'Employee Portal', path: '/emp-portal', icon: '🏢' },
+                      ].map(portal => (
+                        <Link key={portal.name} to={portal.path} className="block p-3 hover:bg-slate-50 rounded-lg group/item text-left">
+                          <p className="text-[10px] font-black uppercase text-slate-900 group-hover/item:text-[#0EA5E9] flex items-center gap-2">
+                            <span>{portal.icon}</span> {portal.name}
+                          </p>
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             )}
 
             <button 
