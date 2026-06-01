@@ -3,13 +3,12 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
-  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
   const brandLogo = '/swayam_logo_v2.jpeg';
 
   return (
     <footer className="bg-white border-t border-[#F1F5F9] pt-16 pb-24 md:pb-12 overflow-hidden relative">
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#0EA5E9]/5 blur-[120px] rounded-full -translate-y-1/2" />
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#0EA5E9] bg-opacity-5 blur-[120px] rounded-full -translate-y-1/2" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -29,7 +28,7 @@ const Footer = () => {
                 <span className="text-[9px] font-bold text-slate-400 tracking-[0.5em] uppercase mt-1">Financial Excellence</span>
               </div>
             </Link>
-            <p className="text-sm text-slate-500 font-medium leading-relaxed italic border-l-4 border-[#0EA5E9]/20 pl-6">
+            <p className="text-sm text-slate-500 font-medium leading-relaxed italic border-l-4 border-[#0EA5E9] border-opacity-20 pl-6">
               "We keep digital money flowing smoothly by using professional-grade tech to move and lend it out really fast."
             </p>
           </div>
@@ -55,7 +54,6 @@ const Footer = () => {
                 <li><FooterLink to="/contact" label="Contact Us" /></li>
               </ul>
             </div>
-          </div>
           </div>
         </div>
 
