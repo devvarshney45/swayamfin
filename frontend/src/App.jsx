@@ -63,6 +63,11 @@ const AppContent = () => {
 
           <Route path="/branches" element={<Branches />} />
           <Route path="/branches/:slug" element={<BranchDetails />} />
+          
+          {/* Legacy Google Sitelink Redirects */}
+          <Route path="/blog-financo" element={<Blog />} />
+          <Route path="/blog/financo" element={<Blog />} />
+
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/blog-admin" element={<BlogAdmin />} />
