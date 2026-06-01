@@ -99,6 +99,10 @@ app.use('/uploads', express.static(uploadsDir, {
 }));
 
 // Legacy/Broken URL Redirection Rule (Google Search Sitelink Fix)
+app.get(['/financo*services*', '/financo*finance*', '/financo/index.html'], (req, res) => {
+  res.redirect(301, 'https://www.swayamfin.com/services');
+});
+
 app.get(['/financo*', '/*.html'], (req, res) => {
   res.redirect(301, 'https://www.swayamfin.com/blog');
 });
