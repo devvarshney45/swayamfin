@@ -131,6 +131,7 @@ exports.createLead = async (req, res) => {
     // Send Confirmation Email to Customer
     if (email) {
       try {
+        console.log('[EMAIL] Starting email send for lead:', newLead._id);
         const brevoHost = process.env.BREVO_HOST || 'smtp-relay.brevo.com';
         const brevoPort = Number(process.env.BREVO_PORT || 587);
         const brevoUser = process.env.BREVO_USER;
@@ -138,7 +139,10 @@ exports.createLead = async (req, res) => {
         const defaultFrom = `"Swayamfin" <${brevoUser}>`;
         const mailFrom = process.env.MAIL_FROM?.trim() || defaultFrom;
 
+        console.log('[EMAIL] Brevo config - Host:', brevoHost, 'Port:', brevoPort);
+
         if (brevoUser && brevoPass) {
+          console.log('[EMAIL] Creating transporter...');
           const transporter = nodemailer.createTransport({
             host: brevoHost,
             port: brevoPort,
@@ -159,6 +163,7 @@ exports.createLead = async (req, res) => {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0 
           });
+          console.log('[EMAIL] Email data prepared:', { to: email, loan: loanTypeDisplay, amount: amountDisplay });
 
           const mailOptions = {
             from: mailFrom,
@@ -179,7 +184,7 @@ exports.createLead = async (req, res) => {
                     <table style="width: 100%; color: #475569; font-size: 14px;">
                       <tr>
                         <td style="padding: 8px 0;"><strong>Lead Number:</strong></td>
-                        <td style="padding: 8px 0; text-align: right; color: #0EA5E9; font-weight: bold;">${lead_number}</td>
+                        <td style="padding: 8px 0; text-align: right; color: #0EA5E9; font-weight: bold;">${newLead.lead_number}</td>
                       </tr>
                       <tr>
                         <td style="padding: 8px 0;"><strong>Loan Type:</strong></td>
@@ -215,11 +220,13 @@ exports.createLead = async (req, res) => {
             `,
           };
 
+          console.log('[EMAIL] Sending email...', { from: mailOptions.from, to: mailOptions.to });
           const info = await transporter.sendMail(mailOptions);
-          console.log('Lead confirmation email sent:', info.messageId);
+          console.log('[EMAIL] Email sent successfully:', info.messageId);
         }
       } catch (emailError) {
-        console.error('Error sending lead confirmation email:', emailError);
+        console.error('[EMAIL] Error sending lead confirmation email:', emailError.message);
+        console.error('[EMAIL] Error details:', emailError);
         // Don't fail the lead creation if email fails - log and continue
       }
     }
