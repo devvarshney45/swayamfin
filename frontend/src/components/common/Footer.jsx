@@ -35,7 +35,7 @@ const Footer = () => {
           </div>
 
           {/* Navigation */}
-          <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-8">
+          <div className="lg:col-span-8 grid grid-cols-2 gap-8">
             <div>
               <h4 className="text-[10px] font-black mb-6 text-[#0EA5E9] uppercase tracking-[0.4em]">Credit Scope</h4>
               <ul className="space-y-4">
@@ -55,19 +55,28 @@ const Footer = () => {
                 <li><FooterLink to="/contact" label="Contact Us" /></li>
               </ul>
             </div>
+          </div>
+          </div>
+        </div>
 
-            <div className="col-span-2 md:col-span-1">
-              <h4 className="text-[10px] font-black mb-6 text-[#0EA5E9] uppercase tracking-[0.4em]">Access Root</h4>
-              <div className="p-6 bg-slate-50 rounded-[24px] border border-slate-100 space-y-6">
-                 <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-[#1E293B]">Partner Portal</p>
-                    <p className="text-[9px] text-slate-500 font-bold uppercase mt-1">Agent & Employee Login</p>
-                 </div>
-                 <Link to="/agent/login" className="btn-primary w-full text-[10px] flex items-center justify-center uppercase tracking-widest py-3">
-                    Partner Access
-                 </Link>
+        {/* Regional Hubs Section */}
+        <div className="mb-16 p-8 bg-slate-50 rounded-[40px] border border-slate-100">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-2 h-2 rounded-full bg-[#0EA5E9]" />
+            <h4 className="text-[10px] font-black text-[#1E293B] uppercase tracking-[0.4em]">Regional Distribution Hubs</h4>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { name: 'Agra Hub', addr: 'Block No. 20/4, Shop No. 11, Maruti Tower, Sanjay Place, Agra, UP - 282002' },
+              { name: 'Mathura Hub', addr: 'No. 207, 2nd Floor, Shri Square, Radhapuram Chauraha, Mathura, UP - 281001' },
+              { name: 'Hathras Hub', addr: 'VG Plaza, Glory Garden, Mathura Road, Hathras, UP - 204101' },
+              { name: 'Kosi Hub', addr: 'Radharani Tower, New Agrawal Colony, Nandgaon Road, Kosi Kalan, UP - 281403' },
+            ].map((branch, i) => (
+              <div key={i} className="space-y-2">
+                <p className="text-[11px] font-black text-[#1E293B] uppercase tracking-tighter">{branch.name}</p>
+                <p className="text-[10px] text-slate-500 font-medium italic leading-relaxed">{branch.addr}</p>
               </div>
-            </div>
+            ))}
           </div>
         </div>
 

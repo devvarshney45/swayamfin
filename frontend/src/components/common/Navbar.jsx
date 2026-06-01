@@ -168,6 +168,12 @@ const Navbar = () => {
               </svg>
             </a>
 
+            {location.pathname.startsWith('/blog') && (
+              <Link to="/" className="bg-rose-500 text-white px-5 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 transition-all flex items-center gap-2">
+                <span>✕</span> Exit Blog
+              </Link>
+            )}
+            
             {user ? (
                <Link to={user.role === 'admin' ? '/admin/dashboard' : '/agent/dashboard'} className="btn-primary py-2 px-6 text-[10px]">Dashboard</Link>
             ) : (
@@ -189,7 +195,6 @@ const Navbar = () => {
                         { name: 'Admin Portal', path: '/agent/login', icon: '🛡️' },
                         { name: 'Agent Portal', path: '/agent/login', icon: '👤' },
                         { name: 'Sales Manager', path: '/agent/login', icon: '📊' },
-                        { name: 'Employee Portal', path: '/emp-portal', icon: '🏢' },
                       ].map(portal => (
                         <Link key={portal.name} to={portal.path} className="block p-3 hover:bg-slate-50 rounded-lg group/item text-left">
                           <p className="text-[10px] font-black uppercase text-slate-900 group-hover/item:text-[#0EA5E9] flex items-center gap-2">
@@ -230,6 +235,11 @@ const Navbar = () => {
               className="lg:hidden bg-white border-t border-slate-100 overflow-hidden"
             >
               <div className="p-4 space-y-4">
+                 {location.pathname.startsWith('/blog') && (
+                    <Link to="/" className="flex items-center gap-2 bg-rose-50 text-rose-600 p-3 rounded-xl text-xs font-black uppercase tracking-widest mb-4 border border-rose-100">
+                      <span>✕</span> Exit Blog Section
+                    </Link>
+                 )}
                  <Link to="/" className="block text-xs font-bold uppercase tracking-widest text-slate-600 p-2">Home</Link>
                  <div className="p-2">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-2">Services</p>

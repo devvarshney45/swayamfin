@@ -206,8 +206,11 @@ const About = () => {
                 viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 className="group text-center"
               >
-                <div className={`relative aspect-[4/5] rounded-[48px] overflow-hidden mb-10 border ${isDark ? 'bg-[#0B1221] border-white/5' : 'bg-white shadow-22xl shadow-slate-200/30'} p-3 transform transition-transform duration-700 group-hover:scale-95`}>
-                   <div className="w-full h-full rounded-[40px] overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-700">
+                <div className={`relative aspect-[4/5] rounded-[48px] overflow-hidden mb-10 border ${isDark ? 'bg-[#0B1221] border-white/5' : 'bg-white shadow-22xl shadow-slate-200/30'} p-3 transform transition-transform duration-700 group-hover:scale-95 ${member.linkedin ? 'cursor-pointer' : ''}`}>
+                   <div 
+                    className="w-full h-full rounded-[40px] overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-700"
+                    onClick={() => member.linkedin && window.open(member.linkedin, '_blank', 'noopener,noreferrer')}
+                   >
                       <img
                         src={member.img}
                         alt={member.name}
@@ -218,13 +221,6 @@ const About = () => {
                           e.currentTarget.src = member.distFallback;
                         }}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-                      
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-110 group-hover:scale-100">
-                         <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
-                            <ArrowRight className="w-6 h-6 text-white" />
-                         </div>
-                      </div>
                    </div>
                 </div>
                 <div className="space-y-4 px-4">

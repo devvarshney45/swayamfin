@@ -180,6 +180,44 @@ const AdminLeads = () => {
     }
   };
 
+  const handleExport = () => {
+    if (filteredLeads.length === 0) return;
+    
+    // CSV Header
+    const headers = ['Lead ID', 'Applicant Name', 'Mobile', 'Email', 'Loan Type', 'Amount (₹)', 'City', 'Status', 'Date'];
+    
+    // Map leads to CSV rows
+    const rows = filteredLeads.map(lead => [
+      lead.lead_number || '',
+      lead.applicant_name || '',
+      lead.mobile || '',
+      lead.email || '',
+      lead.loan_type?.replace('-', ' ') || '',
+      lead.loan_amount_required || 0,
+      lead.location_city || '',
+      lead.status || '',
+      lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : ''
+    ]);
+    
+    // Combine headers and rows
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+    ].join('\n');
+    
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `swayamfin_leads_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (loading) return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center space-y-4">
        <div className="w-12 h-12 border-4 border-[#0EA5E9]/20 border-t-[#0EA5E9] rounded-full animate-spin" />
@@ -214,7 +252,11 @@ const AdminLeads = () => {
                  Global <span className="text-[#0EA5E9] italic">Repository.</span>
               </h1>
            </div>
-           <button type="button" className="bg-white border border-slate-200 px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-[#1E293B] hover:bg-slate-50 transition-all shadow-sm">
+           <button 
+             type="button" 
+             onClick={handleExport}
+             className="bg-white border border-slate-200 px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-[#1E293B] hover:bg-slate-50 transition-all shadow-sm"
+           >
               Export {filteredLeads.length} Node Data
            </button>
         </div>
