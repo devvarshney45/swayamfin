@@ -68,14 +68,16 @@ const leadSchema = new mongoose.Schema({
   external_loan_id: { type: String },
   case_under_company: { type: String },
   
+  // Operational & Reporting Details (Excel Sync - Checkbox Nodes)
+  pd_report: { type: Boolean, default: false },
+  technical_report: { type: Boolean, default: false },
+  legal_report: { type: Boolean, default: false },
+  cpv_report: { type: String }, // Kept as string for details if needed
+  sanction: { type: Boolean, default: false },
+  disbursement: { type: Boolean, default: false },
+  
   fees: { type: Number },
   sanction_amount: { type: Number },
-  pd_report: { type: String },
-  technical_report: { type: String },
-  legal_report: { type: String },
-  cpv_report: { type: String },
-  sanction: { type: String },
-  disbursement: { type: String },
   remarks: { type: String },
 }, { 
   timestamps: true 
