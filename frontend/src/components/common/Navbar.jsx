@@ -26,41 +26,13 @@ const Navbar = () => {
     setActiveDropdown(null);
   }, [location]);
 
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'hi' : 'en';
-    i18n.changeLanguage(newLang);
-    
-    if (newLang === 'hi') {
-      document.body.classList.add('lang-hindi');
-    } else {
-      document.body.classList.remove('lang-hindi');
-    }
-    
-    const attemptTranslate = (attempts = 0) => {
-      const select = document.querySelector('.goog-te-combo');
-      if (select) {
-        select.value = newLang;
-        select.dispatchEvent(new Event('change', { bubbles: true }));
-      } else if (attempts < 15) {
-        setTimeout(() => attemptTranslate(attempts + 1), 200 + (attempts * 100));
-      }
-    };
-    attemptTranslate();
-  };
-
-  useEffect(() => {
-    if (i18n.language === 'hi') {
-      document.body.classList.add('lang-hindi');
-    } else {
-      document.body.classList.remove('lang-hindi');
-    }
-  }, [i18n.language]);
-
   const services = [
-    { name: t('home_loan'), slug: 'housing-loans', desc: 'Home & Construction Financing' },
-    { name: t('lap'), slug: 'lap', desc: 'Loan Against Property' },
-    { name: t('msme_loan'), slug: 'msme-loans', desc: 'Business Growth Capital' },
-    { name: t('supply_chain'), slug: 'supply-chain', desc: 'Invoice Discounting' },
+    { name: t('hl_title'), slug: 'housing-loans', desc: 'Home & Construction Financing' },
+    { name: t('lap_title'), slug: 'lap', desc: 'Loan Against Property' },
+    { name: t('ubl_title'), slug: 'unsecured-business-loan', desc: 'Working Capital' },
+    { name: t('scf_title'), slug: 'supply-chain', desc: 'Vendor Payments' },
+    { name: t('uef_title'), slug: 'unsecured-export-finance', desc: 'Global Trade' },
+    { name: t('mf_title'), slug: 'machinery-loan', desc: 'Equipment Financing' },
   ];
 
   const branches = [
@@ -149,12 +121,7 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <button 
-              onClick={toggleLanguage}
-              className="hidden md:flex w-10 h-10 items-center justify-center border border-slate-200 rounded-lg text-[10px] font-black hover:bg-slate-50 transition-colors"
-            >
-              {i18n.language === 'en' ? 'EN' : 'HI'}
-            </button>
+
 
             <a 
               href="https://wa.me/919560723332" 

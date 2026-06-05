@@ -234,10 +234,11 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
                             onChange={e => setFormData({...formData, loanType: e.target.value})}
                           >
                             <option value="home_loan">Home Loan</option>
-                            <option value="lap">LAP</option>
-                            <option value="msme_structured">MSME Loan</option>
-                            <option value="supply_chain">Supply Chain</option>
-                            <option value="micro_lap">Micro LAP</option>
+                            <option value="lap">Loan Against Property</option>
+                            <option value="unsecured_business">Unsecured Business Loan</option>
+                            <option value="supply_chain">Supply Chain Finance</option>
+                            <option value="unsecured_export">Unsecured Export Finance</option>
+                            <option value="machinery">Machinery Finance</option>
                           </select>
                         </div>
                         <div className="space-y-1">
@@ -274,7 +275,7 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
                         disabled={status === 'submitting'}
                         className="w-full btn-primary h-12 mt-4 uppercase tracking-[0.2em] text-[10px]"
                       >
-                        {status === 'submitting' ? 'Sending OTP...' : 'Verify Email & Send OTP'}
+                        {status === 'submitting' ? 'Submitting...' : 'Submit'}
                       </button>
 
                       {status === 'duplicate' && <p className="text-[10px] text-amber-600 text-center font-bold">Duplicate entry detected.</p>}

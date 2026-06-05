@@ -63,9 +63,9 @@ const Compliance = () => {
                     <td className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Up to 24 Mos</td>
                   </tr>
                   <tr className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-6 py-6 font-black text-[#1E293B] uppercase tracking-tight text-sm">Hybrid MSME Credit</td>
-                    <td className="px-6 py-6 font-black text-[#0EA5E9] text-sm italic">11% - 19%</td>
-                    <td className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Up to 10 Yrs</td>
+                    <td className="px-6 py-6 font-black text-[#1E293B] uppercase tracking-tight text-sm">Housing Loan</td>
+                    <td className="px-6 py-6 font-black text-[#0EA5E9] text-sm italic">8.5% - 14%</td>
+                    <td className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Up to 20 Yrs</td>
                   </tr>
                 </tbody>
               </table>

@@ -53,30 +53,6 @@ const serviceData = {
       { q: 'What is the disbursement time?', a: 'Once the anchor is onboarded, individual invoices can be funded in 24-48 hours.' }
     ]
   },
-  'msme-loans': {
-    title: 'MSME Structured Loan',
-    tagline: 'Dynamic Credit for Growth Cycles',
-    description: 'Tailored credit structures combining term loans and working capital to suit specific business cycles of MSMEs across various industries.',
-    features: [
-      'Ticket size: ₹10L to ₹5Cr',
-      'Flexible repayment: 12 to 60 months',
-      'Debt consolidation options',
-      'Asset-backed and Cash-flow based variants',
-      'Subsidized schemes for manufacturing units'
-    ],
-    eligibility: [
-      'Valid Udyam Registration',
-      'GST returns for last 12 months',
-      'Positive Net Worth',
-      'Business vintage: Min 3 years'
-    ],
-    rates: '12% - 18% p.a.',
-    fees: '1.5% - 2.5% processing fee',
-    faqs: [
-      { q: 'Can I use this for machinery?', a: 'Yes, we have specific sub-products for machinery and equipment purchase.' },
-      { q: 'Do I need a high CIBIL?', a: 'We look at business cash flows. While CIBIL is important, it is not the only criteria.' }
-    ]
-  },
   'lap': {
     title: 'Loan Against Property',
     tagline: 'Asset Liquidity & Equity Extraction',
@@ -105,7 +81,7 @@ const serviceData = {
 
 const ServiceDetails = () => {
   const { slug } = useParams();
-  const data = serviceData[slug] || serviceData['msme-loans'];
+  const data = serviceData[slug] || serviceData['housing-loans'];
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {

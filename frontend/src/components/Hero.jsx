@@ -170,10 +170,10 @@ const Hero = () => {
     }
   };
 
-  const isHindi = i18n.language === 'hi';
+
 
   return (
-    <div className={`bg-white transition-colors duration-500 overflow-x-hidden ${isHindi ? 'hindi-hero' : ''}`}>
+    <div className="bg-white transition-colors duration-500 overflow-x-hidden">
       <section className="relative min-h-screen flex items-center pt-32 pb-20 md:pt-40 md:pb-24">
         
         {/* Abstract Background */}
@@ -206,12 +206,12 @@ const Hero = () => {
                     transition={{ duration: 0.7 }}
                     className="space-y-8"
                    >
-                    <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-[#1E293B] uppercase ${isHindi ? 'leading-tight tracking-normal' : 'leading-[0.9] tracking-tighter'}`}>
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-[#1E293B] uppercase leading-[0.9] tracking-tighter">
                       {slides[activeSlide].title.split(' ').map((word, i) => (
                         <span key={i} className={i % 2 === 1 ? 'text-[#0EA5E9] italic' : ''}>{word} </span>
                       ))}
                     </h1>
-                    <p className={`text-lg sm:text-2xl text-slate-500 font-medium max-w-xl mx-auto lg:mx-0 border-l-4 border-[#0EA5E9]/20 pl-6 italic opacity-80 ${isHindi ? 'leading-normal' : 'leading-tight'}`}>
+                    <p className="text-lg sm:text-2xl text-slate-500 font-medium max-w-xl mx-auto lg:mx-0 border-l-4 border-[#0EA5E9]/20 pl-6 italic opacity-80 leading-tight">
                       {slides[activeSlide].sub}
                     </p>
                   </motion.div>
@@ -221,16 +221,16 @@ const Hero = () => {
               {/* Stats Grid */}
               <div className="grid grid-cols-3 gap-8 pt-10 border-t border-slate-100 max-w-2xl mx-auto lg:mx-0">
                 {[
-                  { val: '₹125Cr+', label: isHindi ? 'वितरित' : 'Disbursed', icon: '📈' },
-                  { val: isHindi ? '100+ ग्राहक' : '100+ Clients', label: isHindi ? 'ग्राहक' : 'Clients', icon: '⚙️' },
-                  { val: '5+', label: isHindi ? 'संचालन' : 'Operations', icon: '🌐' },
+                  { val: '₹125Cr+', label: 'Disbursed', icon: '📈' },
+                  { val: '100+ Clients', label: 'Clients', icon: '⚙️' },
+                  { val: '5+', label: 'Operations', icon: '🌐' },
                 ].map((stat, i) => (
                   <div key={i} className="space-y-2">
                     <div className="flex items-center gap-2">
                        <span className="text-xs opacity-60">{stat.icon}</span>
                        <p className="text-2xl sm:text-4xl font-black text-[#1E293B] tracking-tighter">{stat.val}</p>
                     </div>
-                    <p className={`text-[10px] font-black text-slate-400 italic ${isHindi ? 'tracking-normal' : 'uppercase tracking-[0.3em]'}`}>{stat.label}</p>
+                    <p className="text-[10px] font-black text-slate-400 italic uppercase tracking-[0.3em]">{stat.label}</p>
                   </div>
                 ))}
               </div>
@@ -250,10 +250,6 @@ const Hero = () => {
                 <div className="relative z-10 space-y-8">
                   <div className="space-y-1">
                     <h2 className="text-2xl font-black text-[#1E293B] tracking-tighter uppercase leading-none">Submit <span className="text-blue-600 italic">Your Information</span></h2>
-                    <div className="flex items-center gap-2">
-                       <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] italic">Secure Application Terminal</p>
-                    </div>
                   </div>
 
                   {submitStatus === 'success' ? (
@@ -283,12 +279,13 @@ const Hero = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1">
                           <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Loan Type</label>
-                          <select className="input-standard w-full h-14 rounded-2xl px-6 bg-slate-50 border-slate-100 text-sm focus:bg-white transition-all appearance-none cursor-pointer" value={formData.loanType} onChange={e => setFormData({...formData, loanType: e.target.value})}>
-                            <option value="msme_structured">MSME Structured Loan</option>
+                           <select className="input-standard w-full h-14 rounded-2xl px-6 bg-slate-50 border-slate-100 text-sm focus:bg-white transition-all appearance-none cursor-pointer" value={formData.loanType} onChange={e => setFormData({...formData, loanType: e.target.value})}>
                             <option value="home_loan">Home Loan</option>
-                            <option value="lap">LAP</option>
-                            <option value="supply_chain">Supply Chain</option>
-                            <option value="micro_lap">Micro LAP</option>
+                            <option value="lap">Loan Against Property</option>
+                            <option value="unsecured_business">Unsecured Business Loan</option>
+                            <option value="supply_chain">Supply Chain Finance</option>
+                            <option value="unsecured_export">Unsecured Export Finance</option>
+                            <option value="machinery">Machinery Finance</option>
                           </select>
                         </div>
                         <div className="space-y-1">
@@ -312,7 +309,7 @@ const Hero = () => {
                         type="submit" disabled={submitStatus === 'submitting'}
                         className="w-full h-16 bg-[#1E293B] hover:bg-blue-600 text-white rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
                       >
-                        {submitStatus === 'submitting' ? 'Sending OTP...' : 'Send OTP'} <ChevronRight className="w-4 h-4" />
+                        {submitStatus === 'submitting' ? 'Submitting...' : 'Submit'} <ChevronRight className="w-4 h-4" />
                       </button>
 
                       {submitStatus === 'duplicate' && <p className="text-[9px] text-amber-600 text-center font-bold uppercase tracking-widest italic italic">Coordinate Conflict: Transmission Already Logged.</p>}

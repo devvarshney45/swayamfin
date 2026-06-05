@@ -1,12 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const USPsSection = () => {
+  const { t } = useTranslation();
+  
   const usps = [
-    { title: 'Quick Disbursement', desc: 'Accelerated funding cycles to keep your business moving at full speed.' },
-    { title: 'Fast Processing', desc: 'Digital verification protocols for rapid decisions and minimal turnaround.' },
-    { title: 'Full Transparency', desc: 'Clear terms, fixed schedules, and absolutely no hidden charges.' },
-    { title: 'Expert Advisory', desc: 'Seasoned financial specialists to guide your institutional credit journey.' }
+    { title: t('usp_h1_t'), desc: t('usp_h1_d') },
+    { title: t('usp_h2_t'), desc: t('usp_h2_d') },
+    { title: t('usp_h3_t'), desc: t('usp_h3_d') },
+    { title: t('usp_h4_t'), desc: t('usp_h4_d') }
   ];
 
   return (
@@ -15,11 +18,8 @@ const USPsSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
           <div className="lg:col-span-12 text-center space-y-4 mb-16">
-            <div className="inline-flex items-center gap-3 px-5 py-2 bg-[#0EA5E9]/10 border border-[#0EA5E9]/20 rounded-full">
-              <span className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em]">Why Partner With Us</span>
-            </div>
             <h2 className="text-4xl md:text-6xl font-black text-[#1E293B] uppercase tracking-tight">
-              Institutional <span className="text-[#0EA5E9] italic">Rigor</span>
+              Why <span className="text-[#0EA5E9] italic">Choose Us</span>
             </h2>
           </div>
 

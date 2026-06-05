@@ -1,24 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const Timeline = () => {
+  const { t } = useTranslation();
+
   const steps = [
-    {
-      title: 'Step 1: Application Form Submission',
-      desc: 'Complete our streamlined digital form in under 5 minutes with basic identity and financial parameters.'
-    },
-    {
-      title: 'Step 2: Form Verification',
-      desc: 'Our proprietary verification engine validates your submission against institutional credit standards instantly.'
-    },
-    {
-      title: 'Step 3: Due Diligence',
-      desc: 'Seasoned analysts conduct a comprehensive assessment of your profile to ensure optimal risk mitigation.'
-    },
-    {
-      title: 'Step 4: Disbursement',
-      desc: 'Upon final approval, funds are deployed directly to your designated account through secure channels.'
-    }
+    { title: t('tm_step1_t'), desc: t('tm_step1_d') },
+    { title: t('tm_step2_t'), desc: t('tm_step2_d') },
+    { title: t('tm_step3_t'), desc: t('tm_step3_d') },
+    { title: t('tm_step4_t'), desc: t('tm_step4_d') }
   ];
 
   return (
@@ -27,9 +18,6 @@ const Timeline = () => {
         
         {/* Header */}
         <div className="text-center mb-20 space-y-4">
-          <div className="inline-flex items-center gap-3 px-5 py-2 bg-[#0EA5E9]/10 border border-[#0EA5E9]/20 rounded-full">
-            <span className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em]">Execution Protocol</span>
-          </div>
           <h2 className="text-4xl md:text-6xl font-black text-[#1E293B] uppercase tracking-tight">
             How It <span className="text-[#0EA5E9] italic">Works</span>
           </h2>
@@ -56,7 +44,7 @@ const Timeline = () => {
                 </div>
                 
                 <h3 className="text-lg font-black text-[#1E293B] uppercase tracking-tight mb-4 group-hover:text-[#0EA5E9] transition-colors">
-                  {step.title.split(': ')[1]}
+                  {step.title}
                 </h3>
                 <p className="text-sm text-slate-500 font-medium leading-relaxed italic">
                   {step.desc}
@@ -64,7 +52,7 @@ const Timeline = () => {
                 
                 {/* Visual Step Label */}
                 <div className="mt-6 inline-flex px-4 py-1.5 bg-slate-200 text-slate-500 rounded-full text-[9px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                  Protocol 0{i + 1}
+                  Step 0{i + 1}
                 </div>
               </motion.div>
             ))}

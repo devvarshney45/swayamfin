@@ -9,14 +9,12 @@ const ServicesSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const services = [
-    { name: t('home_loan'), slug: 'housing-loans', tag: 'Mortgage' },
-    { name: t('lap'), slug: 'lap', tag: 'Asset' },
-    { name: t('msme_loan'), slug: 'msme-loans', tag: 'Enterprise' },
-    { name: t('supply_chain'), slug: 'supply-chain', tag: 'Supply' },
-    { name: t('micro_lap'), slug: 'micro-lap', tag: 'Regional' },
-    { name: t('hybrid_msme'), slug: 'hybrid-msme', tag: 'Hybrid' },
-    { name: t('unsecured_msme'), slug: 'unsecured-msme', tag: 'Unsecured' },
-    { name: t('machinery_loan'), slug: 'machinery-loan', tag: 'Machinery' },
+    { id: 'hl', badge: 'HL', name: t('hl_title'), desc: t('hl_desc'), slug: 'housing-loans' },
+    { id: 'lap', badge: 'LAP', name: t('lap_title'), desc: t('lap_desc'), slug: 'lap' },
+    { id: 'ubl', badge: 'UBL', name: t('ubl_title'), desc: t('ubl_desc'), slug: 'unsecured-business-loan' },
+    { id: 'scf', badge: 'SCF', name: t('scf_title'), desc: t('scf_desc'), slug: 'supply-chain' },
+    { id: 'uef', badge: 'UEF', name: t('uef_title'), desc: t('uef_desc'), slug: 'unsecured-export-finance' },
+    { id: 'mf', badge: 'MF', name: t('mf_title'), desc: t('mf_desc'), slug: 'machinery-loan' },
   ];
 
   return (
@@ -25,7 +23,6 @@ const ServicesSection = () => {
         
         {/* Header */}
         <div className="text-center mb-16 space-y-4">
-          {/* Removed CREDIT PORTFOLIO pill */}
           <motion.h2
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             className="text-4xl md:text-6xl font-black text-[#1E293B] tracking-tight uppercase"
@@ -38,7 +35,7 @@ const ServicesSection = () => {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, idx) => (
             <motion.div
               key={idx}
@@ -48,16 +45,23 @@ const ServicesSection = () => {
               transition={{ delay: idx * 0.05 }}
             >
               <Link to={`/services/${service.slug}`} className="group block h-full">
-                <div className="bg-white border border-slate-100 p-8 rounded-[24px] h-full shadow-sm hover:shadow-xl hover:border-[#0EA5E9]/30 transition-all duration-500 flex flex-col justify-between">
-                  <div>
-                    <div className="text-[10px] font-bold text-[#0EA5E9] uppercase tracking-widest mb-4 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9]" /> {service.tag}
+                <div className="bg-white border-2 border-slate-100 p-8 rounded-[32px] h-full shadow-sm hover:shadow-2xl hover:border-[#0EA5E9]/30 transition-all duration-500 flex flex-col gap-6">
+                  <div className="flex items-start justify-between">
+                    <div className="px-4 py-2 bg-[#1E293B] text-white rounded-xl text-xl font-black tracking-tighter group-hover:bg-[#0EA5E9] transition-colors">
+                      {service.badge}
                     </div>
-                    <h3 className="text-xl font-black text-[#1E293B] uppercase tracking-tight mb-4 group-hover:text-[#0EA5E9] transition-colors">
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <h3 className="text-xl font-black text-[#1E293B] uppercase tracking-tight group-hover:text-[#0EA5E9] transition-colors">
                       {service.name}
                     </h3>
+                    <p className="text-slate-500 text-sm font-medium leading-relaxed italic border-l-2 border-slate-100 pl-4">
+                      {service.desc}
+                    </p>
                   </div>
-                  <div className="pt-4 flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-[#0EA5E9] transition-colors">
+                  
+                  <div className="mt-auto pt-4 flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-[#0EA5E9] transition-colors">
                     Learn More <span>→</span>
                   </div>
                 </div>

@@ -26,15 +26,17 @@ const Chatbot = () => {
   // Knowledge Base for Swayamfin
   const knowledgeBase = {
     services: [
-      { keywords: ['msme', 'business loan', 'business'], response: "Hamara MSME Capital Program established businesses ke liye specialized growth funding provide karta hai. Hum secured aur unsecured dono options available hain aapke business turnover ke hisaab se." },
-      { keywords: ['lap', 'property', 'secured'], response: "Loan Against Property (LAP) ke zariye aap apni residential ya commercial property ko leverage karke liquidity unlock kar sakte ho. Hamari interest rates competitive hain!" },
-      { keywords: ['housing', 'home', 'construction'], response: "Hamara Housing Finance division ghar kharidne, construction, aur plot purchase mein madad deta hai. Hum sab paperwork handle karte hain!" },
-      { keywords: ['supply chain', 'invoice', 'factoring'], response: "Supply Chain Finance ke through aap apne working capital ko improve kar sakte ho. Invoice payments faster hoti hain, toh aapka business smooth chalta hai." }
+      { keywords: ['hl', 'home loan', 'house'], response: "Home Loan (HL): We give you the money to buy a house for you to live in." },
+      { keywords: ['lap', 'property', 'building'], response: "Loan Against Property (LAP): If you already own a building, we will lend you cash—and you still get to keep the building!" },
+      { keywords: ['ubl', 'business loan', 'unsecured'], response: "Unsecured Business Loan (UBL): We give your business money to grow, and you don't have to promise to give us any of your stuff if things go wrong." },
+      { keywords: ['scf', 'supply chain', 'vendor'], response: "Supply Chain Finance (SCF): We help pay the people who deliver your boxes, so your shop never runs out of things to sell." },
+      { keywords: ['uef', 'export', 'international'], response: "Unsecured Export Finance (UEF): We give you money to help you pack up and sell your stuff to people far away in other countries." },
+      { keywords: ['mf', 'machinery', 'equipment'], response: "Machinery Finance (MF): We give you the money to buy big, heavy machines so you can build things much faster." }
     ],
     general: [
-      { keywords: ['apply', 'how', 'process'], response: "Apply karne ke liye 'Start Application' button par click kijiye. Aapko email verify karna hai, documents submit karne hain, aur phir hamara team 30 minutes mein aapse contact karega." },
-      { keywords: ['contact', 'call', 'number', 'whatsapp'], response: "Aap hamse +91 95607 23332 par call ya WhatsApp kar sakte ho. Hamara branches Agra, Mathura, Hathras, aur Kosi mein hain. Hum 24/7 available hain!" },
-      { keywords: ['who', 'about', 'company'], response: "Swayamfin ek leading digital financial platform hai. Hum reliable NBFC aur HFC partners ke saath kaam karte hain. Aapke financial goals achieve karne mein hum aapke saath hain!" }
+      { keywords: ['apply', 'how', 'process'], response: "To apply, click the 'Start Application' button. You'll need to verify your email, submit your details, and then our team will contact you within 30 minutes." },
+      { keywords: ['contact', 'call', 'number', 'whatsapp'], response: "You can call or WhatsApp us at +91 95607 23332. Our branches are located in Agra, Mathura, Hathras, and Kosi. We are available 24/7!" },
+      { keywords: ['who', 'about', 'company'], response: "Swayamfin is a leading digital financial platform. We work with reliable NBFC and HFC partners to help you achieve your financial goals!" }
     ]
   };
 
@@ -49,7 +51,7 @@ const Chatbot = () => {
       }
     }
 
-    return "Aapka query register ho gaya. Hamara team jald aapse contact karega. Kya main aapko kuch aur help kar sakta hoon?";
+    return "Your query has been registered. Our team will contact you shortly. Is there anything else I can help you with?";
   };
 
   const handleSend = async (text = inputText) => {
@@ -70,10 +72,10 @@ const Chatbot = () => {
   };
 
   const quickQueries = [
-    "Apply kaise karte ho?",
+    "How to apply?",
     "Available services",
     "Contact info",
-    "Kya secure hai?"
+    "Is it secure?"
   ];
 
   return (
@@ -97,7 +99,7 @@ const Chatbot = () => {
                   <h3 className="font-black uppercase tracking-tighter text-lg leading-none">Swayam AI</h3>
                   <div className="flex items-center gap-1.5 mt-1">
                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Surakshit Uplink Chalti Hai</span>
+                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Secure Uplink Active</span>
                   </div>
                 </div>
               </div>
@@ -148,7 +150,7 @@ const Chatbot = () => {
             <div className="p-6 bg-white flex gap-3">
               <input 
                 type="text" 
-                placeholder="Apna message type kijiye..."
+                placeholder="Type your message..."
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
