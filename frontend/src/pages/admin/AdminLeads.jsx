@@ -98,11 +98,10 @@ const AdminLeads = () => {
       case_under_company: lead.case_under_company || '',
       fees: String(lead.fees || ''),
       sanction_amount: String(lead.sanction_amount || ''),
-      // Checkbox fields
       pd_report: !!lead.pd_report,
       technical_report: !!lead.technical_report,
       legal_report: !!lead.legal_report,
-      cpv_report: lead.cpv_report || '',
+      cpv_report: !!lead.cpv_report,
       sanction: !!lead.sanction,
       disbursement: !!lead.disbursement,
       remarks: lead.remarks || '',
@@ -122,7 +121,7 @@ const AdminLeads = () => {
         sanction_amount: editForm.sanction_amount ? Number(editForm.sanction_amount) : 0,
       }, { headers: { Authorization: `Bearer ${token}` } });
       setEditLead(null);
-      setActionNote({ type: 'success', message: 'Case Logged.' });
+      setActionNote({ type: 'success', message: 'Case Balanced.' });
       fetchLeads();
       setTimeout(() => setActionNote(null), 3000);
     } catch (err) {
@@ -130,33 +129,45 @@ const AdminLeads = () => {
     } finally { setEditSaving(false); }
   };
 
-  const deleteLead = async (lead, e) => {
-    e.stopPropagation();
-    if (!window.confirm(`Delete ${lead.lead_number}?`)) return;
-    try {
-      const token = localStorage.getItem('swayamfin_token');
-      await axios.delete(`${API_URL}/api/leads/${lead._id}`, { headers: { Authorization: `Bearer ${token}` } });
-      fetchLeads();
-    } catch (err) {}
-  };
-
   const handleExport = () => {
-    const headers = ['Serial No.','RM Name','Login Date','TAT','Branch','Partner','Loan ID','Case Under','Product Type','Client Name','Fees','Asking','Sanctioned','PD Report','Technical','Legal','Sanction','Disbursement','Status','Remarks'];
+    const headers = [
+      'Serial No.',
+      'RM Name',
+      'Login Date',
+      'TAT',
+      'Branch',
+      'Partner',
+      'Loan ID',
+      'Case Under(Company)',
+      'Product Type', 
+      'Client Name', 
+      'Fees', 
+      'Asking Amount', 
+      'Sanction Amount', 
+      'PD Report', 
+      'Technical Report', 
+      'Legal Report', 
+      'CPV Report',
+      'Sanction', 
+      'Disbursement', 
+      'Current Status', 
+      'Remarks'
+    ];
     const rows = filteredLeads.map((l, i) => [
       i + 1, l.rm_name || '', l.login_date || '', l.tat || '', l.location_city || '', l.partner_login || '', l.external_loan_id || l.lead_number || '', l.case_under_company || '',
       l.loan_type?.toUpperCase() || '', l.applicant_name || '', l.fees || 0, l.loan_amount_required || 0, l.sanction_amount || 0,
-      l.pd_report ? 'YES' : 'NO', l.technical_report ? 'YES' : 'NO', l.legal_report ? 'YES' : 'NO', l.sanction ? 'YES' : 'NO', l.disbursement ? 'YES' : 'NO',
+      l.pd_report ? 'YES' : 'NO', l.technical_report ? 'YES' : 'NO', l.legal_report ? 'YES' : 'NO', l.cpv_report ? 'YES' : 'NO', l.sanction ? 'YES' : 'NO', l.disbursement ? 'YES' : 'NO',
       l.status || '', l.remarks || ''
     ]);
     const csv = [headers.join(','), ...rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(','))].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `swayamfin_export_${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `swayamfin_global_report_${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
   };
 
-  if (loading) return <div className="min-h-screen bg-slate-50 flex items-center justify-center font-black text-slate-400">LOADING REPOSITORY...</div>;
+  if (loading) return <div className="min-h-screen bg-slate-50 flex items-center justify-center font-black text-slate-400">CONNECTING TO REPOSITORY...</div>;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-32">
@@ -164,7 +175,7 @@ const AdminLeads = () => {
         <AdminTabs />
         <div className="flex justify-between items-center mb-12">
            <h1 className="text-5xl font-black text-[#1E293B] uppercase tracking-tighter">Global <span className="text-blue-600 italic">Repository</span></h1>
-           <button onClick={handleExport} className="bg-white border-2 border-slate-100 px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm">Export Detailed Log</button>
+           <button onClick={handleExport} className="bg-white border-2 border-slate-100 px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm">Export Master Sheet</button>
         </div>
 
         <div className="bg-white border rounded-[40px] shadow-sm overflow-hidden">
@@ -173,18 +184,18 @@ const AdminLeads = () => {
                 <tr className="bg-slate-50 border-b border-slate-100">
                   <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Client Name</th>
                   <th className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Asset Class</th>
-                  <th className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+                  <th className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Protocol State</th>
                   <th className="px-10 py-6 text-right"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {filteredLeads.map(l => (
                   <tr key={l._id} className="hover:bg-slate-50 transition-all cursor-pointer group">
-                    <td className="px-10 py-6 font-black text-[#1E293B] group-hover:text-blue-600 transition-all">{l.applicant_name} <span className="text-[9px] bg-slate-100 px-2 py-0.5 rounded ml-2">ID: {l.lead_number}</span></td>
+                    <td className="px-10 py-6 font-black text-[#1E293B] group-hover:text-blue-600">{l.applicant_name} <span className="text-[9px] bg-slate-100 px-2 py-0.5 rounded ml-2">ID: {l.lead_number}</span></td>
                     <td className="px-6 py-6 font-bold text-slate-600 text-xs uppercase">{l.loan_type?.replace('_',' ')} <div className="text-blue-600 font-black mt-1">₹{l.loan_amount_required.toLocaleString()}</div></td>
                     <td className="px-6 py-6"><span className={`px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border ${getStatusColor(l.status)}`}>{l.status}</span></td>
                     <td className="px-10 py-6 text-right">
-                       <button onClick={(e) => openEdit(l, e)} className="px-4 py-2 border rounded-xl text-[9px] font-black uppercase tracking-widest text-[#1E293B] hover:bg-white shadow transition-all">Edit Case</button>
+                       <button onClick={(e) => openEdit(l, e)} className="px-4 py-2 border rounded-xl text-[9px] font-black uppercase tracking-widest text-[#1E293B] hover:bg-white shadow transition-all">Edit Node</button>
                     </td>
                   </tr>
                 ))}
@@ -206,33 +217,36 @@ const AdminLeads = () => {
               </div>
 
               <div className="space-y-12">
-                {/* Section 1: Institutional Core */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <InputNode label="Client Name" value={editForm.applicant_name} onChange={v => setEditForm({...editForm, applicant_name: v})} />
-                  <InputNode label="External Loan ID" value={editForm.external_loan_id} onChange={v => setEditForm({...editForm, external_loan_id: v})} />
+                  <InputNode label="Loan ID (External)" value={editForm.external_loan_id} onChange={v => setEditForm({...editForm, external_loan_id: v})} />
                   <SelectNode label="Product Type" value={editForm.loan_type} options={LOAN_TYPE_OPTIONS} onChange={v => setEditForm({...editForm, loan_type: v})} />
                   <InputNode label="Asking Amount (₹)" type="number" value={editForm.loan_amount_required} onChange={v => setEditForm({...editForm, loan_amount_required: v})} />
+                  <InputNode label="Sanction Amount (₹)" type="number" value={editForm.sanction_amount} onChange={v => setEditForm({...editForm, sanction_amount: v})} />
+                  <InputNode label="Fees (₹)" type="number" value={editForm.fees} onChange={v => setEditForm({...editForm, fees: v})} />
                 </div>
 
-                {/* Section 2: Ops Metrics */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-slate-50">
                   <InputNode label="RM Name" value={editForm.rm_name} onChange={v => setEditForm({...editForm, rm_name: v})} />
-                  <InputNode label="Partner Login" value={editForm.partner_login} onChange={v => setEditForm({...editForm, partner_login: v})} />
+                  <InputNode label="Login Date" value={editForm.login_date} onChange={v => setEditForm({...editForm, login_date: v})} />
+                  <InputNode label="TAT Days" value={editForm.tat} onChange={v => setEditForm({...editForm, tat: v})} />
+                  <InputNode label="Partner" value={editForm.partner_login} onChange={v => setEditForm({...editForm, partner_login: v})} />
+                  <InputNode label="Case Under(Company)" value={editForm.case_under_company} onChange={v => setEditForm({...editForm, case_under_company: v})} />
+                   <SelectNode label="Current Status" value={editForm.status} options={STATUS_OPTIONS.map(s => ({v:s, l:s}))} onChange={v => setEditForm({...editForm, status: v})} />
                 </div>
 
-                {/* Section 3: Checkbox Nodes (THE REPORTS) */}
                 <div className="space-y-6 pt-8 border-t border-slate-50">
-                   <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Compliance & Milestone Checkboxes</h4>
+                   <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Compliance Checkboxes</h4>
                    <div className="grid grid-cols-2 gap-4">
-                      <CheckboxNode label="PD Report Marked" checked={editForm.pd_report} onChange={v => setEditForm({...editForm, pd_report: v})} />
-                      <CheckboxNode label="Technical Marked" checked={editForm.technical_report} onChange={v => setEditForm({...editForm, technical_report: v})} />
-                      <CheckboxNode label="Legal Marked" checked={editForm.legal_report} onChange={v => setEditForm({...editForm, legal_report: v})} />
-                      <CheckboxNode label="Sanction Protocol Done" checked={editForm.sanction} onChange={v => setEditForm({...editForm, sanction: v})} />
-                      <CheckboxNode label="Disbursement Tranche Logged" checked={editForm.disbursement} onChange={v => setEditForm({...editForm, disbursement: v})} />
+                      <CheckboxNode label="PD Report" checked={editForm.pd_report} onChange={v => setEditForm({...editForm, pd_report: v})} />
+                      <CheckboxNode label="Technical Report" checked={editForm.technical_report} onChange={v => setEditForm({...editForm, technical_report: v})} />
+                      <CheckboxNode label="Legal Report" checked={editForm.legal_report} onChange={v => setEditForm({...editForm, legal_report: v})} />
+                      <CheckboxNode label="CPV Report" checked={editForm.cpv_report} onChange={v => setEditForm({...editForm, cpv_report: v})} />
+                      <CheckboxNode label="Sanction" checked={editForm.sanction} onChange={v => setEditForm({...editForm, sanction: v})} />
+                      <CheckboxNode label="Disbursement" checked={editForm.disbursement} onChange={v => setEditForm({...editForm, disbursement: v})} />
                    </div>
                 </div>
 
-                {/* Section 4: Remarks */}
                 <div className="pt-8 border-t border-slate-50">
                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-1">Case Remarks</label>
                    <textarea className="w-full h-32 bg-slate-50 rounded-2xl p-6 text-sm outline-none focus:bg-white transition-all border border-transparent focus:border-slate-100" value={editForm.remarks} onChange={e => setEditForm({...editForm, remarks: e.target.value})} />
@@ -240,7 +254,7 @@ const AdminLeads = () => {
               </div>
 
               <div className="flex gap-4 mt-12 bg-white sticky bottom-0 pt-6">
-                <button type="submit" disabled={editSaving} className="flex-[2] h-16 bg-[#1E293B] text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] shadow-xl hover:bg-blue-600 transition-all">{editSaving ? 'Syncing...' : 'Sync Case File'}</button>
+                <button type="submit" disabled={editSaving} className="flex-[2] h-16 bg-[#1E293B] text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] shadow-xl hover:bg-blue-600 transition-all">{editSaving ? 'Syncing...' : 'Update Case Record'}</button>
               </div>
             </motion.form>
           </motion.div>

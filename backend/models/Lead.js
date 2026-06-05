@@ -72,7 +72,7 @@ const leadSchema = new mongoose.Schema({
   pd_report: { type: Boolean, default: false },
   technical_report: { type: Boolean, default: false },
   legal_report: { type: Boolean, default: false },
-  cpv_report: { type: String }, // Kept as string for details if needed
+  cpv_report: { type: Boolean, default: false },
   sanction: { type: Boolean, default: false },
   disbursement: { type: Boolean, default: false },
   
