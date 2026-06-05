@@ -1,4 +1,26 @@
 {
+  "redirects": [
+    {
+      "source": "/financo/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/financo/index-2.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/financo/contact.html",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/financo/blog.html",
+      "destination": "/blog",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
