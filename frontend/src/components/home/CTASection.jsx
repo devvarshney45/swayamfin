@@ -19,7 +19,7 @@ const CTASection = () => {
             Ready to Get <span className="text-[#0EA5E9] italic">Started?</span>
           </h2>
           <p className="text-xl text-slate-500 font-medium max-w-2xl mx-auto italic">
-            "Start your secure application today and get funded fast"
+            Start your secure application today and get funded fast
           </p>
         </motion.div>
 

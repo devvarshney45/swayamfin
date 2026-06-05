@@ -219,19 +219,36 @@ const Hero = () => {
               </div>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-3 gap-8 pt-10 border-t border-slate-100 max-w-2xl mx-auto lg:mx-0">
+              <div className="flex flex-wrap gap-x-12 gap-y-10 pt-10 border-t border-slate-100 max-w-3xl mx-auto lg:mx-0">
                 {[
-                  { val: '₹125Cr+', label: 'Disbursed', icon: '📈' },
-                  { val: '100+ Clients', label: 'Clients', icon: '⚙️' },
-                  { val: '5+', label: 'Operations', icon: '🌐' },
+                  { val: '125Cr+', label: 'DISBURSED', detail: 'Primary Asset Class' },
+                  { val: '100+', label: 'CLIENTS', detail: 'Active Partnerships' },
+                  { val: '5+', label: 'OPERATIONS', detail: 'Regional Branch Nodes' },
                 ].map((stat, i) => (
-                  <div key={i} className="space-y-2">
-                    <div className="flex items-center gap-2">
-                       <span className="text-xs opacity-60">{stat.icon}</span>
-                       <p className="text-2xl sm:text-4xl font-black text-[#1E293B] tracking-tighter">{stat.val}</p>
+                  <motion.div 
+                    key={i} 
+                    whileHover={{ y: -5 }}
+                    className="flex flex-col items-center lg:items-start text-center lg:text-left group cursor-default"
+                  >
+                    <div className="relative">
+                      <p className="text-4xl sm:text-6xl font-black text-[#1E293B] tracking-tighter leading-none group-hover:text-[#0EA5E9] transition-colors duration-500">
+                        {stat.val}
+                      </p>
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        whileHover={{ width: '100%' }}
+                        className="absolute -bottom-2 left-0 h-1.5 bg-[#0EA5E9] rounded-full opacity-20"
+                      />
                     </div>
-                    <p className="text-[10px] font-black text-slate-400 italic uppercase tracking-[0.3em]">{stat.label}</p>
-                  </div>
+                    <p className="text-xl sm:text-2xl font-black text-[#1E293B] tracking-tight uppercase mt-3 transition-all duration-500 group-hover:tracking-widest">
+                      {stat.label}
+                    </p>
+                    <div className="overflow-hidden h-0 group-hover:h-5 transition-all duration-500">
+                      <p className="text-[9px] font-black text-[#0EA5E9] uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-opacity duration-700 mt-1">
+                        {stat.detail}
+                      </p>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
             </div>

@@ -509,9 +509,26 @@ exports.sendOtp = async (req, res) => {
       const mailOptions = {
         from: mailFrom,
         to: email,
-        subject: 'Your verification code',
-        text: `Your OTP code is ${otp}. It is valid for 2 minutes.`,
-        html: `<p>Your OTP code is <strong>${otp}</strong>. It is valid for <strong>2 minutes</strong>.</p>`,
+        subject: `${otp} is your verification code - Swayamfin`,
+        text: `Your Swayamfin verification code is ${otp}. It is valid for 2 minutes.`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #0EA5E9 0%, #0369A1 100%); padding: 30px; text-align: center; color: white;">
+              <h2 style="margin: 0; font-size: 24px; letter-spacing: -0.5px;">Swayamfin</h2>
+              <p style="margin: 5px 0 0 0; font-size: 12px; opacity: 0.8; text-transform: uppercase; letter-spacing: 2px;">Identity Verification</p>
+            </div>
+            <div style="padding: 40px; text-align: center; background-color: white;">
+              <p style="color: #64748b; font-size: 14px; margin-bottom: 25px;">Please use the following code to verify your transmission request:</p>
+              <div style="background-color: #f8fafc; border: 1px dashed #cbd5e1; padding: 20px; border-radius: 8px; display: inline-block;">
+                <span style="font-family: monospace; font-size: 36px; font-weight: 900; color: #1E293B; letter-spacing: 8px;">${otp}</span>
+              </div>
+              <p style="color: #94a3b8; font-size: 11px; margin-top: 25px;">This code is valid for <strong>2 minutes</strong>. If you did not request this, please ignore this email.</p>
+            </div>
+            <div style="background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9;">
+              <p style="margin: 0; color: #94a3b8; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">🛡️ Institutional Grade Security Protocol</p>
+            </div>
+          </div>
+        `,
       };
 
       const info = await transporter.sendMail(mailOptions);

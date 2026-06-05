@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Users, Target, Shield, Award, Sparkles, Activity, ShieldCheck, Globe, Zap, Cpu, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Users, Target, Shield, Award, Activity, ShieldCheck, Globe, Zap, Cpu } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 
@@ -11,14 +12,15 @@ const teamMembers = [
     bio: 'Former investment banker, architect of Swayamfin.',
     img: '/team/VikkrantPrasad.png',
     distFallback: '/dist/assets/VikkrantPrasad.png',
-    linkedin: 'https://www.linkedin.com/in/vikkrant-prasad-242158a/'
+    slug: 'vikkrant-prasad'
   },
   {
     name: 'Nupur Prasad',
     role: 'Admin & HR Governance',
     bio: '10+ years in microfinance, LAP, and supply chain control.',
     img: '/team/NupurPrasad.png',
-    distFallback: '/dist/assets/Nupur%20Prasad.png'
+    distFallback: '/dist/assets/Nupur%20Prasad.png',
+    slug: 'nupur-prasad'
   },
   {
     name: 'Sudhanshu Shekhar',
@@ -26,7 +28,7 @@ const teamMembers = [
     bio: 'Former CFO at Humana Financial, Domain Expert.',
     img: '/team/SudhanshuShekhar.png',
     distFallback: '/dist/assets/SudhanshuShekhar.png',
-    linkedin: 'https://www.linkedin.com/in/sudhansshu-shekhar-28b1939/'
+    slug: 'sudhanshu-shekhar'
   },
   {
     name: 'Madhu Priya Prasad',
@@ -34,7 +36,7 @@ const teamMembers = [
     bio: '10+ years in investment banking and strategic protocol.',
     img: '/team/MadhuPriyaPrasad.png',
     distFallback: '/dist/assets/MadhuPriyaPrasad.png',
-    linkedin: 'https://www.linkedin.com/in/astrologer-dr-madhu-priya-indian-astrology-centre-820196191/'
+    slug: 'madhu-priya-prasad'
   },
 ];
 
@@ -88,7 +90,7 @@ const About = () => {
             </h2>
             <div className="space-y-8">
                <p className={`text-[11px] md:text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'} font-black uppercase tracking-[0.4em] leading-relaxed italic border-l-4 border-primary pl-8`}>
-                  Operating under Green Miles Mobility Pvt. Ltd., Swayamfin was born out of a vision to simplify complex lending landscapes. We understand that every business has a unique story, and standard banking doesn't always listen.
+                  Operating under Green Miles Mobility Pvt. Ltd., Swayamfin was born out of a vision to simplify complex lending landscapes. We understand that every business has a unique story, and standard banking doesn\'t always listen.
                </p>
                <p className={`text-[11px] md:text-sm ${isDark ? 'text-slate-500' : 'text-slate-400'} font-black uppercase tracking-[0.3em] leading-relaxed opacity-70`}>
                   We partner with India's most trusted NBFCs and HFCs to provide customized working capital, LAP, and housing solutions with a focus on speed, transparency, and institutional rigor.
@@ -206,25 +208,26 @@ const About = () => {
                 viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                 className="group text-center"
               >
-                <div className={`relative aspect-[4/5] rounded-[48px] overflow-hidden mb-10 border ${isDark ? 'bg-[#0B1221] border-white/5' : 'bg-white shadow-22xl shadow-slate-200/30'} p-3 transform transition-transform duration-700 group-hover:scale-95 ${member.linkedin ? 'cursor-pointer' : ''}`}>
-                   <div 
-                    className="w-full h-full rounded-[40px] overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-700"
-                    onClick={() => member.linkedin && window.open(member.linkedin, '_blank', 'noopener,noreferrer')}
-                   >
-                      <img
-                        src={member.img}
-                        alt={member.name}
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                        onError={(e) => {
-                          if (e.currentTarget.dataset.distFallbackTried) return;
-                          e.currentTarget.dataset.distFallbackTried = 'true';
-                          e.currentTarget.src = member.distFallback;
-                        }}
-                      />
-                   </div>
-                </div>
+                <Link to={`/team/${member.slug}`}>
+                  <div className={`relative aspect-[4/5] rounded-[48px] overflow-hidden mb-10 border ${isDark ? 'bg-[#0B1221] border-white/5' : 'bg-white shadow-22xl shadow-slate-200/30'} p-3 transform transition-transform duration-700 group-hover:scale-95 cursor-pointer`}>
+                    <div className="w-full h-full rounded-[40px] overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-700">
+                        <img
+                          src={member.img}
+                          alt={member.name}
+                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                          onError={(e) => {
+                            if (e.currentTarget.dataset.distFallbackTried) return;
+                            e.currentTarget.dataset.distFallbackTried = 'true';
+                            e.currentTarget.src = member.distFallback;
+                          }}
+                        />
+                    </div>
+                  </div>
+                </Link>
                 <div className="space-y-4 px-4">
-                   <h4 className={`font-black ${isDark ? 'text-white' : 'text-slate-900'} text-2xl uppercase tracking-tighter leading-none`}>{member.linkedin ? <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">{member.name}</a> : member.name}</h4>
+                   <h4 className={`font-black ${isDark ? 'text-white' : 'text-slate-900'} text-2xl uppercase tracking-tighter leading-none`}>
+                      <Link to={`/team/${member.slug}`} className="hover:text-primary transition-colors">{member.name}</Link>
+                   </h4>
                    <p className="text-primary text-[10px] font-black uppercase tracking-[0.4em] italic leading-none">{member.role}</p>
                    <p className={`${isDark ? 'text-slate-500' : 'text-slate-400'} text-[11px] leading-relaxed font-bold italic opacity-60 group-hover:opacity-100 transition-opacity`}>"{member.bio}"</p>
                 </div>

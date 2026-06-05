@@ -9,12 +9,12 @@ const ServicesSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const services = [
-    { id: 'hl', badge: 'HL', name: t('hl_title'), desc: t('hl_desc'), slug: 'housing-loans' },
-    { id: 'lap', badge: 'LAP', name: t('lap_title'), desc: t('lap_desc'), slug: 'lap' },
-    { id: 'ubl', badge: 'UBL', name: t('ubl_title'), desc: t('ubl_desc'), slug: 'unsecured-business-loan' },
-    { id: 'scf', badge: 'SCF', name: t('scf_title'), desc: t('scf_desc'), slug: 'supply-chain' },
-    { id: 'uef', badge: 'UEF', name: t('uef_title'), desc: t('uef_desc'), slug: 'unsecured-export-finance' },
-    { id: 'mf', badge: 'MF', name: t('mf_title'), desc: t('mf_desc'), slug: 'machinery-loan' },
+    { id: 'hl', name: t('hl_title'), desc: t('hl_desc'), slug: 'housing-loans' },
+    { id: 'lap', name: t('lap_title'), desc: t('lap_desc'), slug: 'lap' },
+    { id: 'ubl', name: t('ubl_title'), desc: t('ubl_desc'), slug: 'unsecured-business-loan' },
+    { id: 'scf', name: t('scf_title'), desc: t('scf_desc'), slug: 'supply-chain' },
+    { id: 'uef', name: t('uef_title'), desc: t('uef_desc'), slug: 'unsecured-export-finance' },
+    { id: 'mf', name: t('mf_title'), desc: t('mf_desc'), slug: 'machinery-loan' },
   ];
 
   return (
@@ -46,11 +46,6 @@ const ServicesSection = () => {
             >
               <Link to={`/services/${service.slug}`} className="group block h-full">
                 <div className="bg-white border-2 border-slate-100 p-8 rounded-[32px] h-full shadow-sm hover:shadow-2xl hover:border-[#0EA5E9]/30 transition-all duration-500 flex flex-col gap-6">
-                  <div className="flex items-start justify-between">
-                    <div className="px-4 py-2 bg-[#1E293B] text-white rounded-xl text-xl font-black tracking-tighter group-hover:bg-[#0EA5E9] transition-colors">
-                      {service.badge}
-                    </div>
-                  </div>
                   
                   <div className="space-y-3">
                     <h3 className="text-xl font-black text-[#1E293B] uppercase tracking-tight group-hover:text-[#0EA5E9] transition-colors">

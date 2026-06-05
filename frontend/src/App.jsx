@@ -24,6 +24,7 @@ import AdLandingPage from './pages/AdLandingPage';
 import EmployeePortal from './pages/EmployeePortal';
 import BranchDetails from './pages/BranchDetails';
 import ServiceDetails from './pages/ServiceDetails';
+import TeamMemberDetails from './pages/TeamMemberDetails';
 import LeadDetails from './pages/agent/LeadDetails';
 import NewLead from './pages/agent/NewLead';
 import Blog from './pages/Blog';
@@ -53,6 +54,7 @@ const AppContent = () => {
           <Route path="/process" element={<Process />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/become-a-partner" element={<Partner />} />
+          <Route path="/team/:slug" element={<TeamMemberDetails />} />
           
           <Route path="/services" element={<ServiceDetails />} />
           <Route path="/services/:slug" element={<ServiceDetails />} />

@@ -248,21 +248,7 @@ const Navbar = () => {
         </AnimatePresence>
       </nav>
 
-      {/* Global Command Bar (Desktop Sticky) */}
-      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 ${scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-         <div className="bg-[#1E293B] px-8 py-3 rounded-full flex items-center gap-6 shadow-2xl">
-            <div className="flex items-center gap-2 pr-6 border-r border-slate-700">
-               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-               <span className="text-white text-[9px] font-black uppercase tracking-widest">Active Node</span>
-            </div>
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              className="bg-[#0EA5E9] text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-[#0369A1] transition-all"
-            >
-              Apply Now
-            </button>
-         </div>
-      </div>
+
 
       <LeadCaptureModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>

@@ -59,6 +59,24 @@ const leadSchema = new mongoose.Schema({
   business_vintage_years: { type: Number },
   gst_registered: { type: Boolean, default: false },
   cibil_score: { type: Number },
+
+  // Operational & Reporting Details (Excel Sync)
+  rm_name: { type: String },
+  login_date: { type: String },
+  tat: { type: String },
+  partner_login: { type: String },
+  external_loan_id: { type: String },
+  case_under_company: { type: String },
+  
+  fees: { type: Number },
+  sanction_amount: { type: Number },
+  pd_report: { type: String },
+  technical_report: { type: String },
+  legal_report: { type: String },
+  cpv_report: { type: String },
+  sanction: { type: String },
+  disbursement: { type: String },
+  remarks: { type: String },
 }, { 
   timestamps: true 
 });

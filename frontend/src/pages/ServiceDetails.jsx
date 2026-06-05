@@ -7,74 +7,146 @@ import LeadCaptureModal from '../components/common/LeadCaptureModal';
 const serviceData = {
   'housing-loans': {
     title: 'Housing Loan',
-    tagline: 'Smart, flexible home financing',
-    description: 'In partnership with leading HFCs like DMI Housing Finance, we offer specialized home loans for purchase, construction, and renovation with minimal documentation.',
+    tagline: 'Home & Construction Financing',
+    description: 'We help you get the money you need to buy your dream home or build a new one. With our fast process, you can move into your house sooner.',
     features: [
-      'PMAY subsidy benefits enabled',
-      'Minimal documentation for informal income',
-      'Tenure up to 20 years',
-      'Fast sanction within 3-5 working days',
-      'Balance transfer with top-up options'
+      'Loans for buying or building a house',
+      'Minimal paperwork required',
+      'Pay back over many years (up to 20)',
+      'Fast approval in 3-5 days',
+      'Low interest rates starting from 8.5%'
     ],
     eligibility: [
-      'Minimum age: 21 years',
-      'Salaried or Self-employed profiles',
-      'Min monthly income: ₹15,000',
-      'Co-applicant mandatory for certain schemes'
+      'Age over 21 years',
+      'Consistent monthly income of ₹15,000+',
+      'Available for salaried and business owners',
+      'Simple ID and income proof required'
     ],
     rates: '8.5% - 14% p.a',
     fees: '₹5000 + GST',
     faqs: [
-      { q: 'Do you fund plot purchase?', a: 'Yes, we provide composite loans for plot purchase + construction.' },
-      { q: 'Can I apply if my income is cash-based?', a: 'Yes, we have specialized assessment models for informal income segments.' }
-    ]
-  },
-  'supply-chain': {
-    title: 'Supply Chain Finance',
-    tagline: 'Velocity Control for Invoices & POs',
-    description: 'Specialized financing for manufacturers, distributors, and retailers to manage cash flow gaps between supply and payment. Unlock the value in your supply chain.',
-    features: [
-      'Financing against purchase orders',
-      'Invoice discounting for faster cash',
-      'No collateral required for certain segments',
-      'Direct payment to suppliers',
-      'Short-term credit (30-90 days)'
-    ],
-    eligibility: [
-      'Business vintage: Min 2 years',
-      'Annual Turnover: Min ₹50 Lakhs',
-      'Stable payment history with anchors',
-      'GST registered entity'
-    ],
-    rates: '11% - 16% p.a.',
-    fees: '1% - 2% processing fee',
-    faqs: [
-      { q: 'Is collateral mandatory?', a: 'No, many supply chain products are based on underlying trade documents like Invoices.' },
-      { q: 'What is the disbursement time?', a: 'Once the anchor is onboarded, individual invoices can be funded in 24-48 hours.' }
+      { q: 'Can I buy a plot of land?', a: 'Yes, we provide loans to buy land and build your house on it.' },
+      { q: 'Is it okay if I have informal income?', a: 'Yes, we have special ways to check your income even if it is not documented in standard ways.' }
     ]
   },
   'lap': {
     title: 'Loan Against Property',
-    tagline: 'Asset Liquidity & Equity Extraction',
-    description: 'Maximize the value of your residential, commercial, or industrial property to get long-term financing at lower interest rates for business expansion.',
+    tagline: 'Unlock Cash from Your Building',
+    description: 'If you already own a building, we will lend you cash—and you still get to keep the building! Use the money for your business or personal needs.',
     features: [
-      'Tenures up to 15 years',
-      'Lower EMIs compared to personal loans',
-      'Property remains in your use',
-      'High Loan-to-Value (LTV) up to 70%',
-      'Multi-property collateral accepted'
+      'Use your home or shop to get a loan',
+      'Keep using your property while you pay',
+      'Get larger amounts than regular loans',
+      'Long repayment time (up to 15 years)',
+      'Cheaper interest rates than personal loans'
     ],
     eligibility: [
-      'Clear Property Title and search report',
-      'Property within defined municipal limits',
+      'Must own a residential or commercial property',
+      'Property should have clear legal titles',
       'Stable business or salary income',
-      'Property age not exceeding 40 years'
+      'Property age should be under 40 years'
     ],
     rates: '8.5% - 12% p.a.',
-    fees: '0.5% - 1.5% processing fee',
+    fees: '0.5% - 1.5% fee',
     faqs: [
-      { q: 'Which properties are accepted?', a: 'Self-occupied residential, commercial, and even industrial land in some cases.' },
-      { q: 'Can I take a loan for an under-construction property?', a: 'No, the property must be complete and have an OC/registry.' }
+      { q: 'What kind of property do you accept?', a: 'We accept houses, offices, and even factory land in many locations.' },
+      { q: 'Do I have to give my building to you?', a: 'No, you keep using the building. It just acts as security for the loan.' }
+    ]
+  },
+  'unsecured-business-loan': {
+    title: 'Unsecured Business Loan',
+    tagline: 'Money to Grow Your Business',
+    description: 'We give your business money to grow, and you don\'t have to promise to give us any of your stuff if things go wrong. No collateral needed.',
+    features: [
+      'No property or assets required as security',
+      'Quick funds for daily business needs',
+      'Flexible amounts from ₹5 Lakhs onwards',
+      'Fast digital approval process',
+      'Transparent rules and no hidden fees'
+    ],
+    eligibility: [
+      'Business must be at least 2 years old',
+      'Reasonable monthly sales/turnover',
+      'Clear bank statements for last 12 months',
+      'No collateral or security needed'
+    ],
+    rates: '14% - 19% p.a.',
+    fees: '2% - 3% processing fee',
+    faqs: [
+      { q: 'How fast can I get the money?', a: 'Most unsecured loans are approved and deposited within 48 to 72 hours.' },
+      { q: 'What can I use the money for?', a: 'You can use it for anything your business needs, like buying stock or paying bills.' }
+    ]
+  },
+  'supply-chain': {
+    title: 'Supply Chain Finance',
+    tagline: 'Pay Your Suppliers Faster',
+    description: 'We help pay the people who deliver your boxes, so your shop never runs out of things to sell. We bridge the gap between delivery and payment.',
+    features: [
+      'Get money against your purchase orders',
+      'Pay your suppliers on time, every time',
+      'Better relationships with your vendors',
+      'Short-term funding for 30-90 days',
+      'No need to wait for customers to pay you first'
+    ],
+    eligibility: [
+      'Registered business with GST',
+      'Regular orders from known suppliers',
+      'At least 1 year of trading history',
+      'Stable relationship with your buyers'
+    ],
+    rates: '11% - 16% p.a.',
+    fees: '1% - 2% fee',
+    faqs: [
+      { q: 'Does my supplier need to do anything?', a: 'Yes, we coordinate with your supplier to ensure they get paid directly and quickly.' },
+      { q: 'Is this a long-term loan?', a: 'No, this is a short-term cycle that repeats as you order new stock.' }
+    ]
+  },
+  'unsecured-export-finance': {
+    title: 'Unsecured Export Finance',
+    tagline: 'Sell Your Stuff Globally',
+    description: 'We give you money to help you pack up and sell your stuff to people far away in other countries. Grow your exports without any security.',
+    features: [
+      'Funds for international orders',
+      'No collateral needed for your loan',
+      'Bridge the gap while goods are shipping',
+      'Help with foreign exchange and payments',
+      'Scale your export business fast'
+    ],
+    eligibility: [
+      'Valid IEC (Export Code) and registration',
+      'Confirmed orders from international buyers',
+      'Minimum export history of 1 year',
+      'GST and bank records in good standing'
+    ],
+    rates: '10% - 15% p.a.',
+    fees: '1.5% - 2% fee',
+    faqs: [
+      { q: 'Can I get money before I ship?', a: 'Yes, we provide "pre-shipment" finance to help you manufacture and pack your goods.' },
+      { q: 'Do you help with global buyers?', a: 'We check the reliability of your buyers to make the process safer for you.' }
+    ]
+  },
+  'machinery-loan': {
+    title: 'Machinery Finance',
+    tagline: 'Buy Faster Machines Today',
+    description: 'We give you the money to buy big, heavy machines so you can build things much faster. Modernize your factory with easy monthly payments.',
+    features: [
+      'Finance for new or used machines',
+      'The machine itself acts as the security',
+      'Easy monthly EMIs over 3-5 years',
+      'Fast sanction based on machine invoice',
+      'Available for all manufacturing sectors'
+    ],
+    eligibility: [
+      'Business in manufacturing or related field',
+      'Quotation/Invoice for the new machine',
+      'Business existence for at least 2 years',
+      'Clear factory or unit location'
+    ],
+    rates: '9% - 14% p.a.',
+    fees: '1% - 1.5% fee',
+    faqs: [
+      { q: 'Can I buy second-hand machinery?', a: 'Yes, we provide funding for used machines if they are in good working condition.' },
+      { q: 'Is the interest rate fixed?', a: 'Yes, usually the interest rate stays the same throughout your loan term.' }
     ]
   }
 };
@@ -88,6 +160,10 @@ const ServiceDetails = () => {
     window.scrollTo(0, 0);
   }, [slug]);
 
+  const getCustomCtaText = (title) => {
+    return `Finance Your ${title}`;
+  };
+
   return (
     <div className="bg-[#F8FAFC] min-h-screen pt-32 pb-40 relative font-plus overflow-x-hidden">
       <div className="absolute top-0 right-0 w-[1200px] h-[1200px] bg-[#0EA5E9]/5 blur-[180px] rounded-full translate-x-1/2 -translate-y-1/2" />
@@ -98,7 +174,7 @@ const ServiceDetails = () => {
         <nav className="flex items-center flex-wrap gap-4 text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 mb-16">
             <Link to="/" className="hover:text-[#0EA5E9]">Foundation</Link>
             <div className="w-1 h-1 rounded-full bg-slate-300" />
-            <Link to="/services" className="hover:text-[#0EA5E9]">Ecosystem</Link>
+            <Link to="/" className="hover:text-[#0EA5E9]">Services</Link>
             <div className="w-1 h-1 rounded-full bg-[#0EA5E9]" />
             <span className="text-[#0EA5E9]">{data.title} Asset</span>
         </nav>
@@ -112,8 +188,6 @@ const ServiceDetails = () => {
               className="bg-white border border-slate-100 p-6 md:p-16 rounded-[40px] md:rounded-[60px] shadow-sm relative overflow-hidden group"
             >
               <div className="absolute top-0 right-0 w-80 h-80 bg-[#0EA5E9]/5 blur-[100px] rounded-full -mr-40 -mt-40 group-hover:bg-[#0EA5E9]/10 transition-colors duration-700" />
-              
-
               
               <h1 className="text-4xl md:text-6xl font-black text-[#1E293B] leading-none tracking-tighter mb-8 uppercase">
                  {data.title.split(' ').map((word, i) => (
@@ -134,7 +208,7 @@ const ServiceDetails = () => {
                    <p className="text-xl md:text-2xl font-black text-[#1E293B] truncate">{data.rates}</p>
                 </div>
                 <div className="space-y-1">
-                   <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Processing Fee</p>
+                   <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Fee</p>
                    <p className="text-base md:text-lg font-black text-[#1E293B] truncate">{data.fees}</p>
                 </div>
                 <div className="space-y-1">
@@ -172,11 +246,11 @@ const ServiceDetails = () => {
                 <div className="absolute top-0 right-0 w-64 h-64 bg-[#0EA5E9]/10 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2" />
                 <div className="relative z-10 space-y-8 text-center md:text-left">
                    <div>
-                      <h3 className="text-3xl font-black text-white uppercase tracking-tighter">Finance Your Dream Home</h3>
-                      <p className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em] mt-3 italic">Home Loan Services</p>
+                      <h3 className="text-3xl font-black text-white uppercase tracking-tighter">{getCustomCtaText(data.title)}</h3>
+                      <p className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em] mt-3 italic">{data.title} Services</p>
                    </div>
                    <p className="text-slate-400 text-sm italic font-medium leading-relaxed">
-                      "Find the best financing options for your housing loan today."
+                      "Find the best financing options for your business today."
                    </p>
                    <button 
                     onClick={() => setIsModalOpen(true)}
