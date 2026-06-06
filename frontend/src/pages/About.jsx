@@ -66,14 +66,14 @@ const About = () => {
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
             className={`text-5xl md:text-8xl font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-[0.9] tracking-tighter uppercase`}
           >
-            Evolution of <br /> <span className="text-primary italic">Credit.</span>
+            WE ARE <br /> <span className="text-primary italic">SWAYAMFIN.</span>
           </motion.h1>
 
           <motion.p 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
             className={`${isDark ? 'text-slate-400' : 'text-slate-500'} text-lg md:text-2xl max-w-4xl mx-auto font-medium italic leading-relaxed`}
           >
-            "We help MSMEs and retail customers access finance quickly and easily through a trusted, streamlined process."
+            We believe getting the funding you need shouldn't be complicated. Whether you're a growing business or an individual looking for support, we are here to make securing credit simple, fast, and completely transparent.
           </motion.p>
         </div>
       </section>
@@ -86,14 +86,14 @@ const About = () => {
             viewport={{ once: true }} className="space-y-12"
           >
             <h2 className={`text-4xl md:text-6xl font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-tight tracking-tighter uppercase`}>
-               Bridging the <br /> <span className="text-primary italic text-3xl md:text-5xl">Credit Variance.</span>
+               CONNECTING YOU <br /> <span className="text-primary italic text-3xl md:text-5xl">TO CAPITAL.</span>
             </h2>
             <div className="space-y-8">
                <p className={`text-[11px] md:text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'} font-black uppercase tracking-[0.4em] leading-relaxed italic border-l-4 border-primary pl-8`}>
-                  Operating under Green Miles Mobility Pvt. Ltd., Swayamfin was born out of a vision to simplify complex lending landscapes. We understand that every business has a unique story, and standard banking doesn\'t always listen.
+                  Swayamfin Financial Services Private Limited was born out of a simple vision: to take the confusion out of borrowing. We understand that every business and individual has a unique story, and standard banking doesn't always listen.
                </p>
                <p className={`text-[11px] md:text-sm ${isDark ? 'text-slate-500' : 'text-slate-400'} font-black uppercase tracking-[0.3em] leading-relaxed opacity-70`}>
-                  We partner with India's most trusted NBFCs and HFCs to provide customized working capital, LAP, and housing solutions with a focus on speed, transparency, and institutional rigor.
+                  We partner with India's most trusted NBFCs and HFCs to provide customized working capital, LAP, and housing solutions. Our focus is simple: speed, complete transparency, and reliable service you can count on.
                </p>
             </div>
             
@@ -119,12 +119,8 @@ const About = () => {
             </motion.div>
             
             <div className={`absolute -bottom-10 -left-10 ${isDark ? 'bg-[#0F172A] border-white/5 shadow-black' : 'bg-white border-slate-100 shadow-22xl shadow-slate-200/40'} p-8 rounded-[40px] border z-30 transition-transform group-hover:scale-105 duration-500`}>
-               <div className="flex items-center gap-4 mb-4">
-                  <ShieldCheck className="w-6 h-6 text-primary" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 italic">Certified Integrity</span>
-               </div>
                <div className={`text-6xl font-black ${isDark ? 'text-white' : 'text-[#020617]'} tracking-tighter mb-1`}>25<span className="text-primary italic">Y+</span></div>
-               <div className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] italic">Collective Domain Expertise</div>
+               <div className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em] italic text-center">25+ Years in Financial Services</div>
             </div>
           </div>
         </div>
@@ -152,32 +148,26 @@ const About = () => {
             </motion.div>
 
             <div className="order-1 lg:order-2 space-y-12">
-               <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center">
-                    <Cpu className="w-6 h-6 text-primary" />
-                  </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">System Architecture</span>
-               </div>
+
                <h2 className={`text-4xl md:text-6xl font-black ${isDark ? 'text-white' : 'text-slate-900'} leading-tight tracking-tighter uppercase`}>
-                  A Culture of <br /><span className="text-primary italic text-3xl md:text-5xl">Advanced Trust.</span>
+                  FINANCE POWERED BY <br /><span className="text-primary italic text-3xl md:text-5xl">TRANSPARENCY.</span>
                </h2>
                <p className={`text-lg md:text-xl ${isDark ? 'text-slate-400' : 'text-slate-500'} font-semibold italic leading-relaxed max-w-xl opacity-90`}>
-                  "At Swayamfin, our infrastructure transcends physical borders. We engineer a culture where every protocol is designed to simplify complex financial velocity."
+                  At Swayamfin, we use modern technology to break down traditional banking barriers. Our entire culture is built around one simple goal: taking the complexity out of finance so you can get the credit you need, faster and easier.
                </p>
                
                <div className="grid grid-cols-2 gap-4">
                  {[
-                   { label: 'Environment', val: 'Collaborative-X', icon: Globe },
-                   { label: 'Intelligence', val: 'Digital-First', icon: Zap },
-                   { label: 'Performance', val: 'Delta-Scale', icon: Target },
-                   { label: 'Governance', val: 'Core-Pillar', icon: Shield }
+                   { val: 'CUSTOMER-FIRST', icon: Globe },
+                   { val: 'SEAMLESS PROCESS', icon: Zap },
+                   { val: 'RAPID APPROVALS', icon: Target },
+                   { val: 'FULLY COMPLIANT', icon: Shield }
                  ].map((item, i) => (
                     <div key={i} className={`${isDark ? 'bg-[#0B1221] border-white/5' : 'bg-white border-slate-100 shadow-md'} p-6 rounded-3xl border group/tile hover:bg-primary transition-all duration-500`}>
                       <div className="flex justify-between items-start mb-6">
                          <div className="w-1.5 h-1.5 rounded-full bg-primary group-hover/tile:bg-white" />
                          <item.icon className="w-5 h-5 text-primary group-hover/tile:text-white transition-colors" />
                       </div>
-                      <p className={`text-[9px] font-black text-slate-500 uppercase tracking-widest italic group-hover/tile:text-white/60 mb-1`}>{item.label}</p>
                       <p className={`${isDark ? 'text-white' : 'text-slate-900'} font-black text-lg uppercase tracking-tighter group-hover/tile:text-white transition-colors`}>{item.val}</p>
                    </div>
                  ))}
@@ -197,8 +187,8 @@ const About = () => {
              >
                 <Users className="w-10 h-10" />
              </motion.div>
-             <h2 className={`text-5xl md:text-8xl font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-tighter uppercase leading-none`}>Leadership <span className="text-primary italic">Council.</span></h2>
-             <p className="text-slate-500 font-black uppercase tracking-[0.5em] text-[10px] italic">Strategic minds behind the Swayamfin deployment</p>
+             <h2 className={`text-5xl md:text-8xl font-black ${isDark ? 'text-white' : 'text-slate-900'} tracking-tighter uppercase leading-none`}>MEET THE <span className="text-primary italic">OWNERS.</span></h2>
+             <p className="text-slate-500 font-black uppercase tracking-[0.5em] text-[10px] italic">The leadership behind Swayamfin Financial Services.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
@@ -229,7 +219,7 @@ const About = () => {
                       <Link to={`/team/${member.slug}`} className="hover:text-primary transition-colors">{member.name}</Link>
                    </h4>
                    <p className="text-primary text-[10px] font-black uppercase tracking-[0.4em] italic leading-none">{member.role}</p>
-                   <p className={`${isDark ? 'text-slate-500' : 'text-slate-400'} text-[11px] leading-relaxed font-bold italic opacity-60 group-hover:opacity-100 transition-opacity`}>"{member.bio}"</p>
+                   <p className={`${isDark ? 'text-slate-500' : 'text-slate-400'} text-[11px] leading-relaxed font-bold italic opacity-60 group-hover:opacity-100 transition-opacity`}>{member.bio}</p>
                 </div>
               </motion.div>
             ))}
@@ -237,21 +227,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Trust Architecture Strip */}
-      <section className={`py-16 md:py-24 ${isDark ? 'bg-slate-900 border-t border-white/5' : 'bg-slate-900'} relative overflow-hidden`}>
-         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,theme(colors.primary.DEFAULT)_0%,transparent_70%)]" />
-         <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="text-center md:text-left space-y-4">
-               <h3 className="text-white text-4xl md:text-6xl font-black tracking-tighter uppercase leading-none">Partnership <br /> <span className="text-primary">Protocol.</span></h3>
-               <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.5em] italic leading-relaxed">Secured with India's Tier-1 Financial Anchors</p>
-            </div>
-            <div className="flex flex-wrap justify-center gap-12 grayscale brightness-200 opacity-20 hover:opacity-100 transition-all duration-700">
-               {[1,2,3,4].map(idx => (
-                 <div key={idx} className="w-28 h-6 bg-white/20 rounded-lg animate-pulse" style={{ animationDelay: `${idx * 0.2}s` }} />
-               ))}
-            </div>
-         </div>
-      </section>
+
     </div>
   );
 };

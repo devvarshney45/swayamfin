@@ -50,7 +50,7 @@ const Process = () => {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
             className={`${isDark ? 'text-slate-400' : 'text-slate-500'} text-lg md:text-2xl max-w-4xl mx-auto font-medium italic leading-relaxed`}
           >
-            "Accelerating regional credit cycles through institutional-grade governance and a transparent operational pipeline."
+            Accelerating regional credit cycles through institutional-grade governance and a transparent operational pipeline.
           </motion.p>
         </div>
       </section>
@@ -76,7 +76,7 @@ const Process = () => {
                     <span className={`px-3 py-1 ${isDark ? 'bg-white/5 text-slate-400' : 'bg-slate-100 text-slate-500'} text-[9px] font-black rounded-full uppercase tracking-widest`}>{step.time}</span>
                  </div>
                  <h3 className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'} uppercase tracking-tight leading-tight group-hover:text-primary transition-colors`}>{step.title}</h3>
-                 <p className={`${isDark ? 'text-slate-500' : 'text-slate-400'} text-[11px] font-bold leading-relaxed italic`}>"{step.desc}"</p>
+                 <p className={`${isDark ? 'text-slate-500' : 'text-slate-400'} text-[11px] font-bold leading-relaxed italic`}>{step.desc}</p>
               </div>
 
                <div className="pt-8 mt-8 border-t border-slate-500/10 flex items-center justify-between">
@@ -117,7 +117,7 @@ const Process = () => {
                       className="overflow-hidden"
                     >
                       <div className={`px-10 pb-10 ${isDark ? 'text-slate-400' : 'text-slate-500'} font-bold italic border-t ${isDark ? 'border-white/5' : 'border-slate-50'} pt-8 leading-relaxed`}>
-                        "{faq.a}"
+                        {faq.a}
                       </div>
                     </motion.div>
                   )}

@@ -23,7 +23,7 @@ const serviceData = {
       'Simple ID and income proof required'
     ],
     rates: '8.5% - 14% p.a',
-    fees: '₹5000 + GST',
+    fees: '1% - 1.5% fee + ₹3000 + GST',
     faqs: [
       { q: 'Can I buy a plot of land?', a: 'Yes, we provide loans to buy land and build your house on it.' },
       { q: 'Is it okay if I have informal income?', a: 'Yes, we have special ways to check your income even if it is not documented in standard ways.' }
@@ -48,7 +48,7 @@ const serviceData = {
       'Funds must be used for legitimate business expansion, education, medical, or personal needs'
     ],
     rates: '8.5% - 12% p.a.',
-    fees: '0.5% - 1.5% fee + INR 3000 + GST',
+    fees: '1% - 1.5% fee + ₹3000 + GST',
     faqs: [
       { q: 'What kind of property do you accept?', a: 'We accept houses, offices, and even factory land in many locations.' },
       { q: 'Do I have to give my building to you?', a: 'No, you keep using the building. It just acts as security for the loan.' }
@@ -72,7 +72,7 @@ const serviceData = {
       'No collateral or security needed'
     ],
     rates: '14% - 19% p.a.',
-    fees: '2% - 3% processing fee',
+    fees: '1% - 1.5% fee + ₹3000 + GST',
     faqs: [
       { q: 'How fast can I get the money?', a: 'Most unsecured loans are approved and deposited within 48 to 72 hours.' },
       { q: 'What can I use the money for?', a: 'You can use it for anything your business needs, like buying stock or paying bills.' }
@@ -96,7 +96,7 @@ const serviceData = {
       'Stable relationship with your buyers'
     ],
     rates: '11% - 16% p.a.',
-    fees: '1% - 2% fee',
+    fees: '1% - 1.5% fee + ₹3000 + GST',
     faqs: [
       { q: 'Does my supplier need to do anything?', a: 'Yes, we coordinate with your supplier to ensure they get paid directly and quickly.' },
       { q: 'Is this a long-term loan?', a: 'No, this is a short-term cycle that repeats as you order new stock.' }
@@ -107,20 +107,17 @@ const serviceData = {
     tagline: 'Sell Your Stuff Globally',
     description: 'We give you money to help you pack up and sell your stuff to people far away in other countries. Grow your exports without any security.',
     features: [
-      'Funds for international orders',
-      'No collateral needed for your loan',
-      'Bridge the gap while goods are shipping',
-      'Help with foreign exchange and payments',
-      'Scale your export business fast'
+      'Immediate working capital support',
+      'Improved liquidity cycle',
+      'Reduced dependency on traditional CC/OD limits'
     ],
     eligibility: [
-      'Valid IEC (Export Code) and registration',
-      'Confirmed orders from international buyers',
-      'Minimum export history of 1 year',
-      'GST and bank records in good standing'
+      'Minimum 3 years vintage',
+      'Minimum ₹2 Cr exports in last 12 months',
+      'No prior NPA/default history with any financial institution'
     ],
     rates: '10% - 15% p.a.',
-    fees: '1.5% - 2% fee',
+    fees: '1% - 1.5% fee + ₹3000 + GST',
     faqs: [
       { q: 'Can I get money before I ship?', a: 'Yes, we provide "pre-shipment" finance to help you manufacture and pack your goods.' },
       { q: 'Do you help with global buyers?', a: 'We check the reliability of your buyers to make the process safer for you.' }
@@ -144,7 +141,7 @@ const serviceData = {
       'Clear factory or unit location'
     ],
     rates: '9% - 14% p.a.',
-    fees: '1% - 1.5% fee',
+    fees: '1% - 1.5% fee + ₹3000 + GST',
     faqs: [
       { q: 'Can I buy second-hand machinery?', a: 'Yes, we provide funding for used machines if they are in good working condition.' },
       { q: 'Is the interest rate fixed?', a: 'Yes, usually the interest rate stays the same throughout your loan term.' }
@@ -177,7 +174,7 @@ const ServiceDetails = () => {
             <div className="w-1 h-1 rounded-full bg-slate-300" />
             <Link to="/" className="hover:text-[#0EA5E9]">Services</Link>
             <div className="w-1 h-1 rounded-full bg-[#0EA5E9]" />
-            <span className="text-[#0EA5E9]">{data.title} Asset</span>
+            <span className="text-[#0EA5E9]">{data.title}</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
@@ -197,7 +194,7 @@ const ServiceDetails = () => {
               </h1>
               
               <p className="text-lg md:text-xl text-slate-500 font-medium italic border-l-4 border-[#0EA5E9] pl-6 mb-12">
-                "{data.tagline}"
+                {data.tagline}
               </p>
               <p className="text-slate-600 text-sm font-medium leading-relaxed mb-12 opacity-90">
                  {data.description}
@@ -251,7 +248,7 @@ const ServiceDetails = () => {
                       <p className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em] mt-3 italic">{data.title} Services</p>
                    </div>
                    <p className="text-slate-400 text-sm italic font-medium leading-relaxed">
-                      "Find the best financing options for your business today."
+                      Find the best financing options for your business today.
                    </p>
                    <button 
                     onClick={() => setIsModalOpen(true)}
@@ -286,13 +283,9 @@ const ServiceDetails = () => {
         {/* FAQs */}
         <div className="mt-40 space-y-16">
            <div className="text-center space-y-6">
-              <motion.div 
-                initial={{ scale: 0.9, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }}
-                className="inline-flex items-center gap-2 bg-[#0EA5E9]/10 text-[#0EA5E9] px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.4em]"
-              >
-                Information Node
-              </motion.div>
-              <h2 className="text-4xl md:text-5xl font-black text-[#1E293B] uppercase tracking-tighter leading-none">Deep <span className="text-[#0EA5E9] italic">Interface.</span></h2>
+              <h2 className="text-4xl md:text-5xl font-black text-[#1E293B] uppercase tracking-tighter leading-none">
+                <span className="text-[#0EA5E9] italic">FAQ</span>
+              </h2>
            </div>
            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {data.faqs.map((faq, i) => (
@@ -300,7 +293,7 @@ const ServiceDetails = () => {
                    <h4 className="text-xl font-black text-[#1E293B] uppercase tracking-tight leading-tight flex items-start gap-4">
                      <span className="text-[#0EA5E9]">Q.</span> {faq.q}
                    </h4>
-                   <p className="text-slate-500 font-medium italic border-t border-slate-100 pt-6 leading-relaxed">"{faq.a}"</p>
+                   <p className="text-slate-500 font-medium italic border-t border-slate-100 pt-6 leading-relaxed">{faq.a}</p>
                 </div>
               ))}
            </div>

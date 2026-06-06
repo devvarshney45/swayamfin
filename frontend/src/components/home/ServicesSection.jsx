@@ -65,30 +65,7 @@ const ServicesSection = () => {
           ))}
         </div>
 
-        {/* CTA Banner */}
-        <motion.div
-           initial={{ opacity: 0, y: 30 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           viewport={{ once: true }}
-           className="mt-20 p-10 md:p-16 bg-[#1E293B] rounded-[40px] relative overflow-hidden shadow-2xl"
-        >
-          <div className="absolute top-0 right-0 w-80 h-80 bg-[#0EA5E9]/10 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2" />
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="space-y-4 text-center md:text-left">
-              <p className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em]">Calculate Your Eligibility</p>
-              <h3 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight">
-                See How It <span className="text-[#0EA5E9] italic">Works</span>
-              </h3>
-              <p className="text-slate-400 text-sm max-w-md font-medium">Use our smart tools to estimate your loan eligibility in minutes.</p>
-            </div>
-            <button 
-               onClick={() => setIsModalOpen(true)}
-               className="btn-primary py-5 px-10 text-[10px] uppercase tracking-[0.2em] shadow-xl"
-            >
-              Start Application
-            </button>
-          </div>
-        </motion.div>
+
       </div>
 
       <LeadCaptureModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
