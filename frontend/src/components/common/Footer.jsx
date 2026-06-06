@@ -96,7 +96,7 @@ const Footer = () => {
           {/* Column 4: Locations */}
           <div>
             <h4 className="text-[11px] font-black mb-8 text-[#0EA5E9] uppercase tracking-[0.4em] flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9]" /> OUR LOCATIONS
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9]" /> OUR BRANCH LOCATION
             </h4>
             <div className="space-y-4">
               {hubs.map((hub, i) => (

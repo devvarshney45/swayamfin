@@ -7,17 +7,22 @@ exports.login = async (req, res) => {
 
     const user = await User.findOne({ email }).populate('branch_id');
     if (!user) {
+      console.log(`[AUTH] Login failed: User not found for ${email}`);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     if (!user.is_active) {
+      console.log(`[AUTH] Login failed: User ${email} is inactive`);
       return res.status(401).json({ message: 'User account is inactive' });
     }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
+      console.log(`[AUTH] Login failed: Password mismatch for ${email}`);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
+    
+    console.log(`[AUTH] Login successful for ${email}`);
 
     const token = jwt.sign(
       { 

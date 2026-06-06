@@ -44,10 +44,11 @@ const serviceData = {
       'Must own a residential or commercial property',
       'Property should have clear legal titles',
       'Stable business or salary income',
-      'Property age should be under 40 years'
+      'Property age should be under 40 years',
+      'Funds must be used for legitimate business expansion, education, medical, or personal needs'
     ],
     rates: '8.5% - 12% p.a.',
-    fees: '0.5% - 1.5% fee',
+    fees: '0.5% - 1.5% fee + INR 3000 + GST',
     faqs: [
       { q: 'What kind of property do you accept?', a: 'We accept houses, offices, and even factory land in many locations.' },
       { q: 'Do I have to give my building to you?', a: 'No, you keep using the building. It just acts as security for the loan.' }
@@ -205,14 +206,14 @@ const ServiceDetails = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-10 border-t border-slate-100">
                 <div className="space-y-1">
                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Base Rate</p>
-                   <p className="text-xl md:text-2xl font-black text-[#1E293B] truncate">{data.rates}</p>
+                   <p className="text-xl md:text-2xl font-black text-[#1E293B] break-words">{data.rates}</p>
                 </div>
                 <div className="space-y-1">
                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Fee</p>
-                   <p className="text-base md:text-lg font-black text-[#1E293B] truncate">{data.fees}</p>
+                   <p className="text-sm font-black text-[#1E293B] break-words leading-snug">{data.fees}</p>
                 </div>
                 <div className="space-y-1">
-                   <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Cycle Velocity</p>
+                   <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Processing Time</p>
                    <p className="text-xl md:text-2xl font-black text-[#0EA5E9]">48-72h</p>
                 </div>
               </div>
@@ -224,7 +225,7 @@ const ServiceDetails = () => {
                <div className="flex justify-between items-center mb-10 pb-6 border-b border-slate-50">
                  <div className="flex items-center gap-3">
                     <div className="w-1.5 h-8 bg-[#0EA5E9] rounded-full" />
-                    <h2 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">Scope Matrix</h2>
+                    <h2 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">Scope</h2>
                  </div>
                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest hidden sm:block">Primary Features</span>
                </div>
