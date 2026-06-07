@@ -23,7 +23,7 @@ const serviceData = {
       'Simple ID and income proof required'
     ],
     rates: '8.5% - 14% p.a',
-    fees: '1% - 1.5% fee + ₹3000 + GST',
+    fees: 'INR 3000 + GST',
     faqs: [
       { q: 'Can I buy a plot of land?', a: 'Yes, we provide loans to buy land and build your house on it.' },
       { q: 'Is it okay if I have informal income?', a: 'Yes, we have special ways to check your income even if it is not documented in standard ways.' }
@@ -48,7 +48,7 @@ const serviceData = {
       'Funds must be used for legitimate business expansion, education, medical, or personal needs'
     ],
     rates: '8.5% - 12% p.a.',
-    fees: '1% - 1.5% fee + ₹3000 + GST',
+    fees: 'INR 3000 + GST',
     faqs: [
       { q: 'What kind of property do you accept?', a: 'We accept houses, offices, and even factory land in many locations.' },
       { q: 'Do I have to give my building to you?', a: 'No, you keep using the building. It just acts as security for the loan.' }
@@ -72,7 +72,7 @@ const serviceData = {
       'No collateral or security needed'
     ],
     rates: '14% - 19% p.a.',
-    fees: '1% - 1.5% fee + ₹3000 + GST',
+    fees: 'INR 3000 + GST',
     faqs: [
       { q: 'How fast can I get the money?', a: 'Most unsecured loans are approved and deposited within 48 to 72 hours.' },
       { q: 'What can I use the money for?', a: 'You can use it for anything your business needs, like buying stock or paying bills.' }
@@ -96,7 +96,7 @@ const serviceData = {
       'Stable relationship with your buyers'
     ],
     rates: '11% - 16% p.a.',
-    fees: '1% - 1.5% fee + ₹3000 + GST',
+    fees: 'INR 3000 + GST',
     faqs: [
       { q: 'Does my supplier need to do anything?', a: 'Yes, we coordinate with your supplier to ensure they get paid directly and quickly.' },
       { q: 'Is this a long-term loan?', a: 'No, this is a short-term cycle that repeats as you order new stock.' }
@@ -117,7 +117,7 @@ const serviceData = {
       'No prior NPA/default history with any financial institution'
     ],
     rates: '10% - 15% p.a.',
-    fees: '1% - 1.5% fee + ₹3000 + GST',
+    fees: 'INR 3000 + GST',
     faqs: [
       { q: 'Can I get money before I ship?', a: 'Yes, we provide "pre-shipment" finance to help you manufacture and pack your goods.' },
       { q: 'Do you help with global buyers?', a: 'We check the reliability of your buyers to make the process safer for you.' }
@@ -141,7 +141,7 @@ const serviceData = {
       'Clear factory or unit location'
     ],
     rates: '9% - 14% p.a.',
-    fees: '1% - 1.5% fee + ₹3000 + GST',
+    fees: 'INR 3000 + GST',
     faqs: [
       { q: 'Can I buy second-hand machinery?', a: 'Yes, we provide funding for used machines if they are in good working condition.' },
       { q: 'Is the interest rate fixed?', a: 'Yes, usually the interest rate stays the same throughout your loan term.' }
