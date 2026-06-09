@@ -132,7 +132,7 @@ const Partner = () => {
                     <input required type="tel" maxLength="10" className="input-standard w-full h-16 rounded-[28px] px-8 text-sm" placeholder="+91..." value={formData.mobile} onChange={e => setFormData({...formData, mobile: e.target.value.replace(/\D/g, '')})} />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Hub Location</label>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Branch Location</label>
                     <input required type="text" className="input-standard w-full h-16 rounded-[28px] px-8 text-sm" placeholder="City" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} />
                   </div>
                 </div>

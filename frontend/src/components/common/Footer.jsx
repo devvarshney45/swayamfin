@@ -17,11 +17,11 @@ const Footer = () => {
     { name: 'Machinery Finance', slug: 'machinery-loan' },
   ];
 
-  const hubs = [
-    { name: 'Agra Hub', addr: 'Block No. 20/4, Shop No. 11, Maruti Tower, Sanjay Place, Agra, UP - 282002' },
-    { name: 'Mathura Hub', addr: 'No. 207, 2nd Floor, Shri Square, Radhapuram Chauraha, Mathura, UP - 281001' },
-    { name: 'Hathras Hub', addr: 'VG Plaza, Glory Garden, Mathura Road, Hathras, UP - 204101' },
-    { name: 'Kosi Hub', addr: 'Radharani Tower, New Agrawal Colony, Nandgaon Road, Kosi Kalan, UP - 281403' },
+  const branches = [
+    { name: 'Agra Branch', addr: 'Block No. 20/4, Shop No. 11, Maruti Tower, Sanjay Place, Agra, UP - 282002' },
+    { name: 'Mathura Branch', addr: 'No. 207, 2nd Floor, Shri Square, Radhapuram Chauraha, Mathura, UP - 281001' },
+    { name: 'Hathras Branch', addr: 'VG Plaza, Glory Garden, Mathura Road, Hathras, UP - 204101' },
+    { name: 'Kosi Branch', addr: 'Radharani Tower, New Agrawal Colony, Nandgaon Road, Kosi Kalan, UP - 281403' },
   ];
 
   return (
@@ -99,13 +99,13 @@ const Footer = () => {
               <span className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9]" /> OUR BRANCH LOCATION
             </h4>
             <div className="space-y-4">
-              {hubs.map((hub, i) => (
+              {branches.map((branch, i) => (
                 <div key={i} className="p-4 bg-white/5 border border-white/5 rounded-xl space-y-2 hover:bg-white/10 transition-colors">
                   <div className="flex items-center gap-2">
                     <div className="w-1 h-1 rounded-full bg-[#0EA5E9]" />
-                    <p className="text-[10px] font-black text-white uppercase tracking-tighter">{hub.name}</p>
+                    <p className="text-[10px] font-black text-white uppercase tracking-tighter">{branch.name}</p>
                   </div>
-                  <p className="text-[10px] text-slate-400 font-medium italic leading-relaxed pl-3">{hub.addr}</p>
+                  <p className="text-[10px] text-slate-400 font-medium italic leading-relaxed pl-3">{branch.addr}</p>
                 </div>
               ))}
             </div>

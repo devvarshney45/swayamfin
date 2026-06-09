@@ -46,7 +46,7 @@ const Team = () => {
              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
              className="text-5xl md:text-8xl font-black text-[#1E293B] leading-none tracking-tighter uppercase"
            >
-             The Minds <br /> <span className="text-[#0EA5E9] italic">Behind Hub.</span>
+             The Minds <br /> <span className="text-[#0EA5E9] italic">Behind Branch.</span>
            </motion.h1>
 
            <motion.p 
@@ -88,7 +88,7 @@ const Team = () => {
            <div className="relative z-10 space-y-8">
               <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none">Join the <span className="text-[#0EA5E9] italic">Mission.</span></h2>
               <p className="text-blue-100/60 text-lg md:text-xl font-medium max-w-2xl mx-auto italic">
-                 "We are continuously integrating specialized personnel into our regional hubs across India."
+                 "We are continuously integrating specialized personnel into our regional branches across India."
               </p>
               <div className="pt-6">
                  <a href="mailto:info@swayamfin.com" className="inline-block bg-white text-[#1E293B] font-black px-12 py-5 rounded-2xl shadow-2xl hover:bg-[#0EA5E9] hover:text-white transition-all uppercase tracking-[0.3em] text-[10px]">

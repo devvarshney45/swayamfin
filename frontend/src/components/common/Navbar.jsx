@@ -107,7 +107,7 @@ const Navbar = () => {
                   >
                     {branches.map(b => (
                       <Link key={b.slug} to={`/branches/${b.slug}`} className="block p-3 hover:bg-slate-50 rounded-lg group text-left">
-                        <p className="text-[10px] font-black uppercase text-slate-900 group-hover:text-[#0EA5E9]">{b.name} Hub</p>
+                        <p className="text-[10px] font-black uppercase text-slate-900 group-hover:text-[#0EA5E9]">{b.name} Branch</p>
                       </Link>
                     ))}
                   </motion.div>

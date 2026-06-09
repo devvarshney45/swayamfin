@@ -98,7 +98,7 @@ const NewLead = () => {
                     <input 
                       required type="text"
                       className="input-standard w-full h-16 rounded-2xl px-8 text-sm"
-                      placeholder="E.g. Agra Hub"
+                      placeholder="E.g. Agra Branch"
                       value={formData.location_city}
                       onChange={e => setFormData({...formData, location_city: e.target.value})}
                     />

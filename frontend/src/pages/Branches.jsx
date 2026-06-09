@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 const branches = [
-  { city: 'Agra', slug: 'agra', code: 'AGR-HUB-01', manager: 'Nupur Prasad', tagline: 'Strategic Regional Command Center' },
-  { city: 'Mathura', slug: 'mathura', code: 'MTH-HUB-02', manager: 'Sudhanshu Shekhar', tagline: 'Holy Gate Operational Node' },
-  { city: 'Hathras', slug: 'hathras', code: 'HTH-HUB-03', manager: 'Madhu Priya Prasad', tagline: 'Main Market Credit Matrix' },
-  { city: 'Kosi', slug: 'kosi', code: 'KSI-HUB-04', manager: 'Vikkrant Prasad', tagline: 'G.T. Road Distribution Hub' }
+  { city: 'Agra', slug: 'agra', code: 'AGR-BRANCH-01', manager: 'Mohit Kumar', tagline: 'Strategic Regional Command Center' },
+  { city: 'Mathura', slug: 'mathura', code: 'MTH-BRANCH-02', manager: 'Abhay Kumar Shukla', tagline: 'Holy Gate Operational Node' },
+  { city: 'Hathras', slug: 'hathras', code: 'HTH-BRANCH-03', manager: 'Abhishek Sharma', tagline: 'Main Market Credit Matrix' },
+  { city: 'Kosi', slug: 'kosi', code: 'KSI-BRANCH-04', manager: 'Narendra', tagline: 'G.T. Road Distribution Branch' }
 ];
 
 const Branches = () => {
@@ -54,18 +54,18 @@ const Branches = () => {
 
                        <div className="space-y-4">
                           <h3 className="text-4xl font-black text-[#1E293B] uppercase tracking-tight group-hover:translate-x-2 transition-transform">
-                             {branch.city} <span className="text-[#0EA5E9] italic opacity-40">Hub</span>
+                             {branch.city} <span className="text-[#0EA5E9] italic opacity-40">Branch</span>
                           </h3>
                           <p className="text-slate-500 font-medium italic border-l-2 border-[#0EA5E9]/20 pl-4">{branch.tagline}</p>
                        </div>
 
                        <div className="pt-10 border-t border-slate-200 flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
                           <div className="space-y-1">
-                             <p className="text-slate-400">Node Hub Manager</p>
+                             <p className="text-slate-400">Branch Manager</p>
                              <p className="text-[#1E293B]">{branch.manager}</p>
                           </div>
                           <div className="text-[#0EA5E9] group-hover:translate-x-2 transition-transform">
-                             Access Hub →
+                             Access Branch →
                           </div>
                        </div>
                     </div>
@@ -81,7 +81,7 @@ const Branches = () => {
            <p className="text-slate-400 font-black uppercase tracking-[0.6em] text-[8px]">Network Intelligence Dashboard</p>
            <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
               {[
-                { l: 'Total Hubs', v: '04' },
+                { l: 'Total Branches', v: '04' },
                 { l: 'Uptime', v: '99.9%' },
                 { l: 'Encryption', v: 'AES-256' },
                 { l: 'Topology', v: 'Mesh' }

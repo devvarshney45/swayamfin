@@ -6,10 +6,10 @@ const branchData = {
   'agra': {
     city: 'Agra',
     address: 'Block No. 20/4, Shop No. 11, Maruti Tower, First Floor, Sanjay Place, Agra, UP - 282002',
-    phone: '+91 87009 65594',
+    phone: '05624362840',
     email: 'agra@swayamfin.com',
     map: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3549.0!2d78.0!3d27.18!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDEwJzQ4LjAiTiA3OMKwMDAnMDAuMCJF!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin',
-    manager: 'Nupur Prasad',
+    manager: 'Mohit Kumar',
     code: 'AGR-NOD-01',
     rating: 'A+ Grade',
     velocity: '48H'
@@ -17,10 +17,10 @@ const branchData = {
   'mathura': {
     city: 'Mathura',
     address: 'Reg. Office No. 207, 2nd Floor, Shri Square Building, Radhapuram Chauraha, Shri Radha Puram, Vishwakarma Nagar, Mathura, UP - 281001',
-    phone: '+91 87009 65595',
+    phone: '9560723338',
     email: 'mathura@swayamfin.com',
     map: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.5!2d77.67!3d27.5!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDMwJzAwLjAiTiA3N8KwNDAnMTIuMCJF!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin',
-    manager: 'Sudhanshu Shekhar',
+    manager: 'Abhay Kumar Shukla',
     code: 'MTH-NOD-02',
     rating: 'A Grade',
     velocity: '52H'
@@ -28,10 +28,10 @@ const branchData = {
   'hathras': {
     city: 'Hathras',
     address: 'VG Plaza, Glory Garden, Mathura Road, Hathras, UP - 204101',
-    phone: '+91 87009 65592',
+    phone: '9560733378',
     email: 'hathras@swayamfin.com',
     map: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3525.0!2d78.0!3d27.6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDM2JzAwLjAiTiA3OMKwMDAnMDAuMCJF!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin',
-    manager: 'Madhu Priya Prasad',
+    manager: 'Abhishek Sharma',
     code: 'HTH-NOD-03',
     rating: 'A+ Grade',
     velocity: '45H'
@@ -39,10 +39,10 @@ const branchData = {
   'kosi': {
     city: 'Kosi',
     address: 'Radharani Tower, New Agrawal Colony, Nandgaon Road, Kosi Kalan, Mathura, UP - 281403',
-    phone: '+91 87009 65592',
+    phone: '7017768546',
     email: 'kosi@swayamfin.com',
     map: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3515.0!2d77.4!3d27.8!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDQ4JzAwLjAiTiA3N8KwMjQnMDAuMCJF!5e0!3m2!1sen!2sin!4v1610000000000!5m2!1sen!2sin',
-    manager: 'Vikkrant Prasad',
+    manager: 'Narendra',
     code: 'KSI-NOD-04',
     rating: 'B+ Grade',
     velocity: '60H'
@@ -121,7 +121,7 @@ const BranchDetails = () => {
             <div className="w-1 h-1 rounded-full bg-slate-300" />
             <Link to="/branches" className="hover:text-[#0EA5E9]">Network</Link>
             <div className="w-1 h-1 rounded-full bg-[#0EA5E9]" />
-            <span className="text-[#0EA5E9]">{branch.city} Node</span>
+            <span className="text-[#0EA5E9]">{branch.city} Branch</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
@@ -135,11 +135,11 @@ const BranchDetails = () => {
               <div className="absolute top-0 right-0 w-80 h-80 bg-[#0EA5E9]/5 blur-[100px] rounded-full -mr-40 -mt-40" />
               
               <div className="inline-flex items-center gap-3 px-5 py-2 bg-[#0EA5E9]/10 border border-[#0EA5E9]/20 rounded-full mb-10">
-                <span className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em]">Live Distribution Hub</span>
+                <span className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em]">Live Distribution Branch</span>
               </div>
               
               <h1 className="text-4xl md:text-6xl font-black text-[#1E293B] leading-[1.1] tracking-tight mb-8">
-                Swayamfin <br /> <span className="text-[#0EA5E9] italic uppercase">{branch.city} Hub.</span>
+                Swayamfin <br /> <span className="text-[#0EA5E9] italic uppercase">{branch.city} Branch.</span>
               </h1>
               
               <p className="text-xl text-slate-500 font-medium italic border-l-4 border-[#0EA5E9]/20 pl-6 mb-12">
@@ -147,10 +147,9 @@ const BranchDetails = () => {
               </p>
  
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 pt-10 border-t border-slate-100">
-                <InfoItem label="Geospatial Node" value={branch.address} />
-                <InfoItem label="Interface Link" value={branch.phone} isLarge color="blue" />
-                <InfoItem label="Node Manager" value={branch.manager} />
-                <InfoItem label="System Reliability" value={branch.rating} subValue={`Code: ${branch.code}`} />
+                <InfoItem label="Branch Address" value={branch.address} />
+                <InfoItem label="Contact No." value={branch.phone} isLarge color="blue" />
+                <InfoItem label="Branch Manager" value={branch.manager} />
               </div>
             </motion.div>
  
@@ -176,8 +175,7 @@ const BranchDetails = () => {
                
                <div className="relative z-10 space-y-8">
                   <div>
-                    <h3 className="text-2xl font-black text-white uppercase tracking-tight">Hub Onboarding</h3>
-                    <p className="text-[#0EA5E9] text-[9px] font-bold uppercase tracking-[0.4em] mt-2 italic">Regional Enrollment Portal</p>
+                    <h3 className="text-2xl font-black text-white uppercase tracking-tight">Start Application</h3>
                   </div>
 
                   <AnimatePresence mode="wait">
@@ -187,7 +185,7 @@ const BranchDetails = () => {
                            <span className="text-2xl font-black">✓</span>
                         </div>
                         <h4 className="text-2xl font-black text-white uppercase tracking-tight">Submission Finalized</h4>
-                        <p className="text-slate-400 text-sm font-medium italic">The {branch.city} Hub team will intercept your session shortly.</p>
+                        <p className="text-slate-400 text-sm font-medium italic">The {branch.city} Branch team will intercept your session shortly.</p>
                         <button onClick={() => setSuccess(false)} className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-widest hover:underline">New Request</button>
                       </motion.div>
                     ) : (
@@ -204,7 +202,7 @@ const BranchDetails = () => {
                          </div>
                          <div className="grid grid-cols-2 gap-4">
                            <div className="space-y-2">
-                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Comm Link</label>
+                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Mobile No.</label>
                              <input 
                               required type="tel" maxLength="10"
                               className="w-full bg-white/5 border border-white/10 rounded-[16px] px-6 py-4 text-white text-sm font-bold outline-none focus:border-[#0EA5E9] focus:bg-transparent transition-all"
@@ -242,7 +240,7 @@ const BranchDetails = () => {
                           disabled={isSubmitting}
                           className="w-full btn-primary py-6 uppercase tracking-[0.3em] text-[10px] shadow-2xl"
                          >
-                            {isSubmitting ? 'Syncing...' : 'Initiate Session'}
+                            {isSubmitting ? 'Syncing...' : 'Submit'}
                          </button>
                          {submitStatus === 'duplicate' && <p className="text-[10px] text-amber-500 font-black uppercase tracking-widest text-center">Duplicate lead already submitted within 24 hours.</p>}
                          {submitStatus === 'error' && <p className="text-[10px] text-red-500 font-black uppercase tracking-widest text-center">Submission failed. Please try again.</p>}
@@ -250,7 +248,7 @@ const BranchDetails = () => {
 
                          <div className="p-6 bg-white/5 rounded-[24px] border border-white/5 flex gap-4 items-start">
                             <span className="text-[#0EA5E9] font-black text-lg">!</span>
-                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest leading-relaxed">Session is flagged as <span className="text-[#0EA5E9]">Priority Hub</span> for regional deployment.</p>
+                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest leading-relaxed">You are submitting your information to {branch.city.toLowerCase()} branch</p>
                          </div>
                       </form>
                     )}

@@ -105,7 +105,7 @@ const Contact = () => {
               <div className="relative z-10 space-y-10">
                  <div className="flex items-center gap-6">
                     <div className="w-16 h-16 bg-white/5 rounded-3xl border border-white/10 flex items-center justify-center font-black text-white text-2xl">M</div>
-                    <h3 className="text-3xl font-black text-white uppercase tracking-tighter leading-none">Regional Hub <br /> <span className="text-[#0EA5E9]">Command.</span></h3>
+                    <h3 className="text-3xl font-black text-white uppercase tracking-tighter leading-none">Regional Branch <br /> <span className="text-[#0EA5E9]">Command.</span></h3>
                  </div>
                  <p className="text-blue-100 text-xl md:text-2xl font-medium leading-tight italic max-w-lg">
                     "619, Somdutt Chambers II, Bhikaji Cama, New Delhi – 110066"
@@ -148,7 +148,7 @@ const Contact = () => {
                           <input required type="tel" maxLength="10" className="input-standard w-full h-16 rounded-[28px] px-8 text-sm" placeholder="+91 XXXX" value={formData.mobile} onChange={e => setFormData({...formData, mobile: e.target.value.replace(/\D/g, '')})} />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Hub Location</label>
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Branch Location</label>
                           <input required type="text" className="input-standard w-full h-16 rounded-[28px] px-8 text-sm" placeholder="City" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} />
                         </div>
                       </div>
