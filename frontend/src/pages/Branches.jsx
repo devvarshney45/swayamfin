@@ -23,7 +23,7 @@ const Branches = () => {
               Strategic <span className="text-[#0EA5E9] italic">Nodes.</span>
            </h1>
            <p className="text-slate-500 font-medium italic max-w-2xl mx-auto">
-              "Hyper-localized financial infrastructure across North Indian credit corridors."
+              Hyper-localized financial infrastructure across North Indian credit corridors.
            </p>
         </div>
 
@@ -53,7 +53,7 @@ const Branches = () => {
                        </div>
 
                        <div className="space-y-4">
-                          <h3 className="text-4xl font-black text-[#1E293B] uppercase tracking-tight group-hover:translate-x-2 transition-transform">
+                          <h3 className="text-4xl font-black text-[#1E293B] uppercase tracking-tight group-hover:translate-x-2 transition-transform whitespace-nowrap">
                              {branch.city} <span className="text-[#0EA5E9] italic opacity-40">Branch</span>
                           </h3>
                           <p className="text-slate-500 font-medium italic border-l-2 border-[#0EA5E9]/20 pl-4">{branch.tagline}</p>

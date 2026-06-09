@@ -138,12 +138,12 @@ const BranchDetails = () => {
                 <span className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em]">Live Distribution Branch</span>
               </div>
               
-              <h1 className="text-4xl md:text-6xl font-black text-[#1E293B] leading-[1.1] tracking-tight mb-8">
-                Swayamfin <br /> <span className="text-[#0EA5E9] italic uppercase">{branch.city} Branch.</span>
+              <h1 className="text-4xl md:text-6xl font-black text-[#1E293B] leading-[1.1] tracking-tight mb-8 uppercase">
+                Swayamfin <span className="text-[#0EA5E9] italic whitespace-nowrap">{branch.city} Branch.</span>
               </h1>
               
               <p className="text-xl text-slate-500 font-medium italic border-l-4 border-[#0EA5E9]/20 pl-6 mb-12">
-                "Bringing smart financial solutions to local businesses across the region."
+                Bringing smart financial solutions to local businesses across the region.
               </p>
  
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 pt-10 border-t border-slate-100">
