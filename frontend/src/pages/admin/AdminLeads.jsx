@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AdminTabs from '../../components/admin/AdminTabs';
 
@@ -50,8 +51,9 @@ const AdminLeads = () => {
   const [editLead, setEditLead] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [editSaving, setEditSaving] = useState(false);
-  const [editError, setEditError] = useState('');
+  const [editError, setEditError]   = useState('');
   const [actionNote, setActionNote] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   useEffect(() => { fetchLeads(); }, []);
 
@@ -129,6 +131,38 @@ const AdminLeads = () => {
     } finally { setEditSaving(false); }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem('swayamfin_token');
+      await axios.delete(`${API_URL}/api/leads/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      setLeads(prev => prev.filter(l => l._id !== id));
+      setDeleteConfirm(null);
+      setActionNote({ type: 'success', message: 'Lead deleted.' });
+      setTimeout(() => setActionNote(null), 3000);
+    } catch (err) {
+      setActionNote({ type: 'error', message: err.response?.data?.message || 'Delete failed.' });
+      setDeleteConfirm(null);
+      setTimeout(() => setActionNote(null), 3000);
+    }
+  };
+
+  const formatLoanType = (type) => {
+    const map = {
+      home_loan:        'Home Loan',
+      micro_lap:        'Micro LAP',
+      supply_chain:     'Supply Chain',
+      msme_structured:  'MSME',
+      lap:              'LAP',
+      hybrid:           'Hybrid',
+      microfinance:     'Microfinance',
+      structured:       'Structured',
+      secured:          'Secured',
+      unsecured:        'Unsecured',
+      machinery_loan:   'Machinery Loan',
+    };
+    return map[type] || (type ? type.replace(/_/g, ' ') : '');
+  };
+
   const handleExport = () => {
     const headers = [
       'Serial No.',
@@ -155,7 +189,7 @@ const AdminLeads = () => {
     ];
     const rows = filteredLeads.map((l, i) => [
       i + 1, l.rm_name || '', l.login_date || '', l.tat || '', l.location_city || '', l.partner_login || '', l.external_loan_id || l.lead_number || '', l.case_under_company || '',
-      l.loan_type?.toUpperCase() || '', l.applicant_name || '', l.fees || 0, l.loan_amount_required || 0, l.sanction_amount || 0,
+      formatLoanType(l.loan_type), l.applicant_name || '', l.fees || 0, l.loan_amount_required || 0, l.sanction_amount || 0,
       l.pd_report ? 'YES' : 'NO', l.technical_report ? 'YES' : 'NO', l.legal_report ? 'YES' : 'NO', l.cpv_report ? 'YES' : 'NO', l.sanction ? 'YES' : 'NO', l.disbursement ? 'YES' : 'NO',
       l.status || '', l.remarks || ''
     ]);
@@ -195,7 +229,28 @@ const AdminLeads = () => {
                     <td className="px-6 py-6 font-bold text-slate-600 text-xs uppercase">{l.loan_type?.replace('_',' ')} <div className="text-blue-600 font-black mt-1">₹{l.loan_amount_required.toLocaleString()}</div></td>
                     <td className="px-6 py-6"><span className={`px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border ${getStatusColor(l.status)}`}>{l.status}</span></td>
                     <td className="px-10 py-6 text-right">
-                       <button onClick={(e) => openEdit(l, e)} className="px-4 py-2 border rounded-xl text-[9px] font-black uppercase tracking-widest text-[#1E293B] hover:bg-white shadow transition-all">Edit Node</button>
+                       <div className="flex items-center justify-end gap-2">
+                         <button onClick={(e) => openEdit(l, e)} className="px-4 py-2 border rounded-xl text-[9px] font-black uppercase tracking-widest text-[#1E293B] hover:bg-white shadow transition-all">Edit Node</button>
+                         {deleteConfirm === l._id ? (
+                           <>
+                             <button
+                               onClick={(e) => { e.stopPropagation(); handleDelete(l._id); }}
+                               className="px-4 py-2 bg-red-500 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-red-600 transition-all"
+                             >Confirm</button>
+                             <button
+                               onClick={(e) => { e.stopPropagation(); setDeleteConfirm(null); }}
+                               className="px-3 py-2 border rounded-xl text-[9px] font-black text-slate-400 hover:text-slate-700 transition-all"
+                             >✕</button>
+                           </>
+                         ) : (
+                           <button
+                             onClick={(e) => { e.stopPropagation(); setDeleteConfirm(l._id); }}
+                             className="p-2 border border-red-100 text-red-400 rounded-xl hover:bg-red-50 hover:text-red-600 transition-all"
+                           >
+                             <Trash2 className="w-3.5 h-3.5" />
+                           </button>
+                         )}
+                       </div>
                     </td>
                   </tr>
                 ))}
