@@ -11,6 +11,7 @@ const AdminTabs = () => {
     { name: 'Analytics', path: '/admin/dashboard' },
     { name: 'Repository', path: '/admin/leads' },
     { name: 'Team Members', path: '/admin/agents' },
+    { name: 'Inquiries', path: '/admin/questions' },
   ];
 
   const handleLogout = () => {

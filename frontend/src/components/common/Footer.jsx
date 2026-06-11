@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Phone, Mail, MapPin } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageSquare as MessageSquareIcon, Send as SendIcon } from 'lucide-react';
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -61,6 +62,14 @@ const Footer = () => {
                 <p className="text-[11px] font-bold leading-relaxed tracking-wider">Head Office: 619, Somdutt Chambers II, Bhikaji Cama, New Delhi – 110066</p>
               </div>
             </div>
+
+            {/* Questions Form */}
+            <div className="pt-8 border-t border-white/5 space-y-4">
+              <p className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-[0.3em]">
+                Please Submit your Questions through here.
+              </p>
+              <FooterQuestionForm />
+            </div>
           </div>
 
           {/* Column 2: Services */}
@@ -88,8 +97,29 @@ const Footer = () => {
             <ul className="space-y-4">
               <li><FooterLink to="/about" label="Our Mission" /></li>
               <li><FooterLink to="/" label="How It Works" /></li>
-              <li><FooterLink to="/branches" label="About our branches" /></li>
               <li><FooterLink to="/contact" label="Contact Us" /></li>
+              <li>
+                <a 
+                  href="/Privacy_Policy.pdf" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="text-[11px] text-slate-400 hover:text-white transition-all font-bold uppercase tracking-widest flex items-center gap-3 group"
+                >
+                  <span className="w-1 h-1 rounded-full bg-slate-600 group-hover:bg-[#0EA5E9] transition-all" />
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/Grievance_Redressal_Mechanism.pdf" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="text-[11px] text-slate-400 hover:text-white transition-all font-bold uppercase tracking-widest flex items-center gap-3 group"
+                >
+                  <span className="w-1 h-1 rounded-full bg-slate-600 group-hover:bg-[#0EA5E9] transition-all" />
+                  Grievance Redressal Mechanism
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -130,4 +160,101 @@ const FooterLink = ({ to, label }) => (
   </Link>
 );
 
+const FooterQuestionForm = () => {
+  const [question, setQuestion] = useState('');
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle');
+  const [focused, setFocused] = useState(null); // 'email' | 'question' | null
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!question.trim() || !email.trim()) return;
+    setStatus('submitting');
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/questions/submit`, { question, email });
+      if (response.data.success) {
+        setStatus('success');
+        setQuestion('');
+        setEmail('');
+        setTimeout(() => setStatus('idle'), 3500);
+      } else {
+        setStatus('error');
+        setTimeout(() => setStatus('idle'), 3000);
+      }
+    } catch {
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 3000);
+    }
+  };
+
+  const isDisabled = status === 'submitting' || status === 'success';
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Unified joined input card */}
+      <div className={`rounded-2xl overflow-hidden border transition-all duration-300 ${
+        focused ? 'border-[#0EA5E9]/60 shadow-[0_0_0_3px_rgba(14,165,233,0.08)]' : 'border-white/10'
+      } bg-white/5`}>
+
+        {/* Email row */}
+        <div className={`flex items-center gap-3 px-4 py-3 transition-colors ${focused === 'email' ? 'bg-white/8' : ''}`}>
+          <Mail className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+          <input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            onFocus={() => setFocused('email')}
+            onBlur={() => setFocused(null)}
+            placeholder="Your email address"
+            required
+            disabled={isDisabled}
+            className="w-full bg-transparent text-[12px] font-medium text-white placeholder:text-slate-500 outline-none disabled:opacity-40"
+          />
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-white/8 mx-0" />
+
+        {/* Question row */}
+        <div className={`flex items-start gap-3 px-4 py-3 transition-colors ${focused === 'question' ? 'bg-white/8' : ''}`}>
+          <MessageSquareIcon className="w-3.5 h-3.5 text-slate-500 shrink-0 mt-0.5" />
+          <textarea
+            value={question}
+            onChange={e => setQuestion(e.target.value)}
+            onFocus={() => setFocused('question')}
+            onBlur={() => setFocused(null)}
+            placeholder="Type your question here..."
+            required
+            rows={2}
+            disabled={isDisabled}
+            className="w-full bg-transparent text-[12px] font-medium text-white placeholder:text-slate-500 outline-none resize-none leading-relaxed disabled:opacity-40"
+          />
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-white/8" />
+
+        {/* Submit row */}
+        <button
+          type="submit"
+          disabled={isDisabled}
+          className={`w-full flex items-center justify-center gap-2 py-3 text-[9px] font-black uppercase tracking-[0.3em] transition-all duration-300 ${
+            status === 'success'
+              ? 'bg-emerald-500/20 text-emerald-400'
+              : status === 'error'
+              ? 'bg-rose-500/10 text-rose-400'
+              : 'bg-[#0EA5E9]/10 text-[#0EA5E9] hover:bg-[#0EA5E9]/20'
+          } disabled:opacity-60`}
+        >
+          {status === 'submitting' && <><span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" /> Sending...</>}
+          {status === 'success'    && <><span>✓</span> Question Received</>}
+          {status === 'error'      && <><span>✕</span> Try Again</>}
+          {status === 'idle'       && <><SendIcon className="w-3 h-3" /> Submit Question</>}
+        </button>
+      </div>
+    </form>
+  );
+};
+
 export default Footer;
+

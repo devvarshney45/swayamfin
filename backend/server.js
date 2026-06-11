@@ -89,6 +89,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/branches', branchRoutes);
 app.use('/api/messages', require('./routes/messageRoutes'));
 app.use('/api/blogs', blogRoutes);
+app.use('/api/questions', require('./routes/questionRoutes'));
 
 
 // Always serve files from backend/uploads irrespective of process cwd.
@@ -130,4 +131,5 @@ app.use((err, req, res, next) => {
 // Start Server
 app.listen(PORT, () => {
     console.log(`Backend Server running on http://localhost:${PORT}`);
+    console.log(`SMTP Configured for: ${process.env.BREVO_USER}`);
 });

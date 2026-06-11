@@ -19,6 +19,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminLeads from './pages/admin/AdminLeads';
 import AdminAgents from './pages/admin/AdminAgents';
 import AdminAgentDetails from './pages/admin/AdminAgentDetails';
+import AdminQuestions from './pages/admin/AdminQuestions';
 import BsmDashboard from './pages/bsm/BsmDashboard';
 import AdLandingPage from './pages/AdLandingPage';
 import EmployeePortal from './pages/EmployeePortal';
@@ -168,6 +169,16 @@ const AppContent = () => {
               <ErrorBoundary>
                 <ProtectedRoute allowedRoles={['admin', 'bsm']}>
                   <AdminAgentDetails />
+                </ProtectedRoute>
+              </ErrorBoundary>
+            } 
+          />
+          <Route 
+            path="/admin/questions" 
+            element={
+              <ErrorBoundary>
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminQuestions />
                 </ProtectedRoute>
               </ErrorBoundary>
             } 
