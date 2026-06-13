@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin.onrender.com' : 'http://localhost:5001');
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
 const getDocumentUrl = (fileUrl) => {
   if (!fileUrl) return '#';
@@ -316,11 +316,17 @@ const LeadDetails = () => {
                    <div className="lg:col-span-7 space-y-6">
                       {remarks.map((rm, i) => (
                         <div key={i} className="bg-white border border-slate-100 p-8 rounded-[40px] shadow-sm">
-                           <div className="flex justify-between items-center mb-4">
-                              <span className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-widest">{rm.remark_type}</span>
-                              <span className="text-[9px] text-slate-400 font-bold">{new Date(rm.createdAt).toLocaleDateString()}</span>
-                           </div>
-                           <p className="text-sm text-slate-600 font-medium italic italic">"{rm.remark_text}"</p>
+                          <div className="flex justify-between items-center mb-4">
+                            <span className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-widest">{rm.remark_type}</span>
+                            <span className="text-[9px] text-slate-400 font-bold">{new Date(rm.createdAt).toLocaleDateString()}</span>
+                          </div>
+                          {/* Sender info below */}
+                          {rm.senderName && rm.senderRole && (
+                            <div className="mb-2 text-xs text-slate-500 font-semibold">
+                             {`${rm.senderRole} -- ${rm.senderName}`}
+                            </div>
+                          )}
+                          <p className="text-sm text-slate-600 font-medium italic">"{rm.remark_text}"</p>
                         </div>
                       ))}
                    </div>
@@ -330,9 +336,9 @@ const LeadDetails = () => {
               {activeTab === 'Status' && (
                  <motion.div initial={{opacity:0, scale:0.98}} animate={{opacity:1, scale:1}} className="flex justify-center">
                     <div className="bg-white border border-slate-100 p-8 md:p-14 rounded-[40px] md:rounded-[60px] shadow-2xl max-w-xl w-full text-center space-y-10">
-                       <h3 className="text-3xl font-black text-[#1E293B] uppercase tracking-tighter">Governance Node</h3>
+                       <h3 className="text-3xl font-black text-[#1E293B] uppercase tracking-tighter">Current Status</h3>
                        <div className="grid grid-cols-2 gap-4">
-                         {['New', 'Under login stage', 'Under PD', 'Under Technical/legal', 'Under Sanction', 'Under disbursement', 'Disbursed', 'Rejected'].map(s => (
+                         {['New login','Under login stage', 'Under PD', 'Under Technical/legal', 'Under Sanction', 'Under disbursement', 'Disbursed', 'Rejected'].map(s => (
                            <button 
                              key={s} 
                              onClick={() => setLeadStatus(s)}

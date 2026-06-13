@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Users, Target, Shield, Award, Activity, ShieldCheck, Globe, Zap, Cpu } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet';
 
 const teamMembers = [
   {
@@ -46,6 +47,10 @@ const About = () => {
   
   return (
     <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen font-plus transition-colors duration-500 overflow-hidden`}>
+      <Helmet>
+        <title>About us | Swayamfin</title>
+        <meta name="description" content="Learn more about Swayamfin Financial Services. We are a digital platform connecting you to strategic MSME loans, housing finance, and business capital." />
+      </Helmet>
       
       {/* Institutional Narrative Hero */}
       <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">

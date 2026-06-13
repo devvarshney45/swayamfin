@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Phone, Mail, MapPin, MessageSquare as MessageSquareIcon, Send as SendIcon } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageSquare as MessageSquareIcon, Send as SendIcon, Facebook, Instagram, Linkedin } from 'lucide-react';
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -138,6 +138,25 @@ const Footer = () => {
                   <p className="text-[10px] text-slate-400 font-medium italic leading-relaxed pl-3">{branch.addr}</p>
                 </div>
               ))}
+            </div>
+
+            {/* Social Links Section - Task 19.3 */}
+            <div className="mt-10 pt-8 border-t border-white/5">
+               <h4 className="text-[10px] font-black mb-6 text-slate-500 uppercase tracking-[0.3em]">Social Networks</h4>
+               <div className="flex flex-row items-center gap-3 w-full">
+                  <a href="https://www.facebook.com/SwayamfinServices/" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-all group whitespace-nowrap">
+                    <Facebook className="w-3.5 h-3.5 text-slate-500 group-hover:text-[#0EA5E9] transition-colors" />
+                    <span className="text-[9px] font-black uppercase tracking-widest leading-none">Facebook</span>
+                  </a>
+                  <a href="https://www.instagram.com/swayamfin/" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-all group whitespace-nowrap">
+                    <Instagram className="w-3.5 h-3.5 text-slate-500 group-hover:text-[#E4405F] transition-colors" />
+                    <span className="text-[9px] font-black uppercase tracking-widest leading-none">Instagram</span>
+                  </a>
+                  <a href="https://www.linkedin.com/company/swayamfin-financial-services/" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-all group whitespace-nowrap">
+                    <Linkedin className="w-3.5 h-3.5 text-slate-500 group-hover:text-[#0A66C2] transition-colors" />
+                    <span className="text-[9px] font-black uppercase tracking-widest leading-none">LinkedIn</span>
+                  </a>
+               </div>
             </div>
           </div>
         </div>

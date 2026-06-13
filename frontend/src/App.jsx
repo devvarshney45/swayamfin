@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import Hero from './components/Hero';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
@@ -187,6 +188,10 @@ const AppContent = () => {
           {/* Catch-all route */}
           <Route path="*" element={
             <div className="flex flex-col items-center justify-center min-h-[60vh] p-10">
+              <Helmet>
+                <title>404 Page Not Found | Swayamfin</title>
+                <meta name="robots" content="noindex" />
+              </Helmet>
               <h1 className="text-6xl font-black text-slate-900 mb-4">404</h1>
               <p className="text-slate-500 mb-8 font-bold uppercase tracking-widest">Page Deployment Failed</p>
               <Link to="/" className="btn-primary">Return Foundation</Link>

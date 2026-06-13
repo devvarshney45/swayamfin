@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getUTMParams } from '../utils/helpers';
 import LeadCaptureModal from '../components/common/LeadCaptureModal';
+import { Helmet } from 'react-helmet';
 
 const serviceData = {
   'housing-loans': {
@@ -164,6 +165,10 @@ const ServiceDetails = () => {
 
   return (
     <div className="bg-[#F8FAFC] min-h-screen pt-32 pb-40 relative font-plus overflow-x-hidden">
+      <Helmet>
+        <title>{data.title} | Swayamfin</title>
+        <meta name="description" content={data.tagline + ". " + data.description.substring(0, 120)} />
+      </Helmet>
       <div className="absolute top-0 right-0 w-[1200px] h-[1200px] bg-[#0EA5E9]/5 blur-[180px] rounded-full translate-x-1/2 -translate-y-1/2" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">

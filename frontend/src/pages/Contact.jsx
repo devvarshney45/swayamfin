@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -44,6 +45,10 @@ const Contact = () => {
 
   return (
     <div className="bg-[#F8FAFC] min-h-screen pt-32 pb-40 font-plus-jakarta-sans overflow-hidden">
+      <Helmet>
+        <title>Contact Us | Swayamfin</title>
+        <meta name="description" content="Get in touch with Swayamfin Financial Services. Reach out to our experts for house loans, MSME financing, or business financial consultations." />
+      </Helmet>
       
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#0EA5E9]/5 blur-[160px] rounded-full translate-x-1/2 -translate-y-1/2" />

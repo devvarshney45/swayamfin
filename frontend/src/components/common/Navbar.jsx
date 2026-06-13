@@ -118,6 +118,7 @@ const Navbar = () => {
             <Link to="/process" className={`text-xs font-bold uppercase tracking-widest hover:text-[#0EA5E9] ${location.pathname === '/process' ? 'text-[#0EA5E9]' : 'text-slate-600'}`}>Process</Link>
             <Link to="/blog" className={`text-xs font-bold uppercase tracking-widest hover:text-[#0EA5E9] ${location.pathname === '/blog' ? 'text-[#0EA5E9]' : 'text-slate-600'}`}>Blog</Link>
             <Link to="/about" className={`text-xs font-bold uppercase tracking-widest hover:text-[#0EA5E9] ${location.pathname === '/about' ? 'text-[#0EA5E9]' : 'text-slate-600'}`}>About</Link>
+            <Link to="/contact" className={`text-xs font-bold uppercase tracking-widest hover:text-[#0EA5E9] ${location.pathname === '/contact' ? 'text-[#0EA5E9]' : 'text-slate-600'}`}>Contact</Link>
           </div>
 
           <div className="flex items-center gap-4">

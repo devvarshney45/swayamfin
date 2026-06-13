@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Activity, ShieldCheck, Zap, Target, Cpu, ArrowRight, ChevronDown } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { Helmet } from 'react-helmet';
 
 const Process = () => {
   const { isDark } = useTheme();
@@ -23,6 +24,10 @@ const Process = () => {
 
   return (
     <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen font-plus transition-colors duration-500 overflow-x-hidden`}>
+      <Helmet>
+        <title>Lending Process | Swayamfin</title>
+        <meta name="description" content="Understand the Swayamfin lending process. Our digital workflow ensures fast, transparent, and secure capital disbursement from submission to due diligence." />
+      </Helmet>
       
       {/* Institutional Hero */}
       <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
