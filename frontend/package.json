@@ -20,7 +20,8 @@
     "react-helmet": "^6.1.0",
     "react-i18next": "^14.1.1",
     "react-quill": "^2.0.0",
-    "react-router-dom": "^6.23.0"
+    "react-router-dom": "^6.23.0",
+    "recharts": "^3.8.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",

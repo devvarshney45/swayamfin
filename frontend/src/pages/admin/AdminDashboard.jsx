@@ -3,16 +3,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import AdminTabs from '../../components/admin/AdminTabs';
+import LoginAnalytics from '../../components/admin/LoginAnalytics';
+import { ChevronRight, ChevronLeft, Calendar } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin.onrender.com' : 'http://localhost:5001');
 
 const AdminDashboard = () => {
+  const [allLeads, setAllLeads] = useState([]);
   const [stats, setStats] = useState({
-    totalLeads: 0,
-    totalDisbursed: 0,
-    activeAgents: 0,
-    conversionRate: 0
+    totalActive: 0,
+    casesDMI: 0,
+    casesCredifin: 0,
+    pipelineValue: 0,
+    disbursementValue: 0,
+    sanctionedValue: 0,
   });
+  const [graphData, setGraphData] = useState([]);
+  const [weekOffset, setWeekOffset] = useState(0); // 0 = current week, 1 = previous week
+  const [monthOffset, setMonthOffset] = useState(0); // 0 = current month, 1 = previous month
+  const [showAnalytics, setShowAnalytics] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -20,39 +29,80 @@ const AdminDashboard = () => {
     fetchStats();
   }, []);
 
+  useEffect(() => {
+    if (allLeads.length > 0) {
+      calculateMetrics();
+    }
+  }, [allLeads, weekOffset, monthOffset]);
+
   const fetchStats = async () => {
     try {
       setLoading(true);
       setError(null);
       const token = localStorage.getItem('swayamfin_token');
-      if (!token) throw new Error('Session expired. Please login again.');
+      if (!token) throw new Error('Session expired.');
 
-      const [leadsRes, usersRes] = await Promise.all([
-        axios.get(`${API_URL}/api/leads`, { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get(`${API_URL}/api/users`, { headers: { Authorization: `Bearer ${token}` } })
-      ]);
-
-      const leads = leadsRes.data.data || [];
-      const users = usersRes.data.data || [];
-
-      const disbursed = leads
-        .filter(l => l.status === 'Disbursed' || l.status === 'Closed - Won')
-        .reduce((sum, l) => sum + (Number(l.loan_amount_required) || 0), 0);
-
-      const wonCount = leads.filter(l => l.status === 'Closed - Won' || l.status === 'Disbursed').length;
-
-      setStats({
-        totalLeads: leads.length,
-        totalDisbursed: disbursed,
-        activeAgents: users.filter(u => u.role === 'sales_person' || u.role === 'agent').length,
-        conversionRate: leads.length > 0 ? Math.round((wonCount / leads.length) * 100) : 0
+      const res = await axios.get(`${API_URL}/api/leads`, {
+        headers: { Authorization: `Bearer ${token}` }
       });
+
+      setAllLeads(res.data.data || []);
     } catch (err) {
-      console.error('Fetch Stats Error:', err);
-      setError(err.response?.data?.message || err.message || 'Node connection error. Please verify backend status.');
+      setError(err.message || 'Transmission error.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const calculateMetrics = () => {
+    // 1. Calculate Monthly KPIs based on monthOffset
+    const targetDate = new Date();
+    targetDate.setMonth(targetDate.getMonth() - monthOffset);
+    const targetMonth = targetDate.getMonth();
+    const targetYear = targetDate.getFullYear();
+
+    const monthlyLeads = allLeads.filter(l => {
+      const d = new Date(l.createdAt);
+      return d.getMonth() === targetMonth && d.getFullYear() === targetYear;
+    });
+
+    const activeLeads = monthlyLeads.filter(l => !['Disbursed', 'Dead Lead', 'Closed - Won'].includes(l.status));
+    const dmiLeads = monthlyLeads.filter(l => l.case_under_company === 'DMI');
+    const credifinLeads = monthlyLeads.filter(l => l.case_under_company === 'Credifin');
+    
+    const pipeline = activeLeads.reduce((sum, l) => sum + (Number(l.loan_amount_required) || 0), 0);
+    const disbursed = monthlyLeads.filter(l => l.status === 'Disbursed').reduce((sum, l) => sum + (Number(l.loan_amount_required) || 0), 0);
+    const sanctioned = monthlyLeads.filter(l => l.status === 'Sanctioned' || l.sanction === true).reduce((sum, l) => sum + (Number(l.sanction_amount) || 0), 0);
+
+    setStats({
+      totalActive: activeLeads.length,
+      casesDMI: dmiLeads.length,
+      casesCredifin: credifinLeads.length,
+      pipelineValue: pipeline,
+      disbursementValue: disbursed,
+      sanctionedValue: sanctioned,
+    });
+
+    // 2. Calculate Graph Data (Last 7 Days from weekOffset)
+    const last7Days = [...Array(7)].map((_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (6 - i) - (weekOffset * 7));
+      return d.toISOString().split('T')[0];
+    });
+
+    const dailyData = last7Days.map(date => {
+      const dayLeads = allLeads.filter(l => l.createdAt?.startsWith(date));
+      const dmi = dayLeads.filter(l => l.case_under_company === 'DMI').length;
+      const credifin = dayLeads.filter(l => l.case_under_company === 'Credifin').length;
+      return {
+        date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        dmi,
+        credifin,
+        total: dmi + credifin
+      };
+    });
+
+    setGraphData(dailyData);
   };
 
   if (loading) return (
@@ -78,97 +128,101 @@ const AdminDashboard = () => {
       <div className="max-w-7xl mx-auto">
         <AdminTabs />
         
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 px-2">
-           <div>
-              <div className="flex items-center gap-3 mb-4">
-                 <div className="w-2 h-2 rounded-full bg-[#0EA5E9] animate-pulse" />
-                 <span className="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em]">Swayamfin Intelligence Node</span>
-              </div>
-              <h1 className="text-4xl md:text-6xl font-black text-[#1E293B] tracking-tighter uppercase leading-none">
-                 Revenue <span className="text-[#0EA5E9] italic">Command.</span>
-              </h1>
-           </div>
-          <div className="flex flex-wrap gap-3">
-             <Link to="/admin/agents" className="bg-white border border-slate-200 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all text-[10px] font-black uppercase tracking-widest text-[#0EA5E9]">
-               Manage Team
-             </Link>
-              <button onClick={fetchStats} className="bg-white border border-slate-200 p-4 rounded-xl hover:bg-slate-50 transition-all text-xs font-bold uppercase tracking-widest text-slate-400">Sync Data</button>
-           </div>
+        {/* Business Overview Header & Month Filter */}
+        <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-12 px-2 gap-6">
+            <div>
+                <h1 className="text-4xl md:text-5xl font-black text-[#1E293B] tracking-tighter uppercase leading-none">
+                  Business <span className="text-[#0EA5E9] italic">Overview.</span>
+                </h1>
+            </div>
+            
+            <div className="flex items-center gap-4 bg-white border border-slate-100 p-2 rounded-[24px] shadow-sm">
+                <button 
+                  onClick={() => setMonthOffset(prev => prev + 1)}
+                  className="w-10 h-10 rounded-full hover:bg-slate-50 flex items-center justify-center transition-all text-slate-400 hover:text-[#0EA5E9]"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                <div className="flex items-center gap-3 px-4 py-2 bg-[#0EA5E9]/5 rounded-[18px] text-[10px] font-black text-[#0EA5E9] uppercase tracking-[0.2em]">
+                  <Calendar size={14} />
+                  {new Date(new Date().setMonth(new Date().getMonth() - monthOffset)).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                </div>
+                <button 
+                  onClick={() => setMonthOffset(prev => Math.max(0, prev - 1))}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${monthOffset === 0 ? 'opacity-20 cursor-not-allowed' : 'hover:bg-slate-50 text-slate-400 hover:text-[#0EA5E9]'}`}
+                  disabled={monthOffset === 0}
+                >
+                  <ChevronRight size={20} />
+                </button>
+            </div>
         </div>
 
-        {/* KPIs */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <Link to="/admin/leads" className="contents">
-            <KPICard title="Total Leads" value={stats.totalLeads} sub="Live Leads" />
-          </Link>
-          <KPICard title="Disbursement" value={`₹${(stats.totalDisbursed/10000000).toFixed(2)}Cr`} sub="Cumulative" color="emerald" />
-          <Link to="/admin/agents" className="contents">
-            <KPICard title="Team Members" value={stats.activeAgents} sub="Active Agents" />
-          </Link>
-          <KPICard title="Yield (Win%)" value={`${stats.conversionRate}%`} sub="Target 25%" color="rose" />
+        {/* Business Overview KPIs */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+           <OverviewCard 
+            title="Total Active cases" 
+            value={stats.totalActive} 
+            footer="View Login velocity"
+            onClick={() => setShowAnalytics(true)}
+           />
+           <OverviewCard 
+            title="Cases Under DMI" 
+            value={stats.casesDMI} 
+            footer="View performance"
+            onClick={() => setShowAnalytics(true)}
+           />
+           <OverviewCard 
+            title="Cases under credifin" 
+            value={stats.casesCredifin} 
+            footer="View aggregation"
+            onClick={() => setShowAnalytics(true)}
+           />
+           
+           <OverviewCard title="Pipeline" value={`₹${stats.pipelineValue.toLocaleString('en-IN')}`} isAmount />
+           <OverviewCard title="Disbursement" value={`₹${stats.disbursementValue.toLocaleString('en-IN')}`} isAmount />
+           <OverviewCard title="Sanctioned" value={`₹${stats.sanctionedValue.toLocaleString('en-IN')}`} isAmount />
         </div>
 
-        {/* Secondary Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-           <div className="lg:col-span-2 bg-white border border-slate-100 p-6 md:p-10 rounded-[40px] md:rounded-[48px] shadow-sm relative overflow-hidden group">
-              <div className="flex justify-between items-center mb-12">
-                 <div>
-                    <h3 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">Growth Velocity</h3>
-                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">Disbursement Volume Spectrum</p>
-                 </div>
-                 <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-[#0EA5E9] font-bold">V</div>
-              </div>
-              <div className="h-64 flex items-end gap-3 justify-between">
-                 {[40, 60, 45, 80, 55, 90, 70, 85, 50, 95].map((h, i) => (
-                   <div key={i} className="flex-1 flex flex-col items-center gap-3 h-full">
-                     <div className="flex-1 w-full flex items-end">
-                       <motion.div 
-                        initial={{ height: 0 }}
-                        whileInView={{ height: `${h}%` }}
-                        className="w-full bg-[#0EA5E9]/10 group-hover:bg-[#0EA5E9] rounded-t-xl transition-all duration-700"
-                       />
-                     </div>
-                     <span className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Node {i+1}</span>
-                   </div>
-                 ))}
-              </div>
-           </div>
-
-           <div className="bg-[#1E293B] p-6 md:p-10 rounded-[40px] md:rounded-[48px] shadow-2xl relative overflow-hidden flex flex-col justify-between">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-[#0EA5E9]/10 blur-3xl rounded-full -mr-20 -mt-20" />
-              <div>
-                 <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-8">Regional Hubs</h3>
-                 <div className="space-y-6">
-                    {['Agra', 'Mathura', 'Hathras', 'Kosi'].map((city, i) => (
-                       <Link to={`/branches/${city.toLowerCase()}`} key={i} className="flex items-center justify-between group cursor-pointer border-b border-white/5 pb-4">
-                          <span className="font-black text-sm uppercase tracking-widest text-white">{city} Hub</span>
-                          <span className="text-slate-500 group-hover:text-[#0EA5E9] transition-all">→</span>
-                       </Link>
-                    ))}
-                 </div>
-              </div>
-              <button className="w-full py-5 bg-white text-[#1E293B] rounded-[24px] font-black uppercase tracking-[0.2em] text-[10px] mt-12 hover:bg-[#0EA5E9] hover:text-white transition-all">
-                 Network Audit
-              </button>
-           </div>
-        </div>
+        <AnimatePresence>
+          {showAnalytics && (
+             <motion.div
+               initial={{ opacity: 0, height: 0 }}
+               animate={{ opacity: 1, height: 'auto' }}
+               exit={{ opacity: 0, height: 0 }}
+               className="overflow-hidden"
+             >
+               <LoginAnalytics 
+                data={graphData} 
+                onPrevWeek={() => setWeekOffset(prev => prev + 1)}
+                onNextWeek={() => setWeekOffset(prev => Math.max(0, prev - 1))}
+                isCurrentWeek={weekOffset === 0}
+               />
+             </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
 };
 
-const KPICard = ({ title, value, sub, color }) => (
+const OverviewCard = ({ title, value, isAmount, footer, onClick }) => (
   <motion.div 
     initial={{ opacity: 0, y: 10 }}
     whileInView={{ opacity: 1, y: 0 }}
-    className="bg-white border border-slate-100 p-6 md:p-8 rounded-[32px] md:rounded-[40px] shadow-sm hover:shadow-xl transition-all group relative overflow-hidden"
+    onClick={onClick}
+    className={`bg-white border border-slate-100 p-8 rounded-[32px] shadow-sm hover:shadow-xl transition-all group ${onClick ? 'cursor-pointer' : ''}`}
   >
-    <div className="absolute top-0 right-10 w-24 h-24 bg-slate-50 blur-2xl rounded-full translate-x-1/2 -translate-y-1/2 group-hover:bg-[#0EA5E9]/10 transition-all" />
-    <div className="relative z-10">
-      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 italic">{title}</p>
-      <h3 className="text-3xl font-black text-[#1E293B] tracking-tighter leading-none mb-2">{value}</h3>
-      <p className={`text-[10px] font-black uppercase tracking-widest ${color === 'rose' ? 'text-rose-500' : color === 'emerald' ? 'text-emerald-500' : 'text-[#0EA5E9]'}`}>{sub}</p>
+    <div className="space-y-4">
+      <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{title}</p>
+      <h3 className={`font-black text-[#1E293B] tracking-tighter leading-none ${isAmount ? 'text-2xl' : 'text-5xl'}`}>
+        {value}
+      </h3>
+      {footer && (
+        <div className="pt-4 mt-4 border-t border-slate-50 flex justify-between items-center">
+           <span className="text-[10px] font-black text-[#0EA5E9] uppercase tracking-widest">{footer}</span>
+           <ChevronRight size={14} className="text-[#0EA5E9] group-hover:translate-x-1 transition-all" />
+        </div>
+      )}
     </div>
   </motion.div>
 );

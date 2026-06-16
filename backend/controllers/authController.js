@@ -46,10 +46,10 @@ exports.login = async (req, res) => {
     });
 
   } catch (err) {
-    console.error('Login error:', err);
+    console.error('[AUTH] Login Exception:', err);
     res.status(500).json({ 
       message: 'System Integrity Error', 
-      details: process.env.NODE_ENV === 'development' ? err.message : 'Database or Authentication Service unreachable'
+      details: process.env.NODE_ENV === 'development' ? err.message : 'Internal Node Failure'
     });
   }
 };

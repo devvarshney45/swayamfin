@@ -9,8 +9,6 @@ const Message = require('../models/Message');
 const notificationService = require('../utils/notificationService');
 const axios = require('axios');
 const nodemailer = require('nodemailer');
-const jwt = require('jsonwebtoken');
-
 
 const otpStore = new Map();
 const OTP_MAX_REQUESTS = 5;
@@ -48,16 +46,6 @@ exports.createLead = async (req, res) => {
       submitted_by, otp_method
     } = req.body;
 
-    // Optional Authentication for Agent/Employee Assignment
-    let creator = null;
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      try {
-        const token = req.headers.authorization.split(' ')[1];
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'swayamfin_secret_key_123');
-        creator = await User.findById(decoded.id);
-      } catch (e) { console.error('Optional auth failed:', e); }
-    }
-
     if (!applicant_name || !mobile || !location_city || !loan_type || !loan_amount_required) {
       return res.status(400).json({ message: 'Please provide all required fields: name, mobile, city, loan type, and amount.' });
     }
@@ -79,11 +67,7 @@ exports.createLead = async (req, res) => {
 
     const branch = await Branch.findOne({ city: new RegExp(`^${location_city.trim()}$`, 'i'), is_active: true });
     
-    if (creator && (creator.role === 'sales_person' || creator.role === 'bsm')) {
-      // If creator is agent or BSM, assign to them directly
-      assigned_to = creator._id;
-      branch_id = creator.branch_id || (branch ? branch._id : null);
-    } else if (branch) {
+    if (branch) {
       branch_id = branch._id;
       // Find active sales_person with oldest assignment
       const nextAgent = await User.findOne({ 
@@ -110,7 +94,7 @@ exports.createLead = async (req, res) => {
 
     const newLead = await Lead.create({
       lead_number,
-      source: source || (creator ? 'agent_portal' : 'website'),
+      source: source || 'website',
       applicant_name,
       mobile,
       alternate_mobile,
@@ -121,7 +105,7 @@ exports.createLead = async (req, res) => {
       loan_amount_required,
       branch_id,
       assigned_to,
-      submitted_by: submitted_by || (creator ? creator.full_name : undefined),
+      submitted_by: submitted_by || undefined,
       otp_method: otp_method || 'email',
     });
 
@@ -315,14 +299,15 @@ exports.updateLead = async (req, res) => {
     Object.assign(lead, data);
     if (data.status) {
       const statusToStage = {
-        'Under login stage': 'login',
-        'Under PD': 'pd',
-        'Under Technical': 'technical',
-        'Under Legal': 'legal',
-        'Under Credit': 'credit',
-        'Under Sanction': 'sanction',
-        'Under Disbursement': 'under_disb',
-        'Disbursed': 'disbursed',
+        New: 'new',
+        Contacted: 'contacted',
+        'In Progress': 'in_progress',
+        'Document Submitted': 'docs_submitted',
+        Sanctioned: 'sanctioned',
+        Disbursed: 'disbursed',
+        'Closed - Won': 'closed',
+        'Dead Lead': 'dead',
+        'On Hold': 'on_hold',
       };
       if (statusToStage[data.status]) lead.stage = statusToStage[data.status];
     }
@@ -336,13 +321,12 @@ exports.updateLead = async (req, res) => {
 
 exports.deleteLead = async (req, res) => {
   try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Only administrators can delete leads' });
+    }
+
     const lead = await Lead.findById(req.params.id);
     if (!lead) return res.status(404).json({ message: 'Lead not found' });
-
-    // Permission: Admin or Assigned To the user
-    if (req.user.role !== 'admin' && String(lead.assigned_to) !== String(req.user._id)) {
-      return res.status(403).json({ message: 'You only have jurisdiction to purge your own assigned cases.' });
-    }
 
     const uploadsRoot = path.join(__dirname, '../uploads');
     const docs = await Document.find({ lead_id: lead._id });
@@ -381,20 +365,21 @@ exports.updateStatus = async (req, res) => {
       lead.status = status;
       // Automated mapping to stages
       const statusToStage = {
-        'Under login stage': 'login',
-        'Under PD': 'pd',
-        'Under Technical': 'technical',
-        'Under Legal': 'legal',
-        'Under Credit': 'credit',
-        'Under Sanction': 'sanction',
-        'Under Disbursement': 'under_disb',
-        'Disbursed': 'disbursed'
+        'New': 'new',
+        'Contacted': 'contacted',
+        'In Progress': 'in_progress',
+        'Document Submitted': 'docs_submitted',
+        'Sanctioned': 'sanctioned',
+        'Disbursed': 'disbursed',
+        'Closed - Won': 'closed',
+        'Dead Lead': 'dead',
+        'On Hold': 'on_hold'
       };
       if (statusToStage[status]) lead.stage = statusToStage[status];
     }
     if (dead_reason) lead.dead_reason = dead_reason;
 
-    if (status === 'Disbursed') {
+    if (status === 'Dead Lead' || status === 'Closed - Won' || status === 'Disbursed') {
       lead.closing_date = Date.now();
     }
 
@@ -410,7 +395,7 @@ exports.updateStatus = async (req, res) => {
       });
 
       // [NEW] Trigger Customer WhatsApp for Sanctioned/Disbursed
-      if (status === 'Under Sanction' || status === 'Disbursed') {
+      if (status === 'Sanctioned' || status === 'Disbursed') {
         await notificationService.sendCustomerStatusUpdate(lead, status);
       }
     }

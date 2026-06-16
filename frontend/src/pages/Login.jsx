@@ -10,6 +10,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [errorDetails, setErrorDetails] = useState('');
   const [loading, setLoading] = useState(false);
   const { setAuth } = useAuth();
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ const Login = () => {
       
     } catch (err) {
       setError(err.response?.data?.message || 'Access Denied. Node link fractured.');
+      setErrorDetails(err.response?.data?.details || '');
     } finally {
       setLoading(false);
     }
@@ -63,7 +65,8 @@ const Login = () => {
                 initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
                 className="p-5 bg-rose-50 text-rose-600 border border-rose-100 rounded-[28px] text-[10px] font-black uppercase tracking-widest text-center shadow-inner"
               >
-                {error}
+                <div>{error}</div>
+                {errorDetails && <div className="mt-2 opacity-60 font-medium normal-case text-[8px] tracking-normal">{errorDetails}</div>}
               </motion.div>
             )}
           </AnimatePresence>
