@@ -18,7 +18,8 @@ const leadSchema = new mongoose.Schema({
     enum: [
       'home_loan', 'micro_lap', 'supply_chain', 
       'msme_structured', 'lap', 'hybrid',
-      'microfinance', 'structured', 'secured', 'unsecured', 'machinery_loan'
+      'microfinance', 'structured', 'secured', 'unsecured', 
+      'machinery_loan', 'unsecured_export_finance'
     ], 
     required: true 
   },
@@ -28,18 +29,18 @@ const leadSchema = new mongoose.Schema({
   status: { 
     type: String, 
     enum: [
-      'New', 'Contacted', 'In Progress', 'Document Submitted', 
-      'Sanctioned', 'Disbursed', 'Closed - Won', 'Dead Lead', 'On Hold'
+      'Under login stage', 'Under PD', 'Under Technical', 'Under Legal', 
+      'Under Credit', 'Under Sanction', 'Under Disbursement', 'Disbursed'
     ], 
-    default: 'New' 
+    default: 'Under login stage' 
   },
   stage: { 
     type: String, 
     enum: [
-      'new', 'contacted', 'in_progress', 'docs_submitted', 
-      'sanctioned', 'disbursed', 'closed', 'dead', 'on_hold'
+      'login', 'pd', 'technical', 'legal', 
+      'credit', 'sanction', 'under_disb', 'disbursed'
     ], 
-    default: 'new' 
+    default: 'login' 
   },
   closing_date: { type: Date },
   dead_reason: { type: String },

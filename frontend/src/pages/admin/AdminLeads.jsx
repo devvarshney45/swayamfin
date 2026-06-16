@@ -8,34 +8,41 @@ import AdminTabs from '../../components/admin/AdminTabs';
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin.onrender.com' : 'http://localhost:5001');
 
 const LOAN_TYPE_OPTIONS = [
-  { v: 'home_loan', l: 'Housing' },
-  { v: 'micro_lap', l: 'Micro LAP' },
-  { v: 'supply_chain', l: 'Supply chain' },
-  { v: 'msme_structured', l: 'MSME structured' },
   { v: 'lap', l: 'LAP' },
-  { v: 'hybrid', l: 'Hybrid' },
-  { v: 'microfinance', l: 'Microfinance' },
-  { v: 'structured', l: 'Structured' },
-  { v: 'secured', l: 'Secured' },
-  { v: 'unsecured', l: 'Unsecured' },
-  { v: 'machinery_loan', l: 'Machinery loan' },
+  { v: 'home_loan', l: 'House loan' },
+  { v: 'unsecured', l: 'Unsecure Business Loan' },
+  { v: 'supply_chain', l: 'Supply Chain Finance' },
+  { v: 'unsecured_export_finance', l: 'Unsecure Export Finance' },
+  { v: 'machinery_loan', l: 'Machinery Finance' },
 ];
 
 const STATUS_OPTIONS = [
-  'New', 'Contacted', 'In Progress', 'Document Submitted',
-  'Sanctioned', 'Disbursed', 'Closed - Won', 'Dead Lead', 'On Hold',
+  'Under login stage',
+  'Under PD',
+  'Under Technical',
+  'Under Legal',
+  'Under Credit',
+  'Under Sanction',
+  'Under Disbursement',
+  'Disbursed',
 ];
+
+const getDocumentUrl = (fileUrl) => {
+  if (!fileUrl) return '#';
+  if (/^https?:\/\//i.test(fileUrl)) return fileUrl;
+  return `${API_URL}${encodeURI(fileUrl)}`;
+};
 
 const getStatusColor = (status) => {
   switch(status) {
-    case 'New': return 'bg-blue-50 text-blue-600 border-blue-200';
-    case 'Contacted': return 'bg-yellow-50 text-yellow-600 border-yellow-200';
-    case 'In Progress': return 'bg-indigo-50 text-indigo-600 border-indigo-200';
-    case 'Document Submitted': return 'bg-purple-50 text-purple-600 border-purple-200';
-    case 'Sanctioned': 
-    case 'Disbursed': 
-    case 'Closed - Won': return 'bg-green-50 text-green-600 border-green-200';
-    case 'Dead Lead': return 'bg-red-50 text-red-600 border-red-200';
+    case 'Under login stage': return 'bg-blue-50 text-blue-600 border-blue-200';
+    case 'Under PD': return 'bg-yellow-50 text-yellow-600 border-yellow-200';
+    case 'Under Technical': return 'bg-purple-50 text-purple-600 border-purple-200';
+    case 'Under Legal': return 'bg-indigo-50 text-indigo-600 border-indigo-200';
+    case 'Under Credit': return 'bg-orange-50 text-orange-600 border-orange-200';
+    case 'Under Sanction': return 'bg-cyan-50 text-cyan-600 border-cyan-200';
+    case 'Under Disbursement': return 'bg-emerald-50 text-emerald-600 border-emerald-200';
+    case 'Disbursed': return 'bg-green-50 text-green-600 border-green-200';
     default: return 'bg-slate-50 text-slate-600 border-slate-200';
   }
 };
@@ -54,6 +61,8 @@ const AdminLeads = () => {
   const [editError, setEditError]   = useState('');
   const [actionNote, setActionNote] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [documents, setDocuments] = useState([]);
+  const [uploadLoading, setUploadLoading] = useState(false);
 
   useEffect(() => { fetchLeads(); }, []);
 
@@ -108,7 +117,44 @@ const AdminLeads = () => {
       disbursement: !!lead.disbursement,
       remarks: lead.remarks || '',
     });
+    fetchDocuments(lead._id);
   };
+
+  const fetchDocuments = async (leadId) => {
+    try {
+      const token = localStorage.getItem('swayamfin_token');
+      const res = await axios.get(`${API_URL}/api/leads/${leadId}/documents`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setDocuments(res.data.data || []);
+    } catch (err) { console.error('Fetch docs error:', err); }
+  };
+
+  const handleDocUpload = async (e, docType) => {
+    const file = e.target.files[0];
+    if (!file || !editLead) return;
+    setUploadLoading(true);
+    try {
+      const token = localStorage.getItem('swayamfin_token');
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('doc_type', docType);
+      await axios.post(`${API_URL}/api/leads/${editLead._id}/documents`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      fetchDocuments(editLead._id);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Upload failed');
+    } finally {
+      setUploadLoading(false);
+      e.target.value = '';
+    }
+  };
+
+  const getDocByType = (type) => documents.find(d => d.doc_type === type);
 
   const saveEdit = async (e) => {
     e.preventDefault();
@@ -148,17 +194,12 @@ const AdminLeads = () => {
 
   const formatLoanType = (type) => {
     const map = {
-      home_loan:        'Home Loan',
-      micro_lap:        'Micro LAP',
-      supply_chain:     'Supply Chain',
-      msme_structured:  'MSME',
-      lap:              'LAP',
-      hybrid:           'Hybrid',
-      microfinance:     'Microfinance',
-      structured:       'Structured',
-      secured:          'Secured',
-      unsecured:        'Unsecured',
-      machinery_loan:   'Machinery Loan',
+      lap: 'LAP',
+      home_loan: 'House loan',
+      unsecured: 'Unsecure Business Loan',
+      supply_chain: 'Supply Chain Finance',
+      unsecured_export_finance: 'Unsecure Export Finance',
+      machinery_loan: 'Machinery Finance',
     };
     return map[type] || (type ? type.replace(/_/g, ' ') : '');
   };
@@ -266,7 +307,10 @@ const AdminLeads = () => {
               <div className="flex justify-between items-start mb-10 border-b border-slate-100 pb-6">
                 <div>
                   <h3 className="text-3xl font-black text-[#1E293B] leading-none uppercase tracking-tighter">Edit Case File</h3>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">{editLead.lead_number} • {editLead.applicant_name}</p>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">
+                    {editLead.lead_number} • {editLead.applicant_name} 
+                    {editLead.rm_name ? ` • RM: ${editLead.rm_name}` : ''}
+                  </p>
                 </div>
                 <button type="button" onClick={() => setEditLead(null)} className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 hover:text-red-500 transition-all">✕</button>
               </div>
@@ -282,11 +326,14 @@ const AdminLeads = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-slate-50">
-                  <InputNode label="RM Name" value={editForm.rm_name} onChange={v => setEditForm({...editForm, rm_name: v})} />
                   <InputNode label="Login Date" value={editForm.login_date} onChange={v => setEditForm({...editForm, login_date: v})} />
-                  <InputNode label="TAT Days" value={editForm.tat} onChange={v => setEditForm({...editForm, tat: v})} />
                   <InputNode label="Partner" value={editForm.partner_login} onChange={v => setEditForm({...editForm, partner_login: v})} />
-                  <InputNode label="Case Under(Company)" value={editForm.case_under_company} onChange={v => setEditForm({...editForm, case_under_company: v})} />
+                  <SelectNode 
+                    label="Case Under(Company)" 
+                    value={editForm.case_under_company} 
+                    options={[{v: '', l: 'Select Company'}, {v: 'DMI', l: 'DMI'}, {v: 'Credifin', l: 'Credifin'}]} 
+                    onChange={v => setEditForm({...editForm, case_under_company: v})} 
+                  />
                    <SelectNode label="Current Status" value={editForm.status} options={STATUS_OPTIONS.map(s => ({v:s, l:s}))} onChange={v => setEditForm({...editForm, status: v})} />
                 </div>
 
@@ -299,6 +346,37 @@ const AdminLeads = () => {
                       <CheckboxNode label="CPV Report" checked={editForm.cpv_report} onChange={v => setEditForm({...editForm, cpv_report: v})} />
                       <CheckboxNode label="Sanction" checked={editForm.sanction} onChange={v => setEditForm({...editForm, sanction: v})} />
                       <CheckboxNode label="Disbursement" checked={editForm.disbursement} onChange={v => setEditForm({...editForm, disbursement: v})} />
+                   </div>
+                </div>
+
+                <div className="space-y-6 pt-8 border-t border-slate-50">
+                   <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Identity Documents - Task 19.4</h4>
+                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {[
+                        {v: 'aadhaar_card', l: 'Aadhar'},
+                        {v: 'pan_card', l: 'PAN'},
+                        {v: 'voter_id', l: 'Voter ID'},
+                        {v: 'bank_statement', l: 'Bank Statement'},
+                      ].map(doc => {
+                        const uploaded = getDocByType(doc.v);
+                        return (
+                          <div key={doc.v} className="space-y-2">
+                             <label className="text-[8px] font-bold text-slate-400 uppercase tracking-widest ml-1">{doc.l}</label>
+                             {uploaded ? (
+                               <a 
+                                 href={getDocumentUrl(uploaded.file_url)} 
+                                 target="_blank" rel="noreferrer"
+                                 className="w-full h-12 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center justify-center text-[9px] font-black text-emerald-600 uppercase tracking-widest hover:bg-emerald-100 transition-all"
+                               >View {doc.l}</a>
+                             ) : (
+                               <label className="w-full h-12 bg-slate-50 border border-slate-100 border-dashed rounded-xl flex items-center justify-center text-[9px] font-black text-slate-400 uppercase tracking-widest cursor-pointer hover:bg-white hover:border-blue-300 transition-all">
+                                  {uploadLoading ? '...' : `Upload ${doc.l}`}
+                                  <input type="file" className="hidden" disabled={uploadLoading} onChange={(e) => handleDocUpload(e, doc.v)} />
+                               </label>
+                             )}
+                          </div>
+                        );
+                      })}
                    </div>
                 </div>
 

@@ -299,15 +299,14 @@ exports.updateLead = async (req, res) => {
     Object.assign(lead, data);
     if (data.status) {
       const statusToStage = {
-        New: 'new',
-        Contacted: 'contacted',
-        'In Progress': 'in_progress',
-        'Document Submitted': 'docs_submitted',
-        Sanctioned: 'sanctioned',
-        Disbursed: 'disbursed',
-        'Closed - Won': 'closed',
-        'Dead Lead': 'dead',
-        'On Hold': 'on_hold',
+        'Under login stage': 'login',
+        'Under PD': 'pd',
+        'Under Technical': 'technical',
+        'Under Legal': 'legal',
+        'Under Credit': 'credit',
+        'Under Sanction': 'sanction',
+        'Under Disbursement': 'under_disb',
+        'Disbursed': 'disbursed',
       };
       if (statusToStage[data.status]) lead.stage = statusToStage[data.status];
     }
@@ -365,21 +364,20 @@ exports.updateStatus = async (req, res) => {
       lead.status = status;
       // Automated mapping to stages
       const statusToStage = {
-        'New': 'new',
-        'Contacted': 'contacted',
-        'In Progress': 'in_progress',
-        'Document Submitted': 'docs_submitted',
-        'Sanctioned': 'sanctioned',
-        'Disbursed': 'disbursed',
-        'Closed - Won': 'closed',
-        'Dead Lead': 'dead',
-        'On Hold': 'on_hold'
+        'Under login stage': 'login',
+        'Under PD': 'pd',
+        'Under Technical': 'technical',
+        'Under Legal': 'legal',
+        'Under Credit': 'credit',
+        'Under Sanction': 'sanction',
+        'Under Disbursement': 'under_disb',
+        'Disbursed': 'disbursed'
       };
       if (statusToStage[status]) lead.stage = statusToStage[status];
     }
     if (dead_reason) lead.dead_reason = dead_reason;
 
-    if (status === 'Dead Lead' || status === 'Closed - Won' || status === 'Disbursed') {
+    if (status === 'Disbursed') {
       lead.closing_date = Date.now();
     }
 
@@ -395,7 +393,7 @@ exports.updateStatus = async (req, res) => {
       });
 
       // [NEW] Trigger Customer WhatsApp for Sanctioned/Disbursed
-      if (status === 'Sanctioned' || status === 'Disbursed') {
+      if (status === 'Under Sanction' || status === 'Disbursed') {
         await notificationService.sendCustomerStatusUpdate(lead, status);
       }
     }

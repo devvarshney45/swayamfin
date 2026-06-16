@@ -111,11 +111,12 @@ const NewLead = () => {
                       value={formData.loan_type}
                       onChange={e => setFormData({...formData, loan_type: e.target.value})}
                     >
-                      <option value="home_loan">Housing Optimization</option>
-                      <option value="micro_lap">Micro LAP Assets</option>
-                      <option value="supply_chain">Supply Chain Velocity</option>
-                      <option value="msme_structured">MSME Growth Credit</option>
-                      <option value="lap">Liquidity Against Property</option>
+                      <option value="lap">LAP</option>
+                      <option value="home_loan">House loan</option>
+                      <option value="unsecured">Unsecure Business Loan</option>
+                      <option value="supply_chain">Supply Chain Finance</option>
+                      <option value="unsecured_export_finance">Unsecure Export Finance</option>
+                      <option value="machinery_loan">Machinery Finance</option>
                     </select>
                  </div>
 

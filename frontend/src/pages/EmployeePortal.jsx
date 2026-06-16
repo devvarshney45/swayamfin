@@ -6,11 +6,12 @@ const SESSION_KEY = 'emp_portal_unlocked';
 
 // ─── Loan type display map ────────────────────────────────────────────────────
 const LOAN_TYPES = [
-  { value: 'home_loan',       label: 'Home Loan' },
-  { value: 'lap',             label: 'Loan Against Property (LAP)' },
-  { value: 'msme_structured', label: 'MSME / Business Loan' },
-  { value: 'supply_chain',    label: 'Supply Chain Finance' },
-  { value: 'micro_lap',       label: 'Micro LAP' },
+  { value: 'lap',                       label: 'LAP' },
+  { value: 'home_loan',                 label: 'House loan' },
+  { value: 'unsecured',                 label: 'Unsecure Business Loan' },
+  { value: 'supply_chain',              label: 'Supply Chain Finance' },
+  { value: 'unsecured_export_finance',  label: 'Unsecure Export Finance' },
+  { value: 'machinery_loan',            label: 'Machinery Finance' },
 ];
 
 const CITIES = ['Agra', 'Mathura', 'Hathras', 'Kosi'];
@@ -138,7 +139,7 @@ const emptyForm = () => ({
   fullName: '',
   mobile: '',
   alternativeMobile: '',
-  loanType: 'msme_structured',
+  loanType: 'lap',
   amount: '',
   city: '',
   pincode: '',
