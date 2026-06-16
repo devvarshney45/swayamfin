@@ -55,7 +55,7 @@ router.post('/verify-otp', [emailValidation, otpValidation, ...leadDataValidatio
 router.get('/', protect, getLeads);
 router.get('/:id', protect, getLeadById);
 router.put('/:id', protect, updateLead);
-router.delete('/:id', protect, adminOnly, deleteLead);
+router.delete('/:id', protect, deleteLead);
 router.patch('/:id/status', protect, updateStatus);
 router.patch('/:id/assign', protect, bsmOnly, reassignLead);
 

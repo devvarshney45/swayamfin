@@ -4,7 +4,7 @@ const leadSchema = new mongoose.Schema({
   lead_number: { type: String, unique: true },
   source: { 
     type: String, 
-    enum: ['website', 'manual', 'referral', 'walk-in', 'phone_inquiry', 'employee_portal', 'other'], 
+    enum: ['website', 'manual', 'referral', 'walk-in', 'phone_inquiry', 'employee_portal', 'agent_portal', 'other'], 
     required: true 
   },
   applicant_name: { type: String, required: true },
