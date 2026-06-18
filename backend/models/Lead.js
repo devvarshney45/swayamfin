@@ -79,6 +79,7 @@ const leadSchema = new mongoose.Schema({
   
   fees: { type: Number },
   sanction_amount: { type: Number },
+  disbursed_amount: { type: Number },
   disbursement_date: { type: String },
   sanction_date: { type: String },
   remarks: { type: String },

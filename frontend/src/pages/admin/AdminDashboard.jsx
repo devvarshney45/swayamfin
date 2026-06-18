@@ -23,6 +23,11 @@ const AdminDashboard = () => {
     sanction: [],
     disbursement: []
   });
+  const [graphMeta, setGraphMeta] = useState({
+    login: { dmi: 0, credifin: 0, unit: 'Fees' },
+    sanction: { dmi: 0, credifin: 0, unit: 'Sanctioned' },
+    disbursement: { dmi: 0, credifin: 0, unit: 'Disbursed' }
+  });
   const [weekOffset, setWeekOffset] = useState(0); 
   const [monthOffset, setMonthOffset] = useState(0); 
   const [activeGraph, setActiveGraph] = useState(null); // 'login', 'sanction', 'disbursement' or null
@@ -75,7 +80,7 @@ const AdminDashboard = () => {
     const credifinLeads = monthlyLeads.filter(l => l.case_under_company === 'Credifin');
     
     const pipeline = activeLeads.reduce((sum, l) => sum + (Number(l.loan_amount_required) || 0), 0);
-    const disbursed = monthlyLeads.filter(l => l.status === 'Disbursed' || l.disbursement === true).reduce((sum, l) => sum + (Number(l.loan_amount_required) || 0), 0);
+    const disbursed = monthlyLeads.filter(l => l.status === 'Disbursed' || l.disbursement === true).reduce((sum, l) => sum + (Number(l.disbursed_amount) || Number(l.loan_amount_required) || 0), 0);
     const sanctioned = monthlyLeads.filter(l => 
       ['Under Sanction', 'Under Disbursement', 'Disbursed'].includes(l.status) || l.sanction === true
     ).reduce((sum, l) => sum + (Number(l.sanction_amount) || Number(l.loan_amount_required) || 0), 0);
@@ -96,11 +101,19 @@ const AdminDashboard = () => {
       return d.toISOString().split('T')[0];
     });
 
-    const generateGraphData = (dateField) => {
+    const generateGraphData = (dateField, valueField = null) => {
       return last7Days.map(date => {
         const dayLeads = allLeads.filter(l => l[dateField]?.startsWith(date));
-        const dmi = dayLeads.filter(l => l.case_under_company === 'DMI').length;
-        const credifin = dayLeads.filter(l => l.case_under_company === 'Credifin').length;
+        
+        let dmi, credifin;
+        if (valueField) {
+           dmi = dayLeads.filter(l => l.partner_login === 'DMI').reduce((sum, l) => sum + (Number(l[valueField]) || Number(l.loan_amount_required) || 0), 0);
+           credifin = dayLeads.filter(l => l.partner_login === 'Credifin').reduce((sum, l) => sum + (Number(l[valueField]) || Number(l.loan_amount_required) || 0), 0);
+        } else {
+           dmi = dayLeads.filter(l => l.partner_login === 'DMI').length;
+           credifin = dayLeads.filter(l => l.partner_login === 'Credifin').length;
+        }
+
         return {
           date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
           dmi,
@@ -112,8 +125,21 @@ const AdminDashboard = () => {
 
     setGraphs({
       login: generateGraphData('createdAt'),
-      sanction: generateGraphData('sanction_date'),
-      disbursement: generateGraphData('disbursement_date')
+      sanction: generateGraphData('sanction_date', 'sanction_amount'),
+      disbursement: generateGraphData('disbursement_date', 'disbursed_amount')
+    });
+
+    // 3. Calculate Monthly Totals for Partner Cards
+    const calcMonthlyTotal = (leads, amountField) => {
+      const dmi = leads.filter(l => l.partner_login === 'DMI').reduce((sum, l) => sum + (Number(l[amountField]) || 0), 0);
+      const credifin = leads.filter(l => l.partner_login === 'Credifin').reduce((sum, l) => sum + (Number(l[amountField]) || 0), 0);
+      return { dmi, credifin };
+    };
+
+    setGraphMeta({
+      login: { ...calcMonthlyTotal(monthlyLeads, 'fees'), unit: 'Fees' },
+      sanction: { ...calcMonthlyTotal(monthlyLeads.filter(l => l.status === 'Disbursed' || l.status === 'Under Sanction' || l.status === 'Under Disbursement'), 'sanction_amount'), unit: 'Sanctioned' },
+      disbursement: { ...calcMonthlyTotal(monthlyLeads.filter(l => l.status === 'Disbursed'), 'disbursed_amount'), unit: 'Disbursed' }
     });
   };
 
@@ -220,6 +246,9 @@ const AdminDashboard = () => {
                 title={activeGraph === 'login' ? 'Login Velocity' : activeGraph === 'sanction' ? 'Sanctioned Trend' : 'Disbursement Volume'}
                 subtitle={activeGraph === 'login' ? 'Day-wise performance spectrum' : 'Historical milestone achievement'}
                 data={graphs[activeGraph]} 
+                dmiTotal={graphMeta[activeGraph].dmi}
+                credifinTotal={graphMeta[activeGraph].credifin}
+                unit={graphMeta[activeGraph].unit}
                 onPrevWeek={() => setWeekOffset(prev => prev + 1)}
                 onNextWeek={() => setWeekOffset(prev => Math.max(0, prev - 1))}
                 isCurrentWeek={weekOffset === 0}

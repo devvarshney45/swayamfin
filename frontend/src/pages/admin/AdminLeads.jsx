@@ -109,6 +109,7 @@ const AdminLeads = () => {
       case_under_company: lead.case_under_company || '',
       fees: String(lead.fees || ''),
       sanction_amount: String(lead.sanction_amount || ''),
+      disbursed_amount: String(lead.disbursed_amount || ''),
       pd_report: !!lead.pd_report,
       technical_report: !!lead.technical_report,
       legal_report: !!lead.legal_report,
@@ -169,6 +170,7 @@ const AdminLeads = () => {
         loan_amount_required: Number(editForm.loan_amount_required),
         fees: editForm.fees ? Number(editForm.fees) : 0,
         sanction_amount: editForm.sanction_amount ? Number(editForm.sanction_amount) : 0,
+        disbursed_amount: editForm.disbursed_amount ? Number(editForm.disbursed_amount) : 0,
       }, { headers: { Authorization: `Bearer ${token}` } });
       setEditLead(null);
       setActionNote({ type: 'success', message: 'Case Balanced.' });
@@ -221,6 +223,7 @@ const AdminLeads = () => {
       'Fees', 
       'Asking Amount', 
       'Sanction Amount', 
+      'Disbursed Amount',
       'PD Report', 
       'Technical Report', 
       'Legal Report', 
@@ -234,7 +237,7 @@ const AdminLeads = () => {
     ];
     const rows = filteredLeads.map((l, i) => [
       i + 1, l.rm_name || '', l.login_date || '', l.tat || '', l.location_city || '', l.partner_login || '', l.external_loan_id || l.lead_number || '', l.case_under_company || '',
-      formatLoanType(l.loan_type), l.applicant_name || '', l.fees || 0, l.loan_amount_required || 0, l.sanction_amount || 0,
+      formatLoanType(l.loan_type), l.applicant_name || '', l.fees || 0, l.loan_amount_required || 0, l.sanction_amount || 0, l.disbursed_amount || 0,
       l.pd_report ? 'YES' : 'NO', l.technical_report ? 'YES' : 'NO', l.legal_report ? 'YES' : 'NO', l.cpv_report ? 'YES' : 'NO',
       l.sanction ? 'YES' : 'NO', l.sanction_date || '', l.disbursement ? 'YES' : 'NO', l.disbursement_date || '',
       l.status || '', l.remarks || ''
@@ -327,16 +330,22 @@ const AdminLeads = () => {
                   <SelectNode label="Product Type" value={editForm.loan_type} options={LOAN_TYPE_OPTIONS} onChange={v => setEditForm({...editForm, loan_type: v})} />
                   <InputNode label="Asking Amount (₹)" type="number" value={editForm.loan_amount_required} onChange={v => setEditForm({...editForm, loan_amount_required: v})} />
                   <InputNode label="Sanction Amount (₹)" type="number" value={editForm.sanction_amount} onChange={v => setEditForm({...editForm, sanction_amount: v})} />
+                  <InputNode label="Disbursement Amount (₹)" type="number" value={editForm.disbursed_amount} onChange={v => setEditForm({...editForm, disbursed_amount: v})} />
                   <InputNode label="Fees (₹)" type="number" value={editForm.fees} onChange={v => setEditForm({...editForm, fees: v})} />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-slate-50">
-                  <InputNode label="Login Date" value={editForm.login_date} onChange={v => setEditForm({...editForm, login_date: v})} />
-                  <InputNode label="Partner" value={editForm.partner_login} onChange={v => setEditForm({...editForm, partner_login: v})} />
+                  <InputNode label="Login Date" type="date" value={editForm.login_date} onChange={v => setEditForm({...editForm, login_date: v})} />
+                  <SelectNode 
+                    label="Partner" 
+                    value={editForm.partner_login} 
+                    options={[{v: '', l: 'Select Partner'}, {v: 'DMI', l: 'DMI'}, {v: 'Credifin', l: 'Credifin'}]} 
+                    onChange={v => setEditForm({...editForm, partner_login: v})} 
+                  />
                   <SelectNode 
                     label="Case Under(Company)" 
                     value={editForm.case_under_company} 
-                    options={[{v: '', l: 'Select Company'}, {v: 'DMI', l: 'DMI'}, {v: 'Credifin', l: 'Credifin'}]} 
+                    options={[{v: '', l: 'Select Company'}, {v: 'Swayamfin', l: 'Swayamfin'}, {v: 'DMI', l: 'DMI'}, {v: 'Credifin', l: 'Credifin'}]} 
                     onChange={v => setEditForm({...editForm, case_under_company: v})} 
                   />
                    <SelectNode label="Current Status" value={editForm.status} options={STATUS_OPTIONS.map(s => ({v:s, l:s}))} onChange={v => setEditForm({...editForm, status: v})} />

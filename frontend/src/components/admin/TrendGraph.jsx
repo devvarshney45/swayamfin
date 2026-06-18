@@ -10,7 +10,7 @@ import {
 } from 'recharts';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const TrendGraph = ({ title, subtitle, data, onPrevWeek, onNextWeek, isCurrentWeek }) => {
+const TrendGraph = ({ title, subtitle, data, dmiTotal, credifinTotal, unit, onPrevWeek, onNextWeek, isCurrentWeek }) => {
   return (
     <div className="bg-white border border-slate-100 p-8 rounded-[48px] shadow-sm mb-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
@@ -109,6 +109,18 @@ const TrendGraph = ({ title, subtitle, data, onPrevWeek, onNextWeek, isCurrentWe
             />
           </LineChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* Summary Footer */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12 pt-10 border-t border-slate-50">
+         <div className="bg-slate-50/50 rounded-[32px] p-6 hover:bg-white hover:shadow-xl hover:shadow-rose-100/30 transition-all border border-transparent hover:border-rose-100">
+            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Monthly Total {unit}: DMI</h4>
+            <div className="text-3xl font-black text-[#1E293B] tracking-tighter">₹{dmiTotal.toLocaleString('en-IN')}</div>
+         </div>
+         <div className="bg-slate-50/50 rounded-[32px] p-6 hover:bg-white hover:shadow-xl hover:shadow-emerald-100/30 transition-all border border-transparent hover:border-emerald-100">
+            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Monthly Total {unit}: Credifin</h4>
+            <div className="text-3xl font-black text-[#1E293B] tracking-tighter">₹{credifinTotal.toLocaleString('en-IN')}</div>
+         </div>
       </div>
     </div>
   );
