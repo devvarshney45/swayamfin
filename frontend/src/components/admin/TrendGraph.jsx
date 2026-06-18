@@ -10,13 +10,13 @@ import {
 } from 'recharts';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const LoginAnalytics = ({ data, onPrevWeek, onNextWeek, isCurrentWeek }) => {
+const TrendGraph = ({ title, subtitle, data, onPrevWeek, onNextWeek, isCurrentWeek }) => {
   return (
     <div className="bg-white border border-slate-100 p-8 rounded-[48px] shadow-sm mb-12">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
         <div>
-          <h2 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">Login Velocity</h2>
-          <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">Day-wise performance spectrum</p>
+          <h2 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">{title}</h2>
+          <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">{subtitle}</p>
         </div>
         
         <div className="flex flex-wrap items-center gap-6">
@@ -114,4 +114,4 @@ const LoginAnalytics = ({ data, onPrevWeek, onNextWeek, isCurrentWeek }) => {
   );
 };
 
-export default LoginAnalytics;
+export default TrendGraph;

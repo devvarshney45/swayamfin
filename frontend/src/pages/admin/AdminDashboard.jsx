@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import AdminTabs from '../../components/admin/AdminTabs';
-import LoginAnalytics from '../../components/admin/LoginAnalytics';
+import TrendGraph from '../../components/admin/TrendGraph';
 import { ChevronRight, ChevronLeft, Calendar } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin.onrender.com' : 'http://localhost:5001');
@@ -18,10 +18,14 @@ const AdminDashboard = () => {
     disbursementValue: 0,
     sanctionedValue: 0,
   });
-  const [graphData, setGraphData] = useState([]);
-  const [weekOffset, setWeekOffset] = useState(0); // 0 = current week, 1 = previous week
-  const [monthOffset, setMonthOffset] = useState(0); // 0 = current month, 1 = previous month
-  const [showAnalytics, setShowAnalytics] = useState(false);
+  const [graphs, setGraphs] = useState({
+    login: [],
+    sanction: [],
+    disbursement: []
+  });
+  const [weekOffset, setWeekOffset] = useState(0); 
+  const [monthOffset, setMonthOffset] = useState(0); 
+  const [activeGraph, setActiveGraph] = useState(null); // 'login', 'sanction', 'disbursement' or null
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -71,8 +75,10 @@ const AdminDashboard = () => {
     const credifinLeads = monthlyLeads.filter(l => l.case_under_company === 'Credifin');
     
     const pipeline = activeLeads.reduce((sum, l) => sum + (Number(l.loan_amount_required) || 0), 0);
-    const disbursed = monthlyLeads.filter(l => l.status === 'Disbursed').reduce((sum, l) => sum + (Number(l.loan_amount_required) || 0), 0);
-    const sanctioned = monthlyLeads.filter(l => l.status === 'Sanctioned' || l.sanction === true).reduce((sum, l) => sum + (Number(l.sanction_amount) || 0), 0);
+    const disbursed = monthlyLeads.filter(l => l.status === 'Disbursed' || l.disbursement === true).reduce((sum, l) => sum + (Number(l.loan_amount_required) || 0), 0);
+    const sanctioned = monthlyLeads.filter(l => 
+      ['Under Sanction', 'Under Disbursement', 'Disbursed'].includes(l.status) || l.sanction === true
+    ).reduce((sum, l) => sum + (Number(l.sanction_amount) || Number(l.loan_amount_required) || 0), 0);
 
     setStats({
       totalActive: activeLeads.length,
@@ -83,26 +89,32 @@ const AdminDashboard = () => {
       sanctionedValue: sanctioned,
     });
 
-    // 2. Calculate Graph Data (Last 7 Days from weekOffset)
+    // 2. Calculate Graph Data (Last 7 Days from weekOffset) for different metrics
     const last7Days = [...Array(7)].map((_, i) => {
       const d = new Date();
       d.setDate(d.getDate() - (6 - i) - (weekOffset * 7));
       return d.toISOString().split('T')[0];
     });
 
-    const dailyData = last7Days.map(date => {
-      const dayLeads = allLeads.filter(l => l.createdAt?.startsWith(date));
-      const dmi = dayLeads.filter(l => l.case_under_company === 'DMI').length;
-      const credifin = dayLeads.filter(l => l.case_under_company === 'Credifin').length;
-      return {
-        date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        dmi,
-        credifin,
-        total: dmi + credifin
-      };
-    });
+    const generateGraphData = (dateField) => {
+      return last7Days.map(date => {
+        const dayLeads = allLeads.filter(l => l[dateField]?.startsWith(date));
+        const dmi = dayLeads.filter(l => l.case_under_company === 'DMI').length;
+        const credifin = dayLeads.filter(l => l.case_under_company === 'Credifin').length;
+        return {
+          date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          dmi,
+          credifin,
+          total: dmi + credifin
+        };
+      });
+    };
 
-    setGraphData(dailyData);
+    setGraphs({
+      login: generateGraphData('createdAt'),
+      sanction: generateGraphData('sanction_date'),
+      disbursement: generateGraphData('disbursement_date')
+    });
   };
 
   if (loading) return (
@@ -163,36 +175,51 @@ const AdminDashboard = () => {
             title="Total Active cases" 
             value={stats.totalActive} 
             footer="View Login velocity"
-            onClick={() => setShowAnalytics(true)}
+            onClick={() => setActiveGraph('login')}
            />
            <OverviewCard 
             title="Cases Under DMI" 
             value={stats.casesDMI} 
             footer="View performance"
-            onClick={() => setShowAnalytics(true)}
+            onClick={() => setActiveGraph('login')}
            />
            <OverviewCard 
             title="Cases under credifin" 
             value={stats.casesCredifin} 
             footer="View aggregation"
-            onClick={() => setShowAnalytics(true)}
+            onClick={() => setActiveGraph('login')}
            />
            
            <OverviewCard title="Pipeline" value={`₹${stats.pipelineValue.toLocaleString('en-IN')}`} isAmount />
-           <OverviewCard title="Disbursement" value={`₹${stats.disbursementValue.toLocaleString('en-IN')}`} isAmount />
-           <OverviewCard title="Sanctioned" value={`₹${stats.sanctionedValue.toLocaleString('en-IN')}`} isAmount />
+           <OverviewCard 
+            title="Disbursement" 
+            value={`₹${stats.disbursementValue.toLocaleString('en-IN')}`} 
+            isAmount 
+            footer="View Graph"
+            onClick={() => setActiveGraph('disbursement')}
+           />
+           <OverviewCard 
+            title="Sanctioned" 
+            value={`₹${stats.sanctionedValue.toLocaleString('en-IN')}`} 
+            isAmount 
+            footer="View Graph"
+            onClick={() => setActiveGraph('sanction')}
+           />
         </div>
 
         <AnimatePresence>
-          {showAnalytics && (
+          {activeGraph && (
              <motion.div
+               key={activeGraph}
                initial={{ opacity: 0, height: 0 }}
                animate={{ opacity: 1, height: 'auto' }}
                exit={{ opacity: 0, height: 0 }}
                className="overflow-hidden"
              >
-               <LoginAnalytics 
-                data={graphData} 
+               <TrendGraph 
+                title={activeGraph === 'login' ? 'Login Velocity' : activeGraph === 'sanction' ? 'Sanctioned Trend' : 'Disbursement Volume'}
+                subtitle={activeGraph === 'login' ? 'Day-wise performance spectrum' : 'Historical milestone achievement'}
+                data={graphs[activeGraph]} 
                 onPrevWeek={() => setWeekOffset(prev => prev + 1)}
                 onNextWeek={() => setWeekOffset(prev => Math.max(0, prev - 1))}
                 isCurrentWeek={weekOffset === 0}

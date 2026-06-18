@@ -115,6 +115,8 @@ const AdminLeads = () => {
       cpv_report: !!lead.cpv_report,
       sanction: !!lead.sanction,
       disbursement: !!lead.disbursement,
+      disbursement_date: lead.disbursement_date || '',
+      sanction_date: lead.sanction_date || '',
       remarks: lead.remarks || '',
     });
     fetchDocuments(lead._id);
@@ -224,14 +226,17 @@ const AdminLeads = () => {
       'Legal Report', 
       'CPV Report',
       'Sanction', 
+      'Sanction Date',
       'Disbursement', 
+      'Disbursement Date',
       'Current Status', 
       'Remarks'
     ];
     const rows = filteredLeads.map((l, i) => [
       i + 1, l.rm_name || '', l.login_date || '', l.tat || '', l.location_city || '', l.partner_login || '', l.external_loan_id || l.lead_number || '', l.case_under_company || '',
       formatLoanType(l.loan_type), l.applicant_name || '', l.fees || 0, l.loan_amount_required || 0, l.sanction_amount || 0,
-      l.pd_report ? 'YES' : 'NO', l.technical_report ? 'YES' : 'NO', l.legal_report ? 'YES' : 'NO', l.cpv_report ? 'YES' : 'NO', l.sanction ? 'YES' : 'NO', l.disbursement ? 'YES' : 'NO',
+      l.pd_report ? 'YES' : 'NO', l.technical_report ? 'YES' : 'NO', l.legal_report ? 'YES' : 'NO', l.cpv_report ? 'YES' : 'NO',
+      l.sanction ? 'YES' : 'NO', l.sanction_date || '', l.disbursement ? 'YES' : 'NO', l.disbursement_date || '',
       l.status || '', l.remarks || ''
     ]);
     const csv = [headers.join(','), ...rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(','))].join('\n');
@@ -335,6 +340,8 @@ const AdminLeads = () => {
                     onChange={v => setEditForm({...editForm, case_under_company: v})} 
                   />
                    <SelectNode label="Current Status" value={editForm.status} options={STATUS_OPTIONS.map(s => ({v:s, l:s}))} onChange={v => setEditForm({...editForm, status: v})} />
+                  <InputNode label="Sanction Date" type="date" value={editForm.sanction_date} onChange={v => setEditForm({...editForm, sanction_date: v})} />
+                  <InputNode label="Disbursement Date" type="date" value={editForm.disbursement_date} onChange={v => setEditForm({...editForm, disbursement_date: v})} />
                 </div>
 
                 <div className="space-y-6 pt-8 border-t border-slate-50">

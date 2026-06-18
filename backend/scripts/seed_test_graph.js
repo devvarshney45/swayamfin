@@ -21,6 +21,12 @@ async function seedTestLeads() {
       const company = companies[Math.floor(Math.random() * companies.length)];
       const lead_number = `TEST-${Date.now()}-${i}`;
       
+      // Random milestone dates
+      const sDate = new Date(createdAt);
+      sDate.setDate(sDate.getDate() + 2);
+      const dDate = new Date(sDate);
+      dDate.setDate(dDate.getDate() + 2);
+
       const lead = new Lead({
         lead_number,
         source: 'website',
@@ -31,7 +37,9 @@ async function seedTestLeads() {
         loan_type: 'msme_structured',
         loan_amount_required: 500000,
         case_under_company: company,
-        status: 'Under login stage',
+        status: i % 3 === 0 ? 'Disbursed' : i % 3 === 1 ? 'Under Sanction' : 'Under login stage',
+        sanction_date: sDate.toISOString().split('T')[0],
+        disbursement_date: dDate.toISOString().split('T')[0],
         createdAt: createdAt
       });
       
