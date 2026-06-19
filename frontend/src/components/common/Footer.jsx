@@ -161,6 +161,23 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Collections & Support Policy Section */}
+        <div className="mt-16 pt-12 border-t border-white/5">
+           <div className="bg-white/5 rounded-[32px] p-8 md:p-12 border border-white/5 relative overflow-hidden group hover:border-[#0EA5E9]/30 transition-all duration-500 text-center">
+              <div className="absolute inset-0 bg-[#0EA5E9]/5 rounded-full blur-3xl group-hover:bg-[#0EA5E9]/10 transition-colors opacity-30" />
+              
+              <div className="relative z-10 flex flex-col items-center">
+                <h4 className="text-[11px] font-black mb-6 text-[#0EA5E9] uppercase tracking-[0.4em] flex items-center justify-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9]" /> COLLECTIONS & SUPPORT POLICY
+                </h4>
+                
+                <p className="text-sm md:text-base text-slate-300 font-medium leading-relaxed max-w-4xl mx-auto">
+                   We do not deploy recovery Agents and our Head of Collections is - <span className="text-white font-black">Mr. Manish Choudhary</span> who can be reached out at <a href="mailto:asm@swayamfin.com" className="text-[#0EA5E9] hover:underline underline-offset-4 transition-all">asm@swayamfin.com</a>. One can also contact us at our HO for any collections related query at <span className="text-white font-bold">Phone# 011-44728117</span> and <span className="text-white font-bold">Email: <a href="mailto:info@Swayamfin.com" className="hover:text-[#0EA5E9] transition-colors">info@Swayamfin.com</a></span>
+                </p>
+              </div>
+           </div>
+        </div>
+
         {/* Footer Bottom */}
         <div className="pt-8 border-t border-white/5 text-center">
           <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.3em]">
