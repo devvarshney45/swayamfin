@@ -42,12 +42,17 @@ import Chatbot from './components/common/Chatbot';
 
 const AppContent = () => {
   const location = useLocation();
-  const isLandingPage = location.pathname.startsWith('/lp/') || location.pathname === '/emp-portal';
+  const isPortal = location.pathname.startsWith('/admin/') || 
+                   location.pathname.startsWith('/agent/') || 
+                   location.pathname.startsWith('/bsm/') ||
+                   location.pathname === '/emp-portal';
+  const isLandingPage = location.pathname.startsWith('/lp/');
+  const hideNavbar = isLandingPage || isPortal;
 
   return (
     <div className="flex flex-col min-h-screen">
       <ScrollToTop />
-      {!isLandingPage && <Navbar />}
+      {!hideNavbar && <Navbar />}
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Hero />} />

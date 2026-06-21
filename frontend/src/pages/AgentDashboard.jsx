@@ -354,10 +354,7 @@ const AgentDashboard = () => {
               <div className="flex justify-between items-start mb-10 border-b border-slate-100 pb-6">
                 <div>
                   <h3 className="text-3xl font-black text-[#1E293B] leading-none uppercase tracking-tighter">Edit Case File</h3>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">
-                    {editLead.lead_number} • {editLead.applicant_name} 
-                    {editLead.rm_name ? ` • RM: ${editLead.rm_name}` : ''}
-                  </p>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">{editLead.lead_number} • {editLead.applicant_name}</p>
                 </div>
                 <div className="flex gap-2">
                    {deleteConfirm === editLead._id ? (
