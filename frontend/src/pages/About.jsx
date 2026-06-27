@@ -229,7 +229,7 @@ const About = () => {
 
 
       {/* Regulatory Disclosure: DLG */}
-      <section className="py-32 bg-[#0A0A0A] border-t border-white/5">
+      <section className="py-32 bg-[#0F172A] border-t border-white/5">
         <div className="max-w-5xl mx-auto px-10">
            <div className="space-y-10 mb-20 text-left">
               <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
