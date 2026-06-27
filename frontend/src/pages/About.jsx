@@ -228,6 +228,49 @@ const About = () => {
       </section>
 
 
+      {/* Regulatory Disclosure: DLG */}
+      <section className="py-32 bg-[#0A0A0A] border-t border-white/5">
+        <div className="max-w-5xl mx-auto px-10">
+           <div className="space-y-10 mb-20 text-left">
+              <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+                 Regulatory Disclosure: Default Loss Guarantee (DLG)
+              </h2>
+              <p className="text-slate-300 text-sm md:text-base font-normal leading-relaxed">
+                 In compliance with RBI guidelines on Digital Lending, Swayamfin Financial Services Private Limited (acting as a Loan Service Provider) provides the following details regarding portfolios where a Default Loss Guarantee (DLG) is offered to our associated Regulated Entities (REs):
+              </p>
+           </div>
+
+           <div>
+              <table className="w-full text-left">
+                 <thead>
+                    <tr className="border-b border-white/10">
+                       <th className="py-10 text-xs font-black text-white/40 uppercase tracking-[0.2em]">Portfolios where DLG is offered</th>
+                       <th className="py-10 text-xs font-black text-white/40 uppercase tracking-[0.2em] text-right">Details</th>
+                    </tr>
+                 </thead>
+                 <tbody className="divide-y divide-white/10">
+                    <tr>
+                       <td className="py-10 text-white font-bold text-sm tracking-tight capitalize">Outstanding amount of portfolio</td>
+                       <td className="py-10 text-right">
+                          <span className="text-lg font-black text-white">1.98 Cr.</span>
+                       </td>
+                    </tr>
+                    <tr>
+                       <td className="py-10 text-white font-bold text-sm tracking-tight capitalize">Number of REs (Regulated Entities)</td>
+                       <td className="py-10 text-right">
+                          <span className="text-lg font-black text-white">2</span>
+                       </td>
+                    </tr>
+                 </tbody>
+              </table>
+           </div>
+           
+           <div className="mt-20 flex justify-center">
+              <p className="text-white/20 text-[8px] font-black uppercase tracking-[0.6em] italic">Updated: June 2026 • Institutional Hub Control</p>
+           </div>
+        </div>
+      </section>
+
     </div>
   );
 };

@@ -183,7 +183,7 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
               </div>
             ) : (
               <>
-                <h3 className="text-2xl font-bold text-slate-900 mb-6 uppercase tracking-tight">Start Application</h3>
+                <h3 className="text-2xl font-bold text-slate-900 mb-8 uppercase tracking-tighter">Submit <span className="text-primary italic">Information.</span></h3>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {step === 'form' ? (
                     <>
@@ -227,18 +227,18 @@ const LeadCaptureModal = ({ isOpen, onClose }) => {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1">
-                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Loan Type</label>
+                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Requirement Type</label>
                           <select 
                             className="input-standard h-10 px-4 rounded-lg appearance-none cursor-pointer"
                             value={formData.loanType}
                             onChange={e => setFormData({...formData, loanType: e.target.value})}
                           >
-                            <option value="home_loan">Home Loan</option>
-                            <option value="lap">Loan Against Property</option>
-                            <option value="unsecured_business">Unsecured Business Loan</option>
-                            <option value="supply_chain">Supply Chain Finance</option>
-                            <option value="unsecured_export">Unsecured Export Finance</option>
-                            <option value="machinery">Machinery Finance</option>
+                            <option value="Home Loan">Home Loan</option>
+                            <option value="Loan Against Property">Loan Against Property</option>
+                            <option value="Unsecured Business Loan">Unsecured Business Loan</option>
+                            <option value="Supply Chain Finance">Supply Chain Finance</option>
+                            <option value="Unsecured Export Finance">Unsecured Export Finance</option>
+                            <option value="Machinery Finance">Machinery Finance</option>
                           </select>
                         </div>
                         <div className="space-y-1">

@@ -181,10 +181,9 @@ const AgentDashboard = () => {
 
   const getDocByType = (type) => documents.find(d => d.doc_type === type);
 
-  const activeLeadsCount = leads.filter(l => l.status !== 'Disbursed').length;
   const actualDisbursed = leads
     .filter(l => l.status === 'Disbursed')
-    .reduce((sum, l) => sum + (Number(l.loan_amount_required) || 0), 0);
+    .reduce((sum, l) => sum + (Number(l.disbursed_amount) || Number(l.loan_amount_required) || 0), 0);
 
   const monthlyTarget = 10000000; // 1 Crore target
   const targetProgress = Math.min((actualDisbursed / monthlyTarget) * 100, 100);
@@ -211,101 +210,99 @@ const AgentDashboard = () => {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center space-y-4">
+    <div className="min-h-screen bg-[#FDFDFD] flex flex-col items-center justify-center space-y-4">
        <div className="w-12 h-12 border-4 border-[#0EA5E9]/20 border-t-[#0EA5E9] rounded-full animate-spin" />
-       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Syncing Partner Node...</p>
-    </div>
-  );
-
-  if (error) return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center space-y-6">
-       <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-2xl">!</div>
-       <div className="space-y-4">
-         <h2 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">Access Restricted</h2>
-         <p className="text-slate-500 text-sm font-medium italic max-w-md">{error}</p>
-       </div>
-       <div className="flex gap-4">
-          <button onClick={fetchLeads} className="btn-primary py-3 px-8 text-[10px] uppercase">Retry</button>
-          <button onClick={handleLogout} className="bg-slate-100 py-3 px-8 text-[10px] uppercase font-black text-slate-500 rounded-lg">Sign Out</button>
-       </div>
+       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Propelling Case Hub...</p>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 pb-20 relative">
-      {/* Header Overlay */}
-      <div className="bg-white/90 border-b border-slate-100 fixed top-0 left-0 right-0 z-50 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-            <div className="flex items-center gap-3 md:gap-4 w-full sm:w-auto">
-               <div className="w-12 h-12 bg-[#0EA5E9] rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg">
-                  {user?.full_name?.charAt(0) || 'A'}
-               </div>
-               <div>
-                  <h1 className="text-xl font-black text-[#1E293B] uppercase tracking-tighter leading-none">Partner <span className="text-[#0EA5E9] italic">Hub.</span></h1>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1 italic">{user?.full_name}</p>
+    <div className="min-h-screen bg-[#FDFDFD] text-[#1E293B] pb-32">
+      {/* Header Overlay - RM Blueprint Style */}
+      <div className="bg-white border-b border-slate-100 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 flex flex-col md:flex-row justify-between md:items-end gap-6">
+            <div className="space-y-1">
+               <h1 className="text-4xl font-black tracking-tighter uppercase leading-none text-[#1E293B]">
+                  {user?.full_name} <span className="text-[#0EA5E9] italic opacity-50">.</span>
+               </h1>
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4">Relationship Manager</p>
+               <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-50 rounded-lg border border-slate-100">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9]" />
+                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{user?.branch?.name || 'Central Office'}</span>
                </div>
             </div>
-            <button onClick={handleLogout} className="self-end sm:self-auto px-4 py-2 rounded-xl bg-white border border-slate-200 text-[9px] font-black text-slate-500 uppercase tracking-widest hover:text-rose-500 hover:bg-rose-50 transition-colors">Exit Portal</button>
+            <div className="flex gap-4">
+              <Link to="/agent/lead/new" className="px-8 h-12 flex items-center justify-center bg-[#0EA5E9] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-blue-100 hover:bg-blue-600 transition-all">
+                New Application
+              </Link>
+              <button onClick={handleLogout} className="px-8 h-12 bg-white border border-slate-200 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">
+                Exit Node
+              </button>
+            </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 pt-32">
-        {/* KPI Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-           <StatCard title="Total Leads" value={leads.length} sub="Cumulative" />
-           <StatCard title="Active PPL" value={activeLeadsCount} sub="In Pipeline" color="blue" />
-           <StatCard title="Disbursed" value={`₹${(actualDisbursed/100000).toFixed(1)}L`} sub="Approved" color="emerald" />
-           <StatCard title="Success" value={(leads.length > 0 ? Math.round((leads.filter(l=>['Disbursed'].includes(l.status)).length/leads.length)*100) : 0) + "%"} sub="Win Rate" color="rose" />
-        </div>
-
-        {/* Action Bar */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-           <div className="bg-white border border-slate-100 p-6 md:p-8 rounded-[32px] md:rounded-[40px] shadow-sm relative overflow-hidden group">
-              <div className="flex justify-between items-center mb-6">
-                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Monthly Target</span>
-                 <span className="text-xl font-black text-[#0EA5E9]">{targetProgress.toFixed(0)}%</span>
+      <div className="max-w-7xl mx-auto px-6 md:px-12 pt-16">
+        {/* Mission Status - KPI Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
+           {/* Total Leads Box */}
+           <div className="bg-[#1E293B] p-10 rounded-[48px] shadow-2xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-white/10 transition-all" />
+              <div className="relative z-10">
+                 <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8 italic">Total Leads Segmented</h3>
+                 <div className="flex items-baseline gap-4">
+                    <span className="text-7xl font-black text-white ml-[-4px] tracking-tighter">{leads.length}</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Active Records</span>
+                 </div>
               </div>
-              <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                 <motion.div initial={{ width: 0 }} animate={{ width: `${targetProgress}%` }} className="h-full bg-[#0EA5E9]" />
-              </div>
-              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-4 italic">₹{(actualDisbursed/100000).toFixed(1)}L / ₹1.0Cr Milestone</p>
            </div>
 
-           <div className="lg:col-span-2 flex flex-col sm:flex-row gap-4">
+           {/* Monthly Target Progress */}
+           <div className="bg-white border border-slate-100 p-10 rounded-[48px] shadow-sm flex flex-col justify-center">
+              <div className="flex justify-between items-end mb-8">
+                 <div>
+                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-2 italic">Monthly Target Engine</h3>
+                    <p className="text-2xl font-black text-[#1E293B] tracking-tighter">₹{(actualDisbursed/100000).toFixed(1)}L <span className="text-slate-300 font-medium">/ 1.0Cr</span></p>
+                 </div>
+                 <span className="text-4xl font-black text-[#0EA5E9] tracking-tighter italic">{Math.round(targetProgress)}%</span>
+              </div>
+              <div className="w-full h-4 bg-slate-50 rounded-full overflow-hidden p-1 border border-slate-100">
+                 <motion.div 
+                   initial={{ width: 0 }} 
+                   animate={{ width: `${targetProgress}%` }} 
+                   className="h-full bg-[#1E293B] rounded-full relative"
+                 >
+                    <div className="absolute top-0 right-0 h-full w-2 bg-[#0EA5E9] rounded-full" />
+                 </motion.div>
+              </div>
+              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-6 leading-none">Milestone status: {targetProgress >= 100 ? 'Achieved' : 'In Propulsion'}</p>
+           </div>
+        </div>
+
+        {/* Client List Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 border-b border-slate-100 pb-10">
+           <div>
+              <h2 className="text-3xl font-black text-[#1E293B] uppercase tracking-tighter">Clients <span className="text-[#0EA5E9] italic opacity-50">.</span></h2>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Portfolio Directory ({leads.length} Cases)</p>
+           </div>
+           
+           <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
               <input 
                 type="text" 
-                placeholder="Search cases by ID or Name..."
-                className="input-standard flex-1 h-20 rounded-[28px] px-8 text-sm"
+                placeholder="Find client..."
+                className="h-14 px-8 rounded-2xl bg-white border border-slate-100 text-sm outline-none focus:border-[#0EA5E9]/30 transition-all sm:w-64"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={v => setSearchTerm(v.target.value)}
               />
-              <button
-                onClick={handleLogout}
-                className="h-20 px-8 rounded-[28px] bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 font-black text-[10px] uppercase tracking-widest transition-all"
+              <select 
+                className="h-14 px-8 rounded-2xl bg-white border border-slate-100 text-[10px] font-black uppercase tracking-widest outline-none focus:border-[#0EA5E9]/30 transition-all appearance-none pr-12 cursor-pointer"
+                value={filterStatus}
+                onChange={v => setFilterStatus(v.target.value)}
               >
-                Exit Portal
-              </button>
-              <Link to="/agent/lead/new" className="btn-primary h-20 px-12 rounded-[28px] flex items-center justify-center text-[10px] uppercase tracking-widest shadow-2xl">
-                 Generate New Case
-              </Link>
+                 <option value="All">All States</option>
+                 {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
            </div>
-        </div>
-
-        {/* List Header */}
-        <div className="flex justify-between items-center mb-8 px-2">
-           <h2 className="text-xl font-black text-[#1E293B] uppercase tracking-tighter">Node <span className="text-[#0EA5E9] italic text-sm">Repository</span> ({filteredLeads.length})</h2>
-           <select 
-             className="input-standard w-40 h-10 rounded-xl text-[10px] uppercase tracking-widest font-black appearance-none"
-             value={filterStatus}
-             onChange={(e) => setFilterStatus(e.target.value)}
-           >
-              <option value="All">All States</option>
-              <option value="Under login stage">Login Stage</option>
-              <option value="Under PD">Under PD</option>
-              <option value="Under Credit">Credit Stage</option>
-              <option value="Under Sanction">Sanctioned</option>
-              <option value="Disbursed">Disbursed</option>
-           </select>
         </div>
 
         {/* Grid Cards */}
@@ -343,7 +340,7 @@ const AgentDashboard = () => {
         </div>
         {filteredLeads.length === 0 && (
            <div className="py-32 text-center bg-white border border-slate-100 rounded-[40px] border-dashed">
-              <p className="text-slate-400 text-xs font-black uppercase tracking-widest">No node data detected.</p>
+              <p className="text-slate-400 text-xs font-black uppercase tracking-widest">No case data detected.</p>
            </div>
         )}
 
@@ -405,14 +402,14 @@ const AgentDashboard = () => {
                    </div>
                 </div>
 
-                <div className="space-y-6 pt-8 border-t border-slate-50">
+                <div className="space-y-6 pt-8 border-t border-slate-100">
                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Identity Documents</h4>
                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       {[
                         {v: 'aadhaar_card', l: 'Aadhar'},
                         {v: 'pan_card', l: 'PAN'},
                         {v: 'voter_id', l: 'Voter ID'},
-                        {v: 'bank_statement', l: 'Bank Statement'},
+                        {v: 'bank_statement', l: 'Bankstmt'},
                       ].map(doc => {
                         const uploaded = getDocByType(doc.v);
                         return (
@@ -486,14 +483,6 @@ const CheckboxNode = ({ label, checked, onChange }) => (
        {checked && <span className="font-black text-[10px]">✓</span>}
     </div>
     <span className="text-[10px] font-black text-[#1E293B] uppercase tracking-tight">{label}</span>
-  </div>
-);
-
-const StatCard = ({ title, value, sub, color }) => (
-  <div className="bg-white border border-slate-100 p-6 md:p-8 rounded-[32px] md:rounded-[40px] shadow-sm group hover:shadow-xl transition-all">
-     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 italic">{title}</p>
-     <h3 className="text-3xl font-black text-[#1E293B] tracking-tighter leading-none mb-1">{value}</h3>
-     <p className={`text-[9px] font-black uppercase tracking-widest ${color === 'emerald' ? 'text-emerald-500' : color==='blue' ? 'text-blue-500' : color==='rose' ? 'text-rose-500' : 'text-slate-400'}`}>{sub}</p>
   </div>
 );
 
