@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { ChevronLeft, ChevronRight, Calendar, Filter } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -144,10 +144,14 @@ const BsmDashboard = () => {
                 </div>
                 <div className="space-y-1">
                    {users.map((rm, idx) => (
-                      <div key={rm._id} className="flex items-center gap-6 py-4 border-b border-slate-50 hover:bg-slate-50 transition-all cursor-pointer group">
+                      <Link 
+                        to={`/admin/agents/${rm._id}`}
+                        key={rm._id} 
+                        className="flex items-center gap-6 py-4 border-b border-slate-50 hover:bg-slate-50 transition-all cursor-pointer group block"
+                      >
                          <span className="text-[10px] font-black text-slate-300 italic group-hover:text-primary transition-all">0{idx + 1}</span>
                          <span className="text-sm font-bold text-slate-600 uppercase tracking-tighter group-hover:text-slate-900 transition-all">{rm.full_name}</span>
-                      </div>
+                      </Link>
                    ))}
                 </div>
              </div>

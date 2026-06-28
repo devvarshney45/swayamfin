@@ -3,10 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import AdminTabs from '../../components/admin/AdminTabs';
+import { useAuth } from '../../context/AuthContext';
 
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin.onrender.com' : 'http://localhost:5001');
 
 const AdminAgentDetails = () => {
+  const { user: currentUser } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
   const [agent, setAgent] = useState(null);
@@ -33,9 +35,6 @@ const AdminAgentDetails = () => {
       const agentData = userRes.data.data;
       setAgent(agentData);
       
-      // Filter leads assigned to this agent (assuming leads have assigned_sales_person or similar)
-      // If the backend doesn't store assignment explicitly in lead, we might need a different query.
-      // Based on my knowledge, leads have assigned_sales_person (ObjectId)
       const agentLeads = (leadsRes.data.data || []).filter(l => 
         l.assigned_to === id || l.assigned_to?._id === id
       );
@@ -78,11 +77,11 @@ const AdminAgentDetails = () => {
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-800 px-4 md:px-12 pt-24 md:pt-32 pb-32">
       <div className="max-w-7xl mx-auto">
-        <AdminTabs />
+        {currentUser?.role === 'admin' && <AdminTabs />}
         
         {/* Navigation / Actions */}
         <div className="mb-12 flex justify-between items-center px-4">
-           <button onClick={() => navigate(-1)} className="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:text-[#0EA5E9] transition-all">
+           <button onClick={() => currentUser?.role === 'bsm' ? navigate('/bsm/dashboard') : navigate(-1)} className="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:text-[#0EA5E9] transition-all">
               ← Return
            </button>
            <button className="bg-white border border-slate-200 px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">
