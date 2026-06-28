@@ -1,73 +1,121 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
+import { 
+  Home, 
+  Building2, 
+  Briefcase, 
+  Truck, 
+  Globe, 
+  Activity,
+  ArrowRight
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import LeadCaptureModal from '../common/LeadCaptureModal';
 
 const ServicesSection = () => {
-  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const services = [
-    { name: 'Lending Process', desc: 'Complete roadmap of our digital credit transformation.', path: '/process' },
-    { name: 'About Us', desc: 'The institutional vision driving financial excellence.', path: '/about' },
-    { name: 'Blog', desc: 'Professional insights on India\'s MSME lending sector.', path: '/blog' },
-    { name: 'Contact Us', desc: 'Expert consultation for your capital requirements.', path: '/contact' },
-    { name: 'Loan Against Property', desc: 'Institutional grade funding backed by your assets.', path: '/services/lap' },
+    { 
+        id: 'HL', 
+        name: 'Home Loan', 
+        desc: 'We give you the money to buy a house for you to live in.', 
+        icon: Home,
+        path: '/housing'
+    },
+    { 
+        id: 'LAP', 
+        name: 'Loan Against Property', 
+        desc: 'If you already own a building, we will lend you cash—and you still get to keep the building!', 
+        icon: Building2,
+        path: '/lap'
+    },
+    { 
+        id: 'UBL', 
+        name: 'Unsecured Business Loan', 
+        desc: 'We give your business money to grow, and you don\'t have to promise to give us any of your stuff if things go wrong.', 
+        icon: Briefcase,
+        path: '/msme-loans'
+    },
+    { 
+        id: 'SCF', 
+        name: 'Supply Chain Finance', 
+        desc: 'We help pay the people who deliver your boxes, so your shop never runs out of things to sell.', 
+        icon: Truck,
+        path: '/supply-chain'
+    },
+    { 
+        id: 'UEF', 
+        name: 'Unsecured Export Finance', 
+        desc: 'We give you money to help you pack up and sell your stuff to people far away in other countries.', 
+        icon: Globe,
+        path: '/services/uef'
+    },
+    { 
+        id: 'MF', 
+        name: 'Machinery Finance', 
+        desc: 'We give you the money to buy big, heavy machines so you can build things much faster.', 
+        icon: Activity,
+        path: '/services/machinery-loan'
+    }
   ];
 
   return (
-    <section className="py-20 md:py-32 bg-[#F8FAFC] relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section className="py-24 md:py-32 bg-[#F8FAFC] relative overflow-hidden">
+      
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         
-        {/* Header */}
-        <div className="text-center mb-16 space-y-4">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="text-4xl md:text-6xl font-black text-[#1E293B] tracking-tight uppercase"
-          >
-            Swayamfin <span className="text-[#0EA5E9] italic">Direct</span>
-          </motion.h2>
-          <p className="text-slate-500 max-w-2xl mx-auto font-medium">
-             Central operational node for our institutional resources and primary lending protocols.
-          </p>
-        </div>
-
-        {/* Grid */}
-        <div className="flex flex-wrap justify-center gap-8">
-          {services.map((service, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
+        {/* Section Header */}
+        <div className="text-center mb-20 md:mb-28 space-y-6">
+            <motion.div 
+               initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
+               className="inline-flex items-center gap-3 px-6 py-2 bg-blue-600/10 rounded-full border border-blue-600/20"
+            >
+               <span className="text-blue-600 text-[10px] font-black uppercase tracking-[0.4em]">Our Services</span>
+            </motion.div>
+            <motion.h2 
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: idx * 0.05 }}
-              className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] max-w-sm"
+              className="text-5xl md:text-7xl font-black text-[#1E293B] leading-tight tracking-tighter uppercase"
             >
+              Tailored <span className="text-blue-600 italic">Financial Products.</span>
+            </motion.h2>
+        </div>
+
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {services.map((service, index) => (
               <Link to={service.path} className="group block h-full">
-                <div className="bg-white border-2 border-slate-100 p-10 rounded-[32px] h-full shadow-sm hover:shadow-2xl hover:border-[#0EA5E9]/30 transition-all duration-500 flex flex-col gap-8 relative overflow-hidden">
+                <div className="bg-white border-2 border-slate-100 rounded-[48px] p-10 h-full shadow-sm hover:shadow-2xl hover:border-blue-500/30 transition-all duration-500 cursor-pointer flex flex-col relative overflow-hidden">
                   
-                  <div className="space-y-4">
-                    <h3 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight group-hover:text-[#0EA5E9] transition-colors leading-tight">
-                      {service.name}
-                    </h3>
-                    <p className="text-slate-600 text-[13px] font-medium leading-relaxed italic border-l-4 border-[#0EA5E9]/20 pl-6">
-                      {service.desc}
-                    </p>
+                  {/* Header Icon */}
+                  <div className="mb-8 flex items-center justify-between">
+                     <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100/50 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
+                        <service.icon className="w-8 h-8" />
+                     </div>
                   </div>
-                  
-                  <div className="mt-auto pt-4 flex items-center gap-2 text-[11px] font-black text-slate-400 uppercase tracking-widest group-hover:text-[#0EA5E9] transition-colors">
-                    Access Resource <span>→</span>
+
+                  {/* Content */}
+                  <div className="space-y-4 mb-8">
+                     <h3 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight group-hover:text-blue-600 transition-colors">
+                        {service.name}
+                     </h3>
+                     <p className="text-slate-500 text-sm font-medium leading-relaxed italic border-l-4 border-blue-600/10 pl-6">
+                        {service.desc}
+                     </p>
+                  </div>
+
+                  <div className="mt-auto pt-6 flex items-center justify-between border-t border-slate-50">
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-blue-600 transition-colors">Learn More</span>
+                      <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
                   </div>
                 </div>
               </Link>
-            </motion.div>
           ))}
         </div>
 
-
       </div>
-
       <LeadCaptureModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   );
