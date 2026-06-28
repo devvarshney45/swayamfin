@@ -99,7 +99,7 @@ const BsmDashboard = () => {
                 {authUser?.full_name} <span className="text-primary italic opacity-50">.</span>
              </h2>
              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Branch Manager</p>
-             <button onClick={() => { logout(); navigate('/agent/login'); }} className="mt-4 text-[9px] font-black text-rose-500 uppercase tracking-widest hover:underline transition-all">Term. Session</button>
+             <button onClick={() => { logout(); navigate('/agent/login'); }} className="mt-4 text-[9px] font-black text-rose-500 uppercase tracking-widest hover:underline transition-all">Exit Portal</button>
           </div>
       </div>
 
@@ -145,7 +145,7 @@ const BsmDashboard = () => {
                 <div className="space-y-1">
                    {users.map((rm, idx) => (
                       <Link 
-                        to={`/admin/agents/${rm._id}`}
+                        to={`/agent/dashboard/${rm._id}`}
                         key={rm._id} 
                         className="flex items-center gap-6 py-4 border-b border-slate-50 hover:bg-slate-50 transition-all cursor-pointer group block"
                       >

@@ -72,10 +72,28 @@ const AdminAgentDetails = () => {
     active: leads.filter(l => !['Sanctioned', 'Disbursed', 'Dead Lead', 'Closed - Won'].includes(l.status)).length
   };
 
+  const handleExport = () => {
+    if (!agent || leads.length === 0) return;
+    const headers = ['Client Name', 'ID', 'Loan Type', 'Amount', 'Status'];
+    const rows = leads.map(l => [
+      l.applicant_name,
+      l.lead_number,
+      l.loan_type,
+      l.loan_amount_required,
+      l.status
+    ]);
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${agent.full_name}_Audit_${new Date().toLocaleDateString()}.csv`;
+    link.click();
+  };
+
   const conversionRate = stats.total > 0 ? Math.round((stats.converted / stats.total) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 px-4 md:px-12 pt-24 md:pt-32 pb-32">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 px-4 md:px-12 pt-8 md:pt-12 pb-32">
       <div className="max-w-7xl mx-auto">
         {currentUser?.role === 'admin' && <AdminTabs />}
         
@@ -84,8 +102,11 @@ const AdminAgentDetails = () => {
            <button onClick={() => currentUser?.role === 'bsm' ? navigate('/bsm/dashboard') : navigate(-1)} className="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:text-[#0EA5E9] transition-all">
               ← Return
            </button>
-           <button className="bg-white border border-slate-200 px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">
-              Export Personnel Audit
+           <button 
+             onClick={handleExport}
+             className="bg-white border border-slate-200 px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all shadow-sm"
+           >
+              Export Client Data
            </button>
         </div>
 

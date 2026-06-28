@@ -254,7 +254,7 @@ const AdminLeads = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-32">
-      <div className="max-w-7xl mx-auto px-6 pt-32">
+      <div className="max-w-7xl mx-auto px-6 pt-8 md:pt-12">
         <AdminTabs />
         <div className="flex justify-between items-center mb-12">
            <h1 className="text-5xl font-black text-[#1E293B] uppercase tracking-tighter">Global <span className="text-blue-600 italic">Repository</span></h1>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { Trash2 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin.onrender.com' : 'http://localhost:5001');
 
 const AgentDashboard = () => {
+  const { id } = useParams();
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,6 +17,7 @@ const AgentDashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const [agentInfo, setAgentInfo] = useState(null);
   const [editLead, setEditLead] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [editSaving, setEditSaving] = useState(false);
@@ -24,6 +26,8 @@ const AgentDashboard = () => {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [actionNote, setActionNote] = useState(null);
+
+  const isAdminView = !!id;
 
   const LOAN_TYPE_OPTIONS = [
     { v: 'lap', l: 'LAP' },
@@ -53,7 +57,18 @@ const AgentDashboard = () => {
 
   useEffect(() => {
     fetchLeads();
-  }, []);
+    if (isAdminView) fetchAgentInfo();
+  }, [id]);
+
+  const fetchAgentInfo = async () => {
+    try {
+      const token = localStorage.getItem('swayamfin_token');
+      const res = await axios.get(`${API_URL}/api/users/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setAgentInfo(res.data.data);
+    } catch (err) { console.error('Agent info fetch error', err); }
+  };
 
   const fetchLeads = async () => {
     try {
@@ -62,7 +77,8 @@ const AgentDashboard = () => {
       const token = localStorage.getItem('swayamfin_token');
       if (!token) throw new Error('Session Expired.');
 
-      const response = await axios.get(`${API_URL}/api/leads`, {
+      const url = isAdminView ? `${API_URL}/api/leads?agent_id=${id}` : `${API_URL}/api/leads`;
+      const response = await axios.get(url, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setLeads(response.data.data || []);
@@ -223,20 +239,31 @@ const AgentDashboard = () => {
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 flex flex-col md:flex-row justify-between md:items-end gap-6">
             <div className="space-y-1">
                <h1 className="text-4xl font-black tracking-tighter uppercase leading-none text-[#1E293B]">
-                  {user?.full_name} <span className="text-[#0EA5E9] italic opacity-50">.</span>
+                  {isAdminView ? agentInfo?.full_name : user?.full_name} <span className="text-[#0EA5E9] italic opacity-50">.</span>
                </h1>
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4">Relationship Manager</p>
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4">{isAdminView ? 'Personnel Audit' : 'Relationship Manager'}</p>
                <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-50 rounded-lg border border-slate-100">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9]" />
-                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{user?.branch?.name || 'Central Office'}</span>
+                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
+                    {isAdminView ? agentInfo?.branch_id?.name : (user?.branch?.name || 'Central Office')}
+                  </span>
                </div>
             </div>
             <div className="flex gap-4">
-              <Link to="/agent/lead/new" className="px-8 h-12 flex items-center justify-center bg-[#0EA5E9] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-blue-100 hover:bg-blue-600 transition-all">
-                New Application
-              </Link>
+              {isAdminView ? (
+                <button 
+                  onClick={() => user?.role === 'bsm' ? navigate('/bsm/dashboard') : navigate('/admin/agents')} 
+                  className="px-8 h-12 flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-500 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white transition-all shadow-sm"
+                >
+                  Return to Operations
+                </button>
+              ) : (
+                <Link to="/agent/lead/new" className="px-8 h-12 flex items-center justify-center bg-[#0EA5E9] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-blue-100 hover:bg-blue-600 transition-all">
+                  New Application
+                </Link>
+              )}
               <button onClick={handleLogout} className="px-8 h-12 bg-white border border-slate-200 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">
-                Exit Node
+                Exit Portal
               </button>
             </div>
         </div>

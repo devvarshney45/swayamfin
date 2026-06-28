@@ -108,6 +108,16 @@ const AppContent = () => {
             } 
           />
           <Route 
+            path="/agent/dashboard/:id" 
+            element={
+              <ErrorBoundary>
+                <ProtectedRoute allowedRoles={['bsm', 'admin']}>
+                  <AgentDashboard />
+                </ProtectedRoute>
+              </ErrorBoundary>
+            } 
+          />
+          <Route 
             path="/agent/lead/new" 
             element={
               <ErrorBoundary>

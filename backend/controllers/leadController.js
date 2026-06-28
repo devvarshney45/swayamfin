@@ -241,13 +241,23 @@ exports.createLead = async (req, res) => {
 exports.getLeads = async (req, res) => {
   try {
     const userRole = req.user.role;
+    const { agent_id } = req.query;
     let query = {};
 
-    if (userRole === 'sales_person') {
+    if (agent_id && (userRole === 'admin' || userRole === 'bsm')) {
+      // Security check for BSM
+      if (userRole === 'bsm') {
+        const agent = await User.findById(agent_id);
+        if (!agent || agent.branch_id?.toString() !== req.user.branch_id?.toString()) {
+          return res.status(403).json({ success: false, message: 'Access Denied: Agent not in your branch.' });
+        }
+      }
+      query.assigned_to = agent_id;
+    } else if (userRole === 'sales_person') {
       query.assigned_to = req.user._id;
     } else if (userRole === 'bsm') {
       query.branch_id = req.user.branch_id;
-    } // admin sees all
+    }
 
     const leads = await Lead.find(query)
       .populate('assigned_to', 'full_name')

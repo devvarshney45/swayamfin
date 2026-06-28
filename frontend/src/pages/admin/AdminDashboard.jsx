@@ -162,7 +162,7 @@ const AdminDashboard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 px-4 md:px-8 lg:px-12 pt-10 md:pt-16 pb-32">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 px-4 md:px-8 lg:px-12 pt-8 md:pt-12 pb-32">
       <div className="max-w-7xl mx-auto">
         <AdminTabs />
         

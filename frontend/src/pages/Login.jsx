@@ -53,9 +53,8 @@ const Login = () => {
         
         <div className="text-center mb-12">
            <h1 className="text-4xl md:text-5xl font-black text-[#1E293B] uppercase tracking-tighter leading-none mb-4">
-              Access <span className="text-[#0EA5E9] italic">Hub.</span>
+              Partner <span className="text-[#0EA5E9] italic">Login.</span>
            </h1>
-           <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em] italic leading-relaxed">Infrastructure Command Protocol</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-8">
@@ -73,7 +72,7 @@ const Login = () => {
 
           <div className="space-y-8">
             <div className="space-y-3">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] ml-1">Officer Email</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] ml-1">Email</label>
               <input 
                 type="email" autoComplete="email" required
                 className="input-standard w-full h-16 rounded-[28px] px-8 text-sm"
@@ -85,9 +84,9 @@ const Login = () => {
 
             <div className="space-y-3">
               <div className="flex justify-between px-1">
-                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Access Key</label>
+                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Password</label>
                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[9px] font-black text-[#0EA5E9] uppercase tracking-widest">
-                    {showPassword ? 'Hide Secret' : 'Reveal Secret'}
+                    {showPassword ? 'Hide Password' : 'Show Password'}
                  </button>
               </div>
               <input 
@@ -104,13 +103,10 @@ const Login = () => {
             type="submit" disabled={loading}
             className="w-full h-20 bg-[#1E293B] hover:bg-[#0EA5E9] text-white rounded-[32px] font-black uppercase tracking-[0.4em] shadow-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-4 text-xs"
           >
-            {loading ? 'Initializing...' : 'Decrypt & Enter Hub'}
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
-        <div className="mt-16 pt-10 border-t border-slate-50 text-center">
-           <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest italic">Secure Link v5.1 • Institutional Encryption Enabled</p>
-        </div>
       </motion.div>
     </div>
   );
