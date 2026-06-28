@@ -66,20 +66,14 @@ const ServicesSection = () => {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center mb-20 md:mb-28 space-y-6">
-            <motion.div 
-               initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
-               className="inline-flex items-center gap-3 px-6 py-2 bg-blue-600/10 rounded-full border border-blue-600/20"
-            >
-               <span className="text-blue-600 text-[10px] font-black uppercase tracking-[0.4em]">Our Services</span>
-            </motion.div>
+        <div className="text-center mb-16 md:mb-24 space-y-6">
             <motion.h2 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               className="text-5xl md:text-7xl font-black text-[#1E293B] leading-tight tracking-tighter uppercase"
             >
-              Tailored <span className="text-blue-600 italic">Financial Products.</span>
+              Our <span className="text-blue-600 italic">Services.</span>
             </motion.h2>
         </div>
 
