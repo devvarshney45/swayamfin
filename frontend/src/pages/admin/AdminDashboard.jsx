@@ -146,7 +146,7 @@ const AdminDashboard = () => {
   if (loading) return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center space-y-4">
        <div className="w-12 h-12 border-4 border-[#0EA5E9]/20 border-t-[#0EA5E9] rounded-full animate-spin" />
-       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Initializing Core...</p>
+       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loading Dashboard...</p>
     </div>
   );
 
@@ -154,10 +154,10 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center space-y-6">
        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-2xl">!</div>
        <div className="space-y-2">
-         <h2 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">System Outage</h2>
+         <h2 className="text-2xl font-black text-[#1E293B] uppercase tracking-tight">Sync Failed</h2>
          <p className="text-slate-500 text-sm font-medium italic max-w-md">{error}</p>
        </div>
-       <button onClick={fetchStats} className="btn-primary py-3 px-8 text-xs">Reconnect Node</button>
+       <button onClick={fetchStats} className="btn-primary py-3 px-8 text-xs">Retry Connection</button>
     </div>
   );
 
@@ -243,8 +243,8 @@ const AdminDashboard = () => {
                className="overflow-hidden"
              >
                <TrendGraph 
-                title={activeGraph === 'login' ? 'Login Velocity' : activeGraph === 'sanction' ? 'Sanctioned Trend' : 'Disbursement Volume'}
-                subtitle={activeGraph === 'login' ? 'Day-wise performance spectrum' : 'Historical milestone achievement'}
+                title={activeGraph === 'login' ? 'Login Recent Activity' : activeGraph === 'sanction' ? 'Sanctioned Trend' : 'Disbursement Volume'}
+                subtitle={activeGraph === 'login' ? 'Daily performance insights' : 'Historical performance trends'}
                 data={graphs[activeGraph]} 
                 dmiTotal={graphMeta[activeGraph].dmi}
                 credifinTotal={graphMeta[activeGraph].credifin}

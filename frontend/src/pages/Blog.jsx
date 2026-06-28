@@ -50,25 +50,25 @@ const Blog = () => {
   }
 
   return (
-    <div className="bg-[#F8FAFC] min-h-screen pt-32 pb-40 font-plus-jakarta-sans overflow-hidden">
+    <div className="bg-[#F8FAFC] min-h-screen pt-28 md:pt-36 pb-40 font-plus-jakarta-sans overflow-hidden">
       <Helmet>
         <title>Blog | Swayamfin</title>
         <meta name="description" content="Explore Swayamfin Insights. Stay updated with our latest financial market analysis, loan advice, and strategic wealth management perspectives." />
       </Helmet>
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#0EA5E9]/5 blur-[160px] rounded-full translate-x-1/2 -translate-y-1/2" />
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-12">
           <div className="max-w-3xl space-y-6">
 
-            <h1 className="text-5xl md:text-7xl font-black text-[#1E293B] uppercase tracking-tighter leading-none">
-              Expert <span className="text-[#0EA5E9] italic">Insights.</span>
+            <h1 className="text-5xl md:text-7xl font-black text-[#1E293B] uppercase tracking-tight leading-tight">
+              Expert <span className="text-[#0EA5E9] italic ml-2">Insights.</span>
             </h1>
             <p className="text-lg md:text-xl text-slate-500 font-medium italic leading-relaxed opacity-80">
-              "Stay informed with our latest market analysis, wealth management strategies, and industry perspectives."
+              "Stay informed with our latest market analysis, loan strategies, and industry perspectives."
             </p>
           </div>
           <div className="relative w-full md:w-80">
-            <input placeholder="Search Repository..." className="input-standard w-full h-16 rounded-[28px] px-8 text-sm" />
+            <input placeholder="Search Articles..." className="input-standard w-full h-16 rounded-[28px] px-8 text-sm" />
             <span className="absolute right-8 top-1/2 -translate-y-1/2 text-slate-300 font-black text-xs">GO</span>
           </div>
         </div>
@@ -127,10 +127,10 @@ const Blog = () => {
               Stay Ahead of the <span className="text-[#0EA5E9] italic">Curve.</span>
             </h2>
             <p className="text-blue-100/60 mb-8 max-w-xl mx-auto font-medium italic text-lg leading-relaxed">
-              "Synchronize with our institutional newsletter for direct updates on MSME lending and asset growth credit."
+              "Subscribe to our newsletter for direct updates on MSME lending and credit trends."
             </p>
             <div className="max-w-lg mx-auto flex flex-col sm:flex-row gap-4">
-              <input placeholder="Officer Email" className="flex-1 bg-white/5 border border-white/10 rounded-[24px] px-8 py-5 outline-none focus:border-[#0EA5E9] font-black text-sm uppercase tracking-widest" />
+              <input placeholder="Your Email" className="flex-1 bg-white/5 border border-white/10 rounded-[24px] px-8 py-5 outline-none focus:border-[#0EA5E9] font-black text-sm uppercase tracking-widest" />
               <button className="bg-white text-[#1E293B] px-10 py-5 rounded-[24px] font-black uppercase tracking-[0.4em] text-[10px] hover:bg-[#0EA5E9] hover:text-white transition-all shadow-2xl">
                 JOIN
               </button>

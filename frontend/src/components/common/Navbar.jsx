@@ -137,7 +137,7 @@ const Navbar = () => {
             </a>
 
             {location.pathname.startsWith('/blog') && (
-              <Link to="/" className="bg-rose-500 text-white px-5 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 transition-all flex items-center gap-2">
+              <Link to="/" className="bg-[#1E293B] text-white px-5 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-[#0EA5E9] transition-all flex items-center gap-2 shadow-lg">
                 <span>✕</span> Exit Blog
               </Link>
             )}

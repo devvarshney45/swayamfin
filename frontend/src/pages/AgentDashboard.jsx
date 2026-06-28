@@ -228,20 +228,20 @@ const AgentDashboard = () => {
   if (loading) return (
     <div className="min-h-screen bg-[#FDFDFD] flex flex-col items-center justify-center space-y-4">
        <div className="w-12 h-12 border-4 border-[#0EA5E9]/20 border-t-[#0EA5E9] rounded-full animate-spin" />
-       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Propelling Case Hub...</p>
+       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loading Dashboard...</p>
     </div>
   );
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] text-[#1E293B] pb-32">
-      {/* Header Overlay - RM Blueprint Style */}
+      {/* Header Overlay */}
       <div className="bg-white border-b border-slate-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 flex flex-col md:flex-row justify-between md:items-end gap-6">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 py-6 flex flex-col md:flex-row justify-between md:items-end gap-6">
             <div className="space-y-1">
                <h1 className="text-4xl font-black tracking-tighter uppercase leading-none text-[#1E293B]">
                   {isAdminView ? agentInfo?.full_name : user?.full_name} <span className="text-[#0EA5E9] italic opacity-50">.</span>
                </h1>
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4">{isAdminView ? 'Personnel Audit' : 'Relationship Manager'}</p>
+               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">{isAdminView ? 'Agent Details' : 'Relationship Manager'}</p>
                <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-50 rounded-lg border border-slate-100">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#0EA5E9]" />
                   <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
@@ -255,7 +255,7 @@ const AgentDashboard = () => {
                   onClick={() => user?.role === 'bsm' ? navigate('/bsm/dashboard') : navigate('/admin/agents')} 
                   className="px-8 h-12 flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-500 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white transition-all shadow-sm"
                 >
-                  Return to Operations
+                  Return to Dashboard
                 </button>
               ) : (
                 <Link to="/agent/lead/new" className="px-8 h-12 flex items-center justify-center bg-[#0EA5E9] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-blue-100 hover:bg-blue-600 transition-all">
@@ -269,26 +269,26 @@ const AgentDashboard = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 pt-16">
-        {/* Mission Status - KPI Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 pt-10">
+        {/* Dashboard Overview */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
            {/* Total Leads Box */}
            <div className="bg-[#1E293B] p-10 rounded-[48px] shadow-2xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-white/10 transition-all" />
               <div className="relative z-10">
-                 <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8 italic">Total Leads Segmented</h3>
+                 <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8 italic opacity-60">Lead Statistics</h3>
                  <div className="flex items-baseline gap-4">
                     <span className="text-7xl font-black text-white ml-[-4px] tracking-tighter">{leads.length}</span>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Active Records</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Active Leads</span>
                  </div>
               </div>
            </div>
 
-           {/* Monthly Target Progress */}
+           {/* Monthly Performance */}
            <div className="bg-white border border-slate-100 p-10 rounded-[48px] shadow-sm flex flex-col justify-center">
               <div className="flex justify-between items-end mb-8">
                  <div>
-                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-2 italic">Monthly Target Engine</h3>
+                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 italic opacity-60">Monthly Performance</h3>
                     <p className="text-2xl font-black text-[#1E293B] tracking-tighter">₹{(actualDisbursed/100000).toFixed(1)}L <span className="text-slate-300 font-medium">/ 1.0Cr</span></p>
                  </div>
                  <span className="text-4xl font-black text-[#0EA5E9] tracking-tighter italic">{Math.round(targetProgress)}%</span>
@@ -302,15 +302,15 @@ const AgentDashboard = () => {
                     <div className="absolute top-0 right-0 h-full w-2 bg-[#0EA5E9] rounded-full" />
                  </motion.div>
               </div>
-              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.3em] mt-6 leading-none">Milestone status: {targetProgress >= 100 ? 'Achieved' : 'In Propulsion'}</p>
+              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-6 leading-none">Target Status: {targetProgress >= 100 ? 'Achieved' : 'In Progress'}</p>
            </div>
         </div>
 
         {/* Client List Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 border-b border-slate-100 pb-10">
            <div>
-              <h2 className="text-3xl font-black text-[#1E293B] uppercase tracking-tighter">Clients <span className="text-[#0EA5E9] italic opacity-50">.</span></h2>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Portfolio Directory ({leads.length} Cases)</p>
+              <h2 className="text-3xl font-black text-[#1E293B] uppercase tracking-tighter">Client Records <span className="text-[#0EA5E9] italic opacity-50">.</span></h2>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Managing {leads.length} Active Cases</p>
            </div>
            
            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">

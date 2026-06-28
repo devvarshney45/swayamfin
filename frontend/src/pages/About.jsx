@@ -48,7 +48,7 @@ const About = () => {
     <div className={`${isDark ? 'bg-[#020617]' : 'bg-[#F8FAFC]'} min-h-screen font-plus transition-colors duration-500 overflow-hidden`}>
       
       {/* Institutional Narrative Hero */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+      <section className="relative pt-28 pb-20 md:pt-48 md:pb-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className={`absolute top-0 right-0 w-2/3 h-2/3 ${isDark ? 'bg-primary/5' : 'bg-primary/5'} blur-[140px] rounded-full translate-x-1/2 -translate-y-1/2`} />
           <div className={`absolute bottom-0 left-0 w-1/2 h-1/2 ${isDark ? 'bg-primary/5' : 'bg-primary/3'} blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2`} />
@@ -59,7 +59,7 @@ const About = () => {
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             className={`inline-flex items-center gap-3 px-6 py-2.5 rounded-full ${isDark ? 'bg-white/5 border-white/10' : 'bg-primary/10 border-primary/20'} text-primary text-[10px] font-black uppercase tracking-[0.4em] border`}
           >
-            <Activity className="w-4 h-4" /> Strategic Protocol
+            <Activity className="w-4 h-4" /> Company Overview
           </motion.div>
 
           <motion.h1 
@@ -78,7 +78,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Strategic Blueprint */}
+      {/* Our Mission */}
       <section className="max-w-7xl mx-auto px-6 md:px-10 -mt-12 md:-mt-20 pb-24 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <motion.div
@@ -126,7 +126,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Institutional Architecture */}
+      {/* Operations */}
       <section className={`${isDark ? 'bg-white/2' : 'bg-slate-900/5'} py-20 md:py-32 border-y ${isDark ? 'border-white/5' : 'border-slate-100'}`}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">

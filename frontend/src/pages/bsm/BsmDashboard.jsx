@@ -80,51 +80,51 @@ const BsmDashboard = () => {
   if (loading) return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center space-y-4">
        <div className="w-10 h-10 border-4 border-slate-200 border-t-primary rounded-full animate-spin" />
-       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Syncing Blueprint...</p>
+       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Loading Dashboard...</p>
     </div>
   );
 
   return (
     <div className="min-h-screen bg-white text-slate-900 pb-20 font-plus">
-      {/* Header - Slide 2 Blueprint */}
-      <div className="max-w-7xl mx-auto px-6 py-10 flex justify-between items-start border-b border-slate-100">
+      {/* Header Overlay */}
+      <div className="max-w-7xl mx-auto px-6 py-8 flex justify-between items-start border-b border-slate-100">
           <div>
              <h1 className="text-4xl font-black tracking-tighter uppercase text-slate-900 leading-none">
                 {authUser?.branch?.name || 'Central'} <span className="text-primary italic">Branch.</span>
              </h1>
-             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mt-3">Swayamfin Operations Hub</p>
+             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-3">Branch Overview</p>
           </div>
           <div className="text-right">
              <h2 className="text-2xl font-black tracking-tighter uppercase text-slate-900 leading-none">
                 {authUser?.full_name} <span className="text-primary italic opacity-50">.</span>
              </h2>
              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Branch Manager</p>
-             <button onClick={() => { logout(); navigate('/agent/login'); }} className="mt-4 text-[9px] font-black text-rose-500 uppercase tracking-widest hover:underline transition-all">Exit Portal</button>
+             <button onClick={() => { logout(); navigate('/agent/login'); }} className="mt-4 text-[11px] font-black text-rose-500 uppercase tracking-widest hover:underline transition-all">Exit Portal</button>
           </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-12">
-          {/* KPI Boxes - Slide 2 Blueprint */}
+      <div className="max-w-7xl mx-auto px-6 py-10">
+          {/* KPI Boxes */}
           <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-16">
               <div className="bg-slate-50 border border-slate-100 p-8 rounded-3xl">
                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Total Leads</p>
                  <h3 className="text-4xl font-black text-slate-900 tracking-tighter leading-none">{totalLeads}</h3>
               </div>
               <div className="bg-slate-50 border border-slate-100 p-8 rounded-3xl">
-                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Pipeline</p>
+                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Pipeline Balance</p>
                  <h3 className="text-2xl font-black text-slate-900 tracking-tighter leading-none">₹{(pipelineValue/100000).toFixed(1)}L</h3>
               </div>
               <div className="bg-slate-50 border border-slate-100 p-8 rounded-3xl">
-                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Sanction</p>
+                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Sanctioned</p>
                  <h3 className="text-2xl font-black text-slate-900 tracking-tighter leading-none">₹{(sanctionedValue/100000).toFixed(1)}L</h3>
               </div>
               <div className="bg-slate-50 border border-slate-100 p-8 rounded-3xl">
-                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Disbursement</p>
+                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Disbursed</p>
                  <h3 className="text-2xl font-black text-slate-900 tracking-tighter leading-none">₹{(disbursedValue/100000).toFixed(1)}L</h3>
               </div>
               
               {/* Month Selector */}
-              <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl flex flex-col justify-between">
+              <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl flex flex-col justify-between shadow-xl">
                   <div className="flex justify-between items-center text-primary">
                      <button onClick={() => setMonthOffset(prev => prev + 1)} className="hover:scale-110 transition-transform"><ChevronLeft size={18} /></button>
                      <Calendar size={14} className="opacity-50" />
@@ -134,12 +134,12 @@ const BsmDashboard = () => {
               </div>
           </div>
 
-          {/* Main Content - RM List & Clients (Horizontal Layout) */}
+          {/* Main Content - RM List & Clients */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
              {/* RM List Column */}
              <div className="space-y-8">
                 <div className="flex justify-between items-center border-b border-slate-100 pb-6 mb-4">
-                   <h2 className="text-2xl font-black uppercase tracking-tighter text-slate-900">RM <span className="text-primary italic">List.</span></h2>
+                   <h2 className="text-2xl font-black uppercase tracking-tighter text-slate-900">Relationship <span className="text-primary italic">Managers.</span></h2>
                    <span className="bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-[10px] font-black">{users.length}</span>
                 </div>
                 <div className="space-y-1">
@@ -159,7 +159,7 @@ const BsmDashboard = () => {
              {/* Clients Column */}
              <div className="space-y-8">
                 <div className="flex justify-between items-center border-b border-slate-100 pb-6 mb-4">
-                   <h2 className="text-2xl font-black uppercase tracking-tighter text-slate-900">Clients <span className="text-primary italic">Hub.</span></h2>
+                   <h2 className="text-2xl font-black uppercase tracking-tighter text-slate-900">Client <span className="text-primary italic">Portfolio.</span></h2>
                    <div className="flex items-center gap-3">
                       <button className="text-slate-400 hover:text-primary transition-all"><Filter size={16} /></button>
                       <span className="bg-primary text-white px-3 py-1 rounded-full text-[10px] font-black">{monthlyLeads.length}</span>

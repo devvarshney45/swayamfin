@@ -27,7 +27,7 @@ const TrendGraph = ({ title, subtitle, data, dmiTotal, credifinTotal, unit, onPr
               >
                 <ChevronLeft size={16} />
               </button>
-              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-2">Cycle Navigation</span>
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-2">Time Range</span>
               <button 
                 onClick={onNextWeek}
                 className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isCurrentWeek ? 'opacity-20 cursor-not-allowed' : 'hover:bg-white hover:shadow-sm text-slate-400 hover:text-[#0EA5E9]'}`}

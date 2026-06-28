@@ -44,7 +44,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="bg-[#F8FAFC] min-h-screen pt-32 pb-40 font-plus-jakarta-sans overflow-hidden">
+    <div className="bg-[#F8FAFC] min-h-screen pt-28 md:pt-36 pb-40 font-plus-jakarta-sans overflow-hidden">
       <Helmet>
         <title>Contact Us | Swayamfin</title>
         <meta name="description" content="Get in touch with Swayamfin Financial Services. Reach out to our experts for house loans, MSME financing, or business financial consultations." />
@@ -56,20 +56,20 @@ const Contact = () => {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         
         {/* Header Section */}
-        <div className="text-center mb-24 space-y-6">
+        <div className="text-center mb-16 space-y-6">
 
            <motion.h1 
              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
              className="text-5xl md:text-8xl font-black text-[#1E293B] leading-none tracking-tighter uppercase"
            >
-              Contact <br /> <span className="text-[#0EA5E9] italic">Us.</span>
+              Get in <br /> <span className="text-[#0EA5E9] italic">Touch.</span>
            </motion.h1>
 
            <motion.p 
              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
              className="text-slate-500 text-lg md:text-2xl max-w-4xl mx-auto font-medium italic leading-relaxed"
            >
-              "Reach out to our financial experts through call or chat"
+              "Our dedicated team is ready to assist with your financial requirements"
            </motion.p>
         </div>
 
@@ -130,46 +130,46 @@ const Contact = () => {
             >
                <div className="absolute top-0 right-0 w-64 h-64 bg-[#0EA5E9]/5 blur-[100px] rounded-full -mr-32 -mt-32" />
                <div className="relative z-10 space-y-10">
-                  <div className="space-y-2">
-                     <h3 className="text-3xl font-black text-[#1E293B] uppercase tracking-tighter">Initiate Sync.</h3>
-                     <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.4em] italic opacity-60">Strategic Transmission Protocol</p>
+                  <div className="space-y-1">
+                     <h3 className="text-3xl font-black text-[#1E293B] uppercase tracking-tighter">Contact Us.</h3>
+                     <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] italic opacity-60">General Inquiry Form</p>
                   </div>
 
                   {status === 'success' ? (
                     <div className="py-20 text-center space-y-4">
                       <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-inner text-3xl">✓</div>
-                      <h3 className="text-xl font-black">Transmission Success</h3>
-                      <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest italic">Our unit will contact you shortly.</p>
+                      <h3 className="text-xl font-black">Message Sent</h3>
+                      <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest italic">Our team will contact you shortly.</p>
                     </div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Identity</label>
-                        <input required type="text" className="input-standard w-full h-16 rounded-[28px] px-8 text-sm" placeholder="Your Full Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
+                        <input required type="text" className="input-standard w-full h-16 rounded-[28px] px-8 text-sm" placeholder="Your Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
                       </div>
                       <div className="grid grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Comm Node</label>
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Mobile Number</label>
                           <input required type="tel" maxLength="10" className="input-standard w-full h-16 rounded-[28px] px-8 text-sm" placeholder="+91 XXXX" value={formData.mobile} onChange={e => setFormData({...formData, mobile: e.target.value.replace(/\D/g, '')})} />
                         </div>
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Branch Location</label>
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">City</label>
                           <input required type="text" className="input-standard w-full h-16 rounded-[28px] px-8 text-sm" placeholder="City" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} />
                         </div>
                       </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Capital Scope (₹)</label>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Loan Amount (₹)</label>
                         <input required type="number" className="input-standard w-full h-16 rounded-[28px] px-8 text-sm" placeholder="e.g. 5000000" value={formData.amount} onChange={e => setFormData({...formData, amount: e.target.value})} />
                       </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Requirements Matrix</label>
-                        <textarea rows="5" className="input-standard w-full rounded-3xl p-6 text-sm resize-none" placeholder="Narrative of required financial scope..." value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}></textarea>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Your Message</label>
+                        <textarea rows="5" className="input-standard w-full rounded-3xl p-6 text-sm resize-none" placeholder="How can we help you today?" value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}></textarea>
                       </div>
-                      <button type="submit" disabled={status === 'submitting'} className="w-full h-20 bg-[#1E293B] hover:bg-[#0EA5E9] text-white rounded-[32px] font-black uppercase tracking-[0.4em] shadow-2xl transition-all active:scale-95 disabled:opacity-50"> 
-                        {status === 'submitting' ? 'Transmitting...' : 'Initialize Transmission'} 
+                      <button type="submit" disabled={status === 'submitting'} className="w-full h-16 bg-[#1E293B] hover:bg-[#0EA5E9] text-white rounded-[32px] font-black uppercase tracking-[0.4em] shadow-2xl transition-all active:scale-95 disabled:opacity-50"> 
+                        {status === 'submitting' ? 'Sending...' : 'Send Message'} 
                       </button>
                       <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 text-center">
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] leading-relaxed">Secure 256-bit Institutional Encryption Active. <br /> Data routed via Swayamfin Node.</p>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] leading-relaxed">Your data is secure and protected by our privacy protocols.</p>
                       </div>
                     </form>
                   )}
