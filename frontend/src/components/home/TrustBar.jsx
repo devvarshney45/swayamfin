@@ -20,12 +20,12 @@ const TrustBar = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             
             {/* Left: Logo */}
-            <div className="flex justify-center md:justify-start">
-              <div className="w-full h-96 rounded-2xl flex items-center justify-center overflow-hidden">
+            <div className="flex justify-center md:items-center">
+              <div className="w-full h-48 sm:h-64 md:h-96 rounded-2xl flex items-center justify-center overflow-hidden">
                 <img 
                   src={partnerLogo}
                   alt="DMI Housing Finance Logo"
-                  className="w-full h-full object-contain object-center"
+                  className="w-full h-full object-contain object-center scale-110 md:scale-125"
                 />
               </div>
             </div>

@@ -185,15 +185,18 @@ const Hero = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 relative z-10 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
-            {/* Content Column */}
-            <div className="lg:col-span-7 space-y-10 text-center lg:text-left">
+            {/* Content Column - Second on Mobile */}
+            <div className="lg:col-span-7 space-y-10 text-center lg:text-left order-2 lg:order-1">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="inline-flex items-center gap-3 px-6 py-2.5 bg-[#0EA5E9]/10 border border-[#0EA5E9]/20 rounded-full"
+                className="inline-flex items-center gap-3 px-4 py-2 bg-white/40 backdrop-blur-md border border-white/20 rounded-full shadow-sm hover:shadow-md transition-all group cursor-default"
               >
-                <Activity className="w-3 h-3 text-[#0EA5E9]" />
-                <span className="text-[#0EA5E9] text-[10px] font-black uppercase tracking-[0.4em]">RBI Compliant Fintech Partner</span>
+                <div className="relative">
+                  <Activity className="w-3 h-3 text-[#0EA5E9] animate-pulse" />
+                  <div className="absolute inset-0 bg-[#0EA5E9] blur-sm opacity-20 group-hover:opacity-40 transition-opacity" />
+                </div>
+                <span className="text-[#0EA5E9] text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em]">RBI Compliant Fintech Partner</span>
               </motion.div>
 
               <div className="min-h-[260px] sm:min-h-[300px] md:min-h-[340px]">
@@ -206,12 +209,12 @@ const Hero = () => {
                     transition={{ duration: 0.7 }}
                     className="space-y-8"
                    >
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-[#1E293B] uppercase leading-[0.9] tracking-tighter">
+                    <h1 className="text-[2.5rem] leading-[0.95] sm:text-5xl md:text-6xl lg:text-7xl font-black text-[#1E293B] uppercase tracking-tighter">
                       {slides[activeSlide].title.split(' ').map((word, i) => (
                         <span key={i} className={i % 2 === 1 ? 'text-[#0EA5E9] italic' : ''}>{word} </span>
                       ))}
                     </h1>
-                    <p className="text-lg sm:text-2xl text-slate-500 font-medium max-w-xl mx-auto lg:mx-0 border-l-4 border-[#0EA5E9]/20 pl-6 italic opacity-80 leading-tight">
+                    <p className="text-base sm:text-xl md:text-2xl text-slate-500 font-medium max-w-xl mx-auto lg:mx-0 border-l-4 border-[#0EA5E9]/20 pl-4 sm:pl-6 italic opacity-80 leading-snug">
                       {slides[activeSlide].sub}
                     </p>
                   </motion.div>
@@ -219,11 +222,11 @@ const Hero = () => {
               </div>
 
               {/* Stats Grid */}
-              <div className="flex flex-wrap gap-x-12 gap-y-10 pt-10 border-t border-slate-100 max-w-3xl mx-auto lg:mx-0">
+              <div className="grid grid-cols-3 sm:flex sm:flex-wrap gap-x-4 sm:gap-x-12 gap-y-8 pt-8 border-t border-slate-100 max-w-3xl mx-auto lg:mx-0">
                 {[
-                  { val: '125Cr+', label: 'DISBURSED', detail: 'Primary Asset Class' },
-                  { val: '100+', label: 'CLIENTS', detail: 'Active Partnerships' },
-                  { val: '5+', label: 'OPERATIONS', detail: 'Regional Branch Nodes' },
+                  { val: '125Cr+', label: 'DISBURSED', detail: 'Primary Asset' },
+                  { val: '100+', label: 'CLIENTS', detail: 'Partnerships' },
+                  { val: '5+', label: 'OPERATIONS', detail: 'Nodes' },
                 ].map((stat, i) => (
                   <motion.div 
                     key={i} 
@@ -231,20 +234,15 @@ const Hero = () => {
                     className="flex flex-col items-center lg:items-start text-center lg:text-left group cursor-default"
                   >
                     <div className="relative">
-                      <p className="text-4xl sm:text-6xl font-black text-[#1E293B] tracking-tighter leading-none group-hover:text-[#0EA5E9] transition-colors duration-500">
+                      <p className="text-2xl sm:text-4xl md:text-6xl font-black text-[#1E293B] tracking-tighter leading-none group-hover:text-[#0EA5E9] transition-colors duration-500">
                         {stat.val}
                       </p>
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        whileHover={{ width: '100%' }}
-                        className="absolute -bottom-2 left-0 h-1.5 bg-[#0EA5E9] rounded-full opacity-20"
-                      />
                     </div>
-                    <p className="text-xl sm:text-2xl font-black text-[#1E293B] tracking-tight uppercase mt-3 transition-all duration-500 group-hover:tracking-widest">
+                    <p className="text-[9px] sm:text-xl md:text-2xl font-black text-[#1E293B] tracking-tight uppercase mt-2 transition-all duration-500 group-hover:tracking-widest">
                       {stat.label}
                     </p>
-                    <div className="overflow-hidden h-0 group-hover:h-5 transition-all duration-500">
-                      <p className="text-[9px] font-black text-[#0EA5E9] uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-opacity duration-700 mt-1">
+                    <div className="overflow-hidden h-0 sm:group-hover:h-5 transition-all duration-500">
+                      <p className="hidden sm:block text-[9px] font-black text-[#0EA5E9] uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-opacity duration-700 mt-1">
                         {stat.detail}
                       </p>
                     </div>
@@ -253,15 +251,15 @@ const Hero = () => {
               </div>
             </div>
 
-            {/* Form Column */}
+            {/* Form Column - First on Mobile */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="lg:col-span-5 relative"
+              className="lg:col-span-5 relative order-1 lg:order-2"
             >
-              <div className="bg-white p-8 md:p-12 rounded-[50px] shadow-22xl border border-slate-100 relative overflow-hidden">
-                <div className="absolute top-6 right-6 w-12 h-12 bg-white border border-slate-100 rounded-2xl shadow-xl flex items-center justify-center z-20">
-                   <ShieldCheck className="w-6 h-6 text-primary-gold" />
+              <div className="bg-white/90 backdrop-blur-2xl p-6 sm:p-8 md:p-12 rounded-[40px] sm:rounded-[50px] shadow-22xl border border-white/50 relative overflow-hidden backdrop-saturate-150">
+                <div className="absolute top-6 right-6 w-10 h-10 sm:w-12 sm:h-12 bg-white border border-slate-100 rounded-2xl shadow-lg flex items-center justify-center z-20">
+                   <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#0EA5E9]" />
                 </div>
 
                 <div className="relative z-10 space-y-8">
