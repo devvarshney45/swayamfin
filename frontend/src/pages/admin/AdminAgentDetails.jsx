@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AdminTabs from '../../components/admin/AdminTabs';
 import { useAuth } from '../../context/AuthContext';
 
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin.onrender.com' : 'http://localhost:5001');
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin-5uzv.onrender.com' : 'http://localhost:5001');
 
 const AdminAgentDetails = () => {
   const { user: currentUser } = useAuth();

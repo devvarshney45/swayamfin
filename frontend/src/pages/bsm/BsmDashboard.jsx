@@ -5,7 +5,7 @@ import axios from 'axios';
 import { ChevronLeft, ChevronRight, Calendar, Filter } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin.onrender.com' : 'http://localhost:5001');
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin-5uzv.onrender.com' : 'http://localhost:5001');
 
 const BsmDashboard = () => {
   const { user: authUser, logout } = useAuth();

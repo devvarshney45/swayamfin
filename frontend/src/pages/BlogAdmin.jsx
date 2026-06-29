@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const CATEGORIES = ['Loan on Property', 'Personal Loan', 'Wealth Services'];
 const ADMIN_PASSWORD = 'swayamfinadmin';
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin.onrender.com' : 'http://localhost:5001');
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin-5uzv.onrender.com' : 'http://localhost:5001');
 
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 

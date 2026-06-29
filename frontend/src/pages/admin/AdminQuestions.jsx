@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AdminTabs from '../../components/admin/AdminTabs';
 import { Mail, Clock, CheckCircle, MessageSquare, RefreshCw, Filter } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin.onrender.com' : 'http://localhost:5001');
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin-5uzv.onrender.com' : 'http://localhost:5001');
 
 const STATUS_CONFIG = {
   new:     { label: 'New',     color: 'bg-sky-50 text-sky-600 border-sky-200',      dot: 'bg-sky-500',     icon: MessageSquare },

@@ -53,7 +53,7 @@ const allowedOrigins = [
   'https://www.swayamfin.com',
   'https://swayamfin.com',
   'https://swayamfin.vercel.app',
-  'https://swayamfin.onrender.com'
+  'https://swayamfin-5uzv.onrender.com'
 ];
 
 app.use(cors({

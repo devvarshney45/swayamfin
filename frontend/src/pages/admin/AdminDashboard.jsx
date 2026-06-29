@@ -6,7 +6,7 @@ import AdminTabs from '../../components/admin/AdminTabs';
 import TrendGraph from '../../components/admin/TrendGraph';
 import { ChevronRight, ChevronLeft, Calendar } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin.onrender.com' : 'http://localhost:5001');
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin-5uzv.onrender.com' : 'http://localhost:5001');
 
 const AdminDashboard = () => {
   const [allLeads, setAllLeads] = useState([]);

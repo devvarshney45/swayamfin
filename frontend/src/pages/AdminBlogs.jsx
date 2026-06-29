@@ -6,7 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 
 const ADMIN_PASSWORD = 'swayamfin@admin';
 const CATEGORIES = ['Loan on Property','Personal Loan','Wealth Services','Mutual Funds','Insurance','General'];
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin.onrender.com' : 'http://localhost:5001');
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin-5uzv.onrender.com' : 'http://localhost:5001');
 
 const compressImage = (dataUrl, maxWidth = 800, maxHeight = 600, quality = 0.7) => {
   return new Promise((resolve) => {
