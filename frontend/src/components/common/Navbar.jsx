@@ -226,7 +226,7 @@ const Navbar = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-white/60 backdrop-blur-2xl z-[100] lg:hidden"
+                className="fixed inset-0 bg-white/60 backdrop-blur-2xl z-[110] lg:hidden"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
               <motion.div 
@@ -234,7 +234,7 @@ const Navbar = () => {
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="fixed inset-y-0 right-0 w-full md:w-[400px] bg-white shadow-2xl z-[105] lg:hidden flex flex-col"
+                className="fixed inset-y-0 right-0 w-full h-screen md:w-[400px] bg-white shadow-22xl z-[120] lg:hidden flex flex-col"
               >
                 <div className="flex-1 overflow-y-auto pt-24 pb-8 px-6">
                   {/* Menu Sections */}
