@@ -63,8 +63,32 @@ const AdminLeads = () => {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [uploadLoading, setUploadLoading] = useState(false);
+  const [selectedLeads, setSelectedLeads] = useState([]);
+  const [bulkDeleteConfirm, setBulkDeleteConfirm] = useState(false);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
+  const [monthOffset, setMonthOffset] = useState(0); // 0 = current month, 1 = last month, -1 = all time
+  const [rms, setRms] = useState([]);
+  const [branches, setBranches] = useState([]);
+  const [rmFilter, setRmFilter] = useState('all');
+  const [branchFilter, setBranchFilter] = useState('all');
 
-  useEffect(() => { fetchLeads(); }, []);
+  useEffect(() => { 
+    fetchLeads(); 
+    fetchMetadata();
+  }, []);
+
+  const fetchMetadata = async () => {
+    try {
+      const token = localStorage.getItem('swayamfin_token');
+      const headers = { Authorization: `Bearer ${token}` };
+      const [uRes, bRes] = await Promise.all([
+        axios.get(`${API_URL}/api/users`, { headers }),
+        axios.get(`${API_URL}/api/branches`, { headers })
+      ]);
+      setRms(uRes.data.data?.filter(u => u.role === 'sales_person' || u.role === 'agent') || []);
+      setBranches(bRes.data.data || []);
+    } catch (err) { console.error('Metadata fetch failed', err); }
+  };
 
   const fetchLeads = async () => {
     try {
@@ -79,14 +103,31 @@ const AdminLeads = () => {
     } finally { setLoading(false); }
   };
 
-  const filteredLeads = leads.filter(lead => {
+  const filterByMonth = (data) => {
+    if (monthOffset === -1) return data;
+    const targetDate = new Date();
+    targetDate.setMonth(targetDate.getMonth() - monthOffset);
+    const targetMonth = targetDate.getMonth();
+    const targetYear = targetDate.getFullYear();
+
+    return data.filter(l => {
+      const dateToUse = l.login_date ? new Date(l.login_date) : (l.createdAt ? new Date(l.createdAt) : null);
+      if (!dateToUse || isNaN(dateToUse.getTime())) return false;
+      return dateToUse.getMonth() === targetMonth && dateToUse.getFullYear() === targetYear;
+    });
+  };
+
+  const filteredLeads = filterByMonth(leads).filter(lead => {
     const matchesSearch = 
       lead.applicant_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lead.mobile?.includes(searchTerm) ||
       lead.lead_number?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || lead.status === statusFilter;
     const matchesType = typeFilter === 'all' || lead.loan_type === typeFilter;
-    return matchesSearch && matchesStatus && matchesType;
+    const matchesRM = rmFilter === 'all' || lead.rm_name === rmFilter || lead.sales_person?._id === rmFilter;
+    const matchesBranch = branchFilter === 'all' || lead.location_city === branchFilter || lead.branch?._id === branchFilter;
+    
+    return matchesSearch && matchesStatus && matchesType && matchesRM && matchesBranch;
   });
 
   const openEdit = (lead, e) => {
@@ -196,6 +237,44 @@ const AdminLeads = () => {
     }
   };
 
+  const handleBulkDelete = async () => {
+    if (selectedLeads.length === 0) return;
+    setBulkDeleting(true);
+    try {
+      const token = localStorage.getItem('swayamfin_token');
+      await Promise.all(
+        selectedLeads.map(id =>
+          axios.delete(`${API_URL}/api/leads/${id}`, { headers: { Authorization: `Bearer ${token}` } })
+        )
+      );
+      setLeads(prev => prev.filter(l => !selectedLeads.includes(l._id)));
+      setSelectedLeads([]);
+      setBulkDeleteConfirm(false);
+      setActionNote({ type: 'success', message: `${selectedLeads.length} lead(s) deleted successfully.` });
+      setTimeout(() => setActionNote(null), 3000);
+    } catch (err) {
+      setActionNote({ type: 'error', message: err.response?.data?.message || 'Bulk delete failed.' });
+      setBulkDeleteConfirm(false);
+      setTimeout(() => setActionNote(null), 3000);
+    } finally {
+      setBulkDeleting(false);
+    }
+  };
+
+  const toggleSelectLead = (id) => {
+    setSelectedLeads(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedLeads.length === filteredLeads.length) {
+      setSelectedLeads([]);
+    } else {
+      setSelectedLeads(filteredLeads.map(l => l._id));
+    }
+  };
+
   const formatLoanType = (type) => {
     const map = {
       lap: 'LAP',
@@ -246,35 +325,156 @@ const AdminLeads = () => {
     const blob = new Blob([csv], { type: 'text/csv' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `swayamfin_global_report_${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = `swayamfin_client_list_${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
   };
 
-  if (loading) return <div className="min-h-screen bg-slate-50 flex items-center justify-center font-black text-slate-400">CONNECTING TO REPOSITORY...</div>;
+  const getTargetMonthLabel = () => {
+    if (monthOffset === -1) return "All Time Records";
+    const d = new Date();
+    d.setMonth(d.getMonth() - monthOffset);
+    return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  };
+
+  if (loading) return (
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center space-y-4">
+      <div className="w-10 h-10 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin" />
+      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic leading-none">CONNECTING TO CLIENT LIST...</p>
+    </div>
+  );
+
+  const allSelected = filteredLeads.length > 0 && selectedLeads.length === filteredLeads.length;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-32">
       <div className="max-w-7xl mx-auto px-6 pt-8 md:pt-12">
         <AdminTabs />
-        <div className="flex justify-between items-center mb-12">
-           <h1 className="text-5xl font-black text-[#1E293B] uppercase tracking-tighter">Global <span className="text-blue-600 italic">Repository</span></h1>
-           <button onClick={handleExport} className="bg-white border-2 border-slate-100 px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm">Export Master Sheet</button>
+        <div className="flex justify-between items-end mb-8 px-2">
+           <div>
+              <h1 className="text-5xl font-black text-[#1E293B] uppercase tracking-tighter">Client <span className="text-blue-600 italic">List.</span></h1>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mt-3">{getTargetMonthLabel()}</p>
+           </div>
+           <div className="flex gap-4">
+              {/* Month Selector Mini */}
+              <div className="bg-slate-900 px-6 py-4 rounded-2xl flex items-center gap-6 shadow-xl">
+                  <button onClick={() => setMonthOffset(prev => prev === -1 ? 0 : prev + 1)} className="text-white hover:text-blue-400 transition-colors">◀</button>
+                  <span className="text-white text-[9px] font-bold uppercase tracking-widest min-w-[100px] text-center">{monthOffset === -1 ? 'ALL TIME' : getTargetMonthLabel().split(' ')[0]}</span>
+                  <button onClick={() => setMonthOffset(prev => prev <= 0 ? -1 : prev - 1)} className="text-white hover:text-blue-400 transition-colors">▶</button>
+              </div>
+              <button onClick={handleExport} className="bg-white border-2 border-slate-100 px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm">Export Master Sheet</button>
+           </div>
         </div>
+
+        {/* Filter Bar */}
+        <div className="flex flex-wrap gap-4 mb-8 bg-white border border-slate-100 rounded-3xl px-6 py-5 shadow-sm">
+          <input
+            type="text"
+            placeholder="Search client name, mobile or ID..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            className="flex-1 min-w-[200px] h-11 bg-slate-50 rounded-2xl px-5 text-sm outline-none focus:bg-white transition-all border border-transparent focus:border-slate-200 font-medium text-slate-700 placeholder:text-slate-400"
+          />
+          <select
+            value={statusFilter}
+            onChange={e => setStatusFilter(e.target.value)}
+            className="h-11 bg-slate-50 rounded-2xl px-5 text-[11px] font-black uppercase tracking-widest outline-none focus:bg-white transition-all border border-transparent focus:border-slate-200 text-slate-700 appearance-none pr-8"
+          >
+            <option value="all">All Status</option>
+            {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
+          </select>
+          <select
+            value={typeFilter}
+            onChange={e => setTypeFilter(e.target.value)}
+            className="h-11 bg-slate-50 rounded-2xl px-5 text-[11px] font-black uppercase tracking-widest outline-none focus:bg-white transition-all border border-transparent focus:border-slate-200 text-slate-700 appearance-none pointer-events-auto"
+          >
+            <option value="all">Product Type</option>
+            {LOAN_TYPE_OPTIONS.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
+          </select>
+          <select
+            value={rmFilter}
+            onChange={e => setRmFilter(e.target.value)}
+            className="h-11 bg-slate-50 rounded-2xl px-5 text-[11px] font-black uppercase tracking-widest outline-none focus:bg-white transition-all border border-transparent focus:border-slate-200 text-slate-700 appearance-none pointer-events-auto"
+          >
+            <option value="all">All RM</option>
+            {rms.map(u => <option key={u._id} value={u.full_name}>{u.full_name}</option>)}
+          </select>
+          <select
+            value={branchFilter}
+            onChange={e => setBranchFilter(e.target.value)}
+            className="h-11 bg-slate-50 rounded-2xl px-5 text-[11px] font-black uppercase tracking-widest outline-none focus:bg-white transition-all border border-transparent focus:border-slate-200 text-slate-700 appearance-none pointer-events-auto"
+          >
+            <option value="all">All Branches</option>
+            {branches.map(b => <option key={b._id} value={b.name}>{b.name}</option>)}
+          </select>
+          <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest self-center">
+            {filteredLeads.length} result{filteredLeads.length !== 1 ? 's' : ''}
+          </div>
+        </div>
+
+        {/* Bulk Delete Bar */}
+        {selectedLeads.length > 0 && (
+          <div className="flex items-center gap-4 mb-6 bg-red-50 border border-red-100 rounded-3xl px-6 py-4">
+            <span className="text-[11px] font-black text-red-600 uppercase tracking-widest">{selectedLeads.length} selected</span>
+            <div className="flex-1" />
+            {bulkDeleteConfirm ? (
+              <>
+                <span className="text-[11px] font-black text-red-700 uppercase tracking-widest">Confirm delete {selectedLeads.length} leads?</span>
+                <button
+                  onClick={handleBulkDelete}
+                  disabled={bulkDeleting}
+                  className="px-6 py-2 bg-red-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 transition-all disabled:opacity-50"
+                >{bulkDeleting ? 'Deleting...' : 'Yes, Delete All'}</button>
+                <button
+                  onClick={() => setBulkDeleteConfirm(false)}
+                  className="px-4 py-2 border border-red-200 text-red-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-red-700 transition-all"
+                >Cancel</button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setSelectedLeads([])}
+                  className="px-4 py-2 border border-slate-200 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-slate-700 transition-all"
+                >Deselect All</button>
+                <button
+                  onClick={() => setBulkDeleteConfirm(true)}
+                  className="flex items-center gap-2 px-6 py-2 bg-red-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 transition-all"
+                ><Trash2 className="w-3.5 h-3.5" /> Delete Selected</button>
+              </>
+            )}
+          </div>
+        )}
 
         <div className="bg-white border rounded-[40px] shadow-sm overflow-hidden">
            <table className="w-full text-left">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-100">
-                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Client Name</th>
-                  <th className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Asset Class</th>
-                  <th className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Protocol State</th>
+                  <th className="px-6 py-6">
+                    <div
+                      onClick={toggleSelectAll}
+                      className={`w-5 h-5 rounded-md border-2 flex items-center justify-center cursor-pointer transition-all ${
+                        allSelected ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-300 bg-white hover:border-blue-400'
+                      }`}
+                    >
+                      {allSelected && <span className="font-black text-[9px]">✓</span>}
+                    </div>
+                  </th>
+                  <th className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Client Name</th>
+                  <th className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Asking Amount</th>
+                  <th className="px-6 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
                   <th className="px-10 py-6 text-right"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {filteredLeads.map(l => (
-                  <tr key={l._id} className="hover:bg-slate-50 transition-all cursor-pointer group">
-                    <td className="px-10 py-6 font-black text-[#1E293B] group-hover:text-blue-600">{l.applicant_name} <span className="text-[9px] bg-slate-100 px-2 py-0.5 rounded ml-2">ID: {l.lead_number}</span></td>
+                  <tr key={l._id} className={`hover:bg-slate-50 transition-all cursor-pointer group ${selectedLeads.includes(l._id) ? 'bg-blue-50/40' : ''}`}>
+                    <td className="px-6 py-6" onClick={e => { e.stopPropagation(); toggleSelectLead(l._id); }}>
+                      <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
+                        selectedLeads.includes(l._id) ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-300 bg-white hover:border-blue-400'
+                      }`}>
+                        {selectedLeads.includes(l._id) && <span className="font-black text-[9px]">✓</span>}
+                      </div>
+                    </td>
+                    <td className="px-6 py-6 font-black text-[#1E293B] group-hover:text-blue-600">{l.applicant_name} <span className="text-[9px] bg-slate-100 px-2 py-0.5 rounded ml-2">ID: {l.lead_number}</span></td>
                     <td className="px-6 py-6 font-bold text-slate-600 text-xs uppercase">{l.loan_type?.replace('_',' ')} <div className="text-blue-600 font-black mt-1">₹{l.loan_amount_required.toLocaleString()}</div></td>
                     <td className="px-6 py-6"><span className={`px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border ${getStatusColor(l.status)}`}>{l.status}</span></td>
                     <td className="px-10 py-6 text-right">

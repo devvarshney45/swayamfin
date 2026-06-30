@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { ChevronLeft, ChevronRight, Calendar, Filter } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, Filter, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://swayamfin-5uzv.onrender.com' : 'http://localhost:5001');
@@ -14,7 +14,25 @@ const BsmDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [monthOffset, setMonthOffset] = useState(0);
+  const [showFilters, setShowFilters] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
   const navigate = useNavigate();
+
+  const STATUS_OPTIONS = [
+    'Under login stage', 'Under PD', 'Under Technical', 'Under Legal',
+    'Under Credit', 'Under Sanction', 'Under Disbursement', 'Disbursed',
+  ];
+
+  const LOAN_TYPE_OPTIONS = [
+    { v: 'lap', l: 'LAP' },
+    { v: 'home_loan', l: 'House loan' },
+    { v: 'unsecured', l: 'Unsecure Business Loan' },
+    { v: 'supply_chain', l: 'Supply Chain Finance' },
+    { v: 'unsecured_export_finance', l: 'Unsecure Export Finance' },
+    { v: 'machinery_loan', l: 'Machinery Finance' },
+  ];
 
   useEffect(() => {
     fetchData();
@@ -60,12 +78,22 @@ const BsmDashboard = () => {
     const targetYear = targetDate.getFullYear();
 
     return data.filter(l => {
-      const d = new Date(l.createdAt);
-      return d.getMonth() === targetMonth && d.getFullYear() === targetYear;
+      const dateToUse = l.login_date ? new Date(l.login_date) : (l.createdAt ? new Date(l.createdAt) : null);
+      if (!dateToUse || isNaN(dateToUse.getTime())) return false;
+      return dateToUse.getMonth() === targetMonth && dateToUse.getFullYear() === targetYear;
     });
   };
 
-  const monthlyLeads = filterMonthlyLeads(leads);
+  const monthlyLeads = filterMonthlyLeads(leads).filter(lead => {
+    const matchesSearch =
+      !searchTerm ||
+      lead.applicant_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.mobile?.includes(searchTerm) ||
+      lead.lead_number?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || lead.status === statusFilter;
+    const matchesType = typeFilter === 'all' || lead.loan_type === typeFilter;
+    return matchesSearch && matchesStatus && matchesType;
+  });
   const totalLeads = monthlyLeads.length;
   const pipelineValue = monthlyLeads
     .filter(l => !['Disbursed', 'Dead Lead', 'Closed - Won'].includes(l.status))
@@ -161,10 +189,51 @@ const BsmDashboard = () => {
                 <div className="flex justify-between items-center border-b border-slate-100 pb-6 mb-4">
                    <h2 className="text-2xl font-black uppercase tracking-tighter text-slate-900">Client <span className="text-primary italic">Portfolio.</span></h2>
                    <div className="flex items-center gap-3">
-                      <button className="text-slate-400 hover:text-primary transition-all"><Filter size={16} /></button>
+                      <button
+                        onClick={() => setShowFilters(v => !v)}
+                        className={`transition-all ${showFilters ? 'text-primary' : 'text-slate-400 hover:text-primary'}`}
+                      ><Filter size={16} /></button>
                       <span className="bg-primary text-white px-3 py-1 rounded-full text-[10px] font-black">{monthlyLeads.length}</span>
                    </div>
                 </div>
+
+                {/* Filter Panel */}
+                {showFilters && (
+                  <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 space-y-3 mb-4">
+                    <input
+                      type="text"
+                      placeholder="Search client name, mobile or ID..."
+                      value={searchTerm}
+                      onChange={e => setSearchTerm(e.target.value)}
+                      className="w-full h-10 bg-white rounded-xl px-4 text-sm outline-none border border-slate-100 focus:border-primary transition-all font-medium text-slate-700 placeholder:text-slate-400"
+                    />
+                    <div className="flex gap-3">
+                      <select
+                        value={statusFilter}
+                        onChange={e => setStatusFilter(e.target.value)}
+                        className="flex-1 h-10 bg-white rounded-xl px-4 text-[11px] font-black uppercase tracking-wide outline-none border border-slate-100 focus:border-primary transition-all text-slate-700 appearance-none"
+                      >
+                        <option value="all">All Status</option>
+                        {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                      <select
+                        value={typeFilter}
+                        onChange={e => setTypeFilter(e.target.value)}
+                        className="flex-1 h-10 bg-white rounded-xl px-4 text-[11px] font-black uppercase tracking-wide outline-none border border-slate-100 focus:border-primary transition-all text-slate-700 appearance-none"
+                      >
+                        <option value="all">All Types</option>
+                        {LOAN_TYPE_OPTIONS.map(o => <option key={o.v} value={o.v}>{o.l}</option>)}
+                      </select>
+                      {(searchTerm || statusFilter !== 'all' || typeFilter !== 'all') && (
+                        <button
+                          onClick={() => { setSearchTerm(''); setStatusFilter('all'); setTypeFilter('all'); }}
+                          className="h-10 px-3 bg-white border border-slate-100 rounded-xl text-slate-400 hover:text-red-500 transition-all"
+                        ><X size={14} /></button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 <div className="space-y-1">
                    {monthlyLeads.slice(0, 10).map((lead, idx) => (
                       <div key={lead._id} className="flex items-center justify-between py-4 border-b border-slate-50 hover:bg-slate-50 transition-all cursor-pointer group">
