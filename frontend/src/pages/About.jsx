@@ -89,10 +89,10 @@ const About = () => {
                CONNECTING YOU <br /> <span className="text-primary italic text-3xl md:text-5xl">TO CAPITAL.</span>
             </h2>
             <div className="space-y-8">
-               <p className={`text-[11px] md:text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'} font-black uppercase tracking-[0.4em] leading-relaxed italic border-l-4 border-primary pl-8`}>
+               <p className={`text-base md:text-lg ${isDark ? 'text-slate-300' : 'text-slate-700'} font-semibold leading-relaxed border-l-4 border-primary pl-8`}>
                   Swayamfin Financial Services Private Limited was born out of a simple vision: to take the confusion out of borrowing. We understand that every business and individual has a unique story, and standard banking doesn't always listen.
                </p>
-               <p className={`text-[11px] md:text-sm ${isDark ? 'text-slate-500' : 'text-slate-400'} font-black uppercase tracking-[0.3em] leading-relaxed opacity-70`}>
+               <p className={`text-sm md:text-base ${isDark ? 'text-slate-400' : 'text-slate-500'} font-medium leading-relaxed pl-8`}>
                   We partner with India's most trusted NBFCs and HFCs to provide customized working capital, LAP, and housing solutions. Our focus is simple: speed, complete transparency, and reliable service you can count on.
                </p>
             </div>
