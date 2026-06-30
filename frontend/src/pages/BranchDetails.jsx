@@ -59,7 +59,7 @@ const BranchDetails = () => {
   const [formData, setFormData] = useState({
     fullName: '', 
     mobile: '', 
-    loanType: 'msme_structured', 
+    loanType: 'home_loan', 
     amount: '',
     city: branch.city
   });
@@ -95,7 +95,7 @@ const BranchDetails = () => {
 
       if (response.ok) {
         setSuccess(true);
-        setFormData({ fullName: '', mobile: '', loanType: 'msme_structured', amount: '', city: branch.city });
+        setFormData({ fullName: '', mobile: '', loanType: 'home_loan', amount: '', city: branch.city });
       } else if (response.status === 409) {
         setSubmitStatus('duplicate');
       } else {
@@ -229,9 +229,12 @@ const BranchDetails = () => {
                             value={formData.loanType}
                             onChange={e => setFormData({...formData, loanType: e.target.value})}
                            >
-                            <option value="msme_structured" className="bg-[#1E293B]">MSME Loans</option>
-                            <option value="lap" className="bg-[#1E293B]">LAP Assets</option>
-                            <option value="home_loan" className="bg-[#1E293B]">Home Loans</option>
+                             <option value="home_loan" className="bg-[#1E293B]">Home Loan</option>
+                             <option value="lap" className="bg-[#1E293B]">LAP (Loan Against Property)</option>
+                             <option value="unsecured" className="bg-[#1E293B]">Unsecured Business Loan</option>
+                             <option value="supply_chain" className="bg-[#1E293B]">Supply Chain Finance</option>
+                             <option value="unsecured_export_finance" className="bg-[#1E293B]">Unsecured Export Finance</option>
+                             <option value="machinery_loan" className="bg-[#1E293B]">Machinery Loan</option>
                            </select>
                          </div>
 
