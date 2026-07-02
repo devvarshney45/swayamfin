@@ -4,6 +4,12 @@ const User = require('../models/User');
 exports.protect = async (req, res, next) => {
   let token;
 
+  // Employee Portal system bypass
+  if (req.headers['x-employee-portal-key'] === (process.env.EMPLOYEE_PORTAL_KEY || 'swayam@emp2025')) {
+    req.user = { role: 'employee' }; // No ID, so uploaded_by stays undefined
+    return next();
+  }
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -17,10 +23,10 @@ exports.protect = async (req, res, next) => {
         return res.status(401).json({ message: 'User not found or inactive' });
       }
 
-      next();
+      return next();
     } catch (err) {
       console.error('Auth middleware error:', err);
-      res.status(401).json({ message: 'Not authorized, token failed' });
+      return res.status(401).json({ message: 'Not authorized, token failed' });
     }
   }
 

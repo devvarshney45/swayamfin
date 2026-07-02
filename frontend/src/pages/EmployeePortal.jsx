@@ -13,6 +13,10 @@ const LOAN_TYPES = [
   { value: 'unsecured_export_finance',  label: 'Unsecure Export Finance' },
   { value: 'machinery_loan',            label: 'Machinery Finance' },
 ];
+const STATUS_OPTIONS = [
+  'Under login stage', 'Under PD', 'Under Technical', 'Under Legal',
+  'Under Credit', 'Under Sanction', 'Under Disbursement', 'Disbursed',
+];
 
 const CITIES = ['Agra', 'Mathura', 'Hathras', 'Kosi'];
 
@@ -144,6 +148,27 @@ const emptyForm = () => ({
   city: '',
   pincode: '',
   employeeName: '',
+  externalLoanId: '',
+  sanctionAmount: '',
+  disbursedAmount: '',
+  fees: '',
+  loginDate: '',
+  partnerLogin: '',
+  caseUnderCompany: '',
+  status: 'Under login stage',
+  sanctionDate: '',
+  disbursementDate: '',
+  pdReport: false,
+  technicalReport: false,
+  legalReport: false,
+  cpvReport: false,
+  sanction: false,
+  disbursement: false,
+  remarks: '',
+  aadhaarCard: null,
+  panCard: null,
+  voterId: null,
+  bankStatement: null,
 });
 
 const LeadForm = () => {
@@ -182,6 +207,23 @@ const LeadForm = () => {
           pincode: form.pincode || undefined,
           source: 'employee_portal',
           submitted_by: form.employeeName.trim() || 'Employee',
+          external_loan_id: form.externalLoanId || undefined,
+          sanction_amount: form.sanctionAmount ? Number(form.sanctionAmount) : undefined,
+          disbursed_amount: form.disbursedAmount ? Number(form.disbursedAmount) : undefined,
+          fees: form.fees ? Number(form.fees) : undefined,
+          login_date: form.loginDate || undefined,
+          partner_login: form.partnerLogin || undefined,
+          case_under_company: form.caseUnderCompany || undefined,
+          status: form.status,
+          sanction_date: form.sanctionDate || undefined,
+          disbursement_date: form.disbursementDate || undefined,
+          pd_report: form.pdReport,
+          technical_report: form.technicalReport,
+          legal_report: form.legalReport,
+          cpv_report: form.cpvReport,
+          sanction: form.sanction,
+          disbursement: form.disbursement,
+          remarks: form.remarks || undefined,
         }),
       });
 
@@ -196,6 +238,31 @@ const LeadForm = () => {
       }
 
       const data = await res.json();
+      const newLeadId = data.data?._id;
+
+      if (newLeadId) {
+        const uploadDoc = async (fileObj, docType) => {
+          if (!fileObj) return;
+          const fd = new FormData();
+          fd.append('file', fileObj);
+          fd.append('doc_type', docType);
+          try {
+            await fetch(`${import.meta.env.VITE_API_URL}/api/leads/${newLeadId}/documents`, {
+              method: 'POST',
+              headers: { 'X-Employee-Portal-Key': import.meta.env.VITE_EMPLOYEE_PORTAL_KEY || 'swayam@emp2025' },
+              body: fd
+            });
+          } catch (err) { console.error('Doc upload error:', err); }
+        };
+
+        await Promise.all([
+          uploadDoc(form.aadhaarCard, 'aadhaar_card'),
+          uploadDoc(form.panCard, 'pan_card'),
+          uploadDoc(form.voterId, 'voter_id'),
+          uploadDoc(form.bankStatement, 'bank_statement')
+        ]);
+      }
+
       const record = {
         id: Date.now(),
         name: form.fullName,
@@ -363,6 +430,122 @@ const LeadForm = () => {
                 </div>
               </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <Label>Sanction Amount (₹)</Label>
+                  <Input type="number" placeholder="e.g. 400000" min="0" value={form.sanctionAmount} onChange={v => set('sanctionAmount', v)} />
+                </div>
+                <div>
+                  <Label>Disbursement Amount (₹)</Label>
+                  <Input type="number" placeholder="e.g. 400000" min="0" value={form.disbursedAmount} onChange={v => set('disbursedAmount', v)} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <Label>Fees (₹)</Label>
+                  <Input type="number" placeholder="e.g. 5000" min="0" value={form.fees} onChange={v => set('fees', v)} />
+                </div>
+                <div>
+                  <Label>Loan ID (External)</Label>
+                  <Input placeholder="External ID" value={form.externalLoanId} onChange={v => set('externalLoanId', v)} />
+                </div>
+              </div>
+
+              <div className="h-px bg-slate-100" />
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Processing Details</p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                   <Label>Login Date</Label>
+                   <input type="date" value={form.loginDate} onChange={e => set('loginDate', e.target.value)} className="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-[#0EA5E9] transition-all cursor-text" />
+                </div>
+                <div>
+                   <Label>Current Status</Label>
+                   <select value={form.status} onChange={e => set('status', e.target.value)} className="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-[#0EA5E9] transition-all appearance-none cursor-pointer">
+                     {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
+                   </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                   <Label>Case Under(Company)</Label>
+                   <select value={form.caseUnderCompany} onChange={e => set('caseUnderCompany', e.target.value)} className="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-[#0EA5E9] transition-all appearance-none cursor-pointer">
+                      <option value="">Select Company</option>
+                      <option value="Swayamfin">Swayamfin</option>
+                      <option value="DMI">DMI</option>
+                      <option value="Credifin">Credifin</option>
+                   </select>
+                </div>
+                <div>
+                   <Label>Partner</Label>
+                   <select value={form.partnerLogin} onChange={e => set('partnerLogin', e.target.value)} className="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-[#0EA5E9] transition-all appearance-none cursor-pointer">
+                      <option value="">Select Partner</option>
+                      <option value="DMI">DMI</option>
+                      <option value="Credifin">Credifin</option>
+                   </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                   <Label>Sanction Date</Label>
+                   <input type="date" value={form.sanctionDate} onChange={e => set('sanctionDate', e.target.value)} className="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-[#0EA5E9] transition-all cursor-text" />
+                </div>
+                <div>
+                   <Label>Disbursement Date</Label>
+                   <input type="date" value={form.disbursementDate} onChange={e => set('disbursementDate', e.target.value)} className="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-[#0EA5E9] transition-all cursor-text" />
+                </div>
+              </div>
+
+              <div className="h-px bg-slate-100" />
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Compliance Checkboxes</p>
+              
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pb-4">
+                 <Checkbox label="PD Report" checked={form.pdReport} onChange={v => set('pdReport', v)} />
+                 <Checkbox label="Technical Report" checked={form.technicalReport} onChange={v => set('technicalReport', v)} />
+                 <Checkbox label="Legal Report" checked={form.legalReport} onChange={v => set('legalReport', v)} />
+                 <Checkbox label="CPV Report" checked={form.cpvReport} onChange={v => set('cpvReport', v)} />
+                 <Checkbox label="Sanction" checked={form.sanction} onChange={v => set('sanction', v)} />
+                 <Checkbox label="Disbursement" checked={form.disbursement} onChange={v => set('disbursement', v)} />
+              </div>
+
+              <div className="h-px bg-slate-100" />
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Identity Documents</p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-4">
+                 <div className="space-y-2">
+                    <Label>Aadhar</Label>
+                    <input type="file" onChange={e => set('aadhaarCard', e.target.files[0])} className="w-full text-[10px] text-slate-500 file:cursor-pointer file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[9px] file:font-black file:uppercase file:tracking-widest file:bg-[#0EA5E9]/10 file:text-[#0EA5E9] hover:file:bg-[#0EA5E9]/20" />
+                 </div>
+                 <div className="space-y-2">
+                    <Label>PAN</Label>
+                    <input type="file" onChange={e => set('panCard', e.target.files[0])} className="w-full text-[10px] text-slate-500 file:cursor-pointer file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[9px] file:font-black file:uppercase file:tracking-widest file:bg-[#0EA5E9]/10 file:text-[#0EA5E9] hover:file:bg-[#0EA5E9]/20" />
+                 </div>
+                 <div className="space-y-2">
+                    <Label>Voter ID</Label>
+                    <input type="file" onChange={e => set('voterId', e.target.files[0])} className="w-full text-[10px] text-slate-500 file:cursor-pointer file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[9px] file:font-black file:uppercase file:tracking-widest file:bg-[#0EA5E9]/10 file:text-[#0EA5E9] hover:file:bg-[#0EA5E9]/20" />
+                 </div>
+                 <div className="space-y-2">
+                    <Label>Bank Statement</Label>
+                    <input type="file" onChange={e => set('bankStatement', e.target.files[0])} className="w-full text-[10px] text-slate-500 file:cursor-pointer file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[9px] file:font-black file:uppercase file:tracking-widest file:bg-[#0EA5E9]/10 file:text-[#0EA5E9] hover:file:bg-[#0EA5E9]/20" />
+                 </div>
+              </div>
+
+              <div className="h-px bg-slate-100" />
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Remarks</p>
+              <div>
+                <textarea
+                  placeholder="Case remarks..."
+                  value={form.remarks}
+                  onChange={e => set('remarks', e.target.value)}
+                  className="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-[#0EA5E9] transition-all h-24 resize-none"
+                />
+              </div>
+
+              <div className="h-px bg-slate-100" />
+
               <div>
                 <Label>Branch City *</Label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -499,15 +682,25 @@ const Label = ({ children }) => (
   <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.25em] mb-2">{children}</p>
 );
 
-const Input = ({ placeholder, value, onChange, required }) => (
+const Input = ({ placeholder, value, onChange, required, type = 'text', min }) => (
   <input
-    type="text"
+    type={type}
+    min={min}
     required={required}
     placeholder={placeholder}
     value={value}
     onChange={e => onChange(e.target.value)}
     className="w-full border border-slate-200 bg-white rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:border-[#0EA5E9] transition-all"
   />
+);
+
+const Checkbox = ({ label, checked, onChange }) => (
+  <div className="flex items-center gap-3 cursor-pointer select-none" onClick={() => onChange(!checked)}>
+    <div className={`w-5 h-5 rounded flex items-center justify-center transition-all ${checked ? 'bg-[#0EA5E9]' : 'bg-slate-200'}`}>
+      {checked && <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>}
+    </div>
+    <span className="text-xs font-semibold text-slate-600">{label}</span>
+  </div>
 );
 
 // ─── Root: Gate + Portal ──────────────────────────────────────────────────────
