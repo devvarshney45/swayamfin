@@ -252,7 +252,7 @@ const About = () => {
                     <tr>
                        <td className="py-10 text-slate-800 font-bold text-sm tracking-tight capitalize">Outstanding amount of portfolio</td>
                        <td className="py-10 text-right">
-                          <span className="text-lg font-black text-slate-900">1.98 Cr.</span>
+                          <span className="text-lg font-black text-slate-900">Rs1.2Cr</span>
                        </td>
                     </tr>
                     <tr>
