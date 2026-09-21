@@ -21,13 +21,18 @@ const TrustBar = () => {
             
             {/* Left: Logo */}
             <div className="flex justify-center md:items-center">
-              <div className="w-full h-48 sm:h-64 md:h-96 rounded-2xl flex items-center justify-center overflow-hidden">
+              <a 
+                href="https://www.dmihousingfinance.in/"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full h-48 sm:h-64 md:h-96 rounded-2xl flex items-center justify-center overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+              >
                 <img 
                   src={partnerLogo}
                   alt="DMI Housing Finance Logo"
                   className="w-full h-full object-contain object-center scale-110 md:scale-125"
                 />
-              </div>
+              </a>
             </div>
 
             {/* Right: Content & Buttons */}
